@@ -15,3 +15,5 @@
     * *At least one test function for each function*
 
   # Integral Test
+[http://domain/page label]
+http://domain/page
