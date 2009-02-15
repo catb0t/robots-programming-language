@@ -8,8 +8,8 @@
 = Details =
 
   # TDD (Test Driven Development)
-    * [http://en.wikipedia.org/wiki/Test-driven_development]Test-driven development
+    * Test-driven development[http://en.wikipedia.org/wiki/Test-driven_development]
   # Unit Test using JUnit
-    * [http://open.ncsu.edu/se/tutorials/junit/] Unit Testing in Eclipse Using JUnit
-    * At least one test function for each function
+    * Unit Testing in Eclipse Using JUnit [http://open.ncsu.edu/se/tutorials/junit/]
+    * *At least one test function for each function*
   # Integral Test
