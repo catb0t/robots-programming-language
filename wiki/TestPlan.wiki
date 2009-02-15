@@ -1,9 +1,8 @@
-
 = Introduction =
 
-1. TDD (Test Driven Development)
-2. Unit Test using JUnit
-3. Integral Test
+#1. TDD (Test Driven Development)
+#2. Unit Test using JUnit
+#3. Integral Test
 
 
 = Details =
