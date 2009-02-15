@@ -12,6 +12,5 @@
     * [http://www.agiledata.org/essays/tdd.html Introduction to Test Driven Design (TDD)]
   # Unit Test using JUnit
     * [http://open.ncsu.edu/se/tutorials/junit/ Unit Testing in Eclipse Using JUnit] 
-    * *At least tws test functions for each function*
-
+    * Every functions must have at least *tow test functions*.
   # Integral Test
