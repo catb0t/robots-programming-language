@@ -13,5 +13,5 @@
   # Unit Test using JUnit
     * [http://open.ncsu.edu/se/tutorials/junit/ Unit Testing in Eclipse Using JUnit] 
     * Every functions must have at least *two test functions*.
-    * Generally do NOT use "test????? (e.g. testAlgorithm)" as function name except for test case.
+    * Generally *do NOT use "test????? (e.g. testAlgorithm)" as function name except for test case*.
   # Integral Test
