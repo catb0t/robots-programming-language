@@ -1,5 +1,7 @@
 package plt;
 
+import java.io.*;			//added by soonhac @ 02/20/09
+
 public class Terrain {
 
     private static final int MAP_SIZE = 1024;                        // Size Of Our .RAW Height Map (NEW)
@@ -24,15 +26,15 @@ public class Terrain {
             pHeightMap[i] &= 0xFF;                 //Quick fix
     }
     
+    private static void readBuffer(InputStream in, byte[] buffer) throws IOException {
+	    int bytesRead = 0;
+	    int bytesToRead = buffer.length;
+	    while (bytesToRead > 0) {
+	        int read = in.read(buffer, bytesRead, bytesToRead);
+	        bytesRead += read;
+	        bytesToRead -= read;
+	    }
+	}
 }
 
 
-private static void readBuffer(InputStream in, byte[] buffer) throws IOException {
-    int bytesRead = 0;
-    int bytesToRead = buffer.length;
-    while (bytesToRead > 0) {
-        int read = in.read(buffer, bytesRead, bytesToRead);
-        bytesRead += read;
-        bytesToRead -= read;
-    }
-}
