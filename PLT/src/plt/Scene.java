@@ -141,13 +141,13 @@ public class Scene implements GLEventListener {
 
 	
 
-	@Override
+	//@Override
 	public void displayChanged(GLAutoDrawable drawable, boolean arg1, boolean arg2) {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
+	//@Override
 	public void init(GLAutoDrawable drawable) {
 		final GL gl = drawable.getGL();
 		gl.glShadeModel(GL.GL_SMOOTH);
@@ -174,7 +174,7 @@ public class Scene implements GLEventListener {
 
 	}
 
-	@Override
+	//@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL gl = drawable.getGL();
 		final GLU glu = new GLU();
