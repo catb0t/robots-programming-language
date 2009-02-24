@@ -7,5 +7,5 @@ Please post links and information relevant to parsing here.
 = Links =
 
   * [http://www2.cs.tum.edu/projects/cup/manual.html CUP manual]
-  * [http://cs.ua.edu/434/spring2005/SetupInstructions.pdf Directions to use Jlex, CUP and JUnit]
-  *[http://www.cs.princeton.edu/~appel/modern/java/JLex/current/manual.html Using Jlex]
+  * [http://cs.ua.edu/434/spring2005/SetupInstructions.pdf  Directions to use Jlex, CUP and JUnit]
+  * [http://www.cs.princeton.edu/~appel/modern/java/JLex/current/manual.html Using Jlex]
