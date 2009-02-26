@@ -20,11 +20,16 @@ public class Scene implements GLEventListener {
 	private GLU glu = new GLU();
 	private Camera cam = null;
 	private Terrain terrain = null;
+	public double DOUBLETROUBLEINMYROOM = 69;
 	
 	public Robot player = null;
 
 	float t = 0;
 	
+	private int terrainDL;
+	private int waterDL;
+	private int skyDL;
+	private int robotDL;
 
 	public void display(GLAutoDrawable drawable) {
 		final GL gl = drawable.getGL();
@@ -40,9 +45,8 @@ public class Scene implements GLEventListener {
 
 		//render robot
 		gl.glPushMatrix();
-		drawPyramid(gl);
+		gl.glCallList(robotDL);
 		gl.glPopMatrix();
-		
 		
 		//render water
 		drawWater(gl);
@@ -51,11 +55,20 @@ public class Scene implements GLEventListener {
 	
 	protected void drawWater(GL gl)
 	{		
+		
 		gl.glPushMatrix();
         gl.glBindTexture(GL.GL_TEXTURE_2D, terrainTexture);
 		gl.glScalef(100.0f, 0.0f, 100.0f);
+			gl.glCallList(waterDL);		
+		gl.glPopMatrix();
+	}
+	
+	protected void createWater(GL gl)
+	{
+		waterDL = gl.glGenLists(1);
+		gl.glNewList(waterDL, GL.GL_COMPILE);
 		
-		gl.glBegin(GL.GL_TRIANGLES);
+			gl.glBegin(GL.GL_TRIANGLES);
 			gl.glColor3f(1.0f,1.0f, 1.0f);
 			
 			gl.glTexCoord2f(1.0f, 0.0f);
@@ -71,12 +84,17 @@ public class Scene implements GLEventListener {
 			gl.glVertex3f(-1.0f, 0.0f, -1.0f);
 			gl.glTexCoord2f(0.0f, 1.0f);
 			gl.glVertex3f( -1.0f, 0.0f, 1.0f);
-		gl.glEnd();	
-		gl.glPopMatrix();
+			gl.glEnd();	
+	
+		gl.glEndList();
 	}
 	
-	protected void drawPyramid(GL gl){
-		gl.glBegin(GL.GL_TRIANGLES);					
+	protected void createRobot(GL gl){
+		
+		robotDL = gl.glGenLists(1);
+        gl.glNewList(robotDL, GL.GL_COMPILE);
+     
+			gl.glBegin(GL.GL_TRIANGLES);					
 			gl.glColor3f(1.0f,0.0f,0.0f);			
 			gl.glVertex3f( 0.0f, 1.0f, 0.0f);			
 			gl.glColor3f(0.0f,1.0f,0.0f);			
@@ -101,7 +119,10 @@ public class Scene implements GLEventListener {
 			gl.glVertex3f(-1.0f,-1.0f,-1.0f);			
 			gl.glColor3f(0.0f,1.0f,0.0f);			
 			gl.glVertex3f(-1.0f,-1.0f, 1.0f);			
-		gl.glEnd();	
+		    gl.glEnd();
+
+	    gl.glEndList();
+
 	}
 	
 	protected void drawCube(GL gl){
@@ -170,6 +191,12 @@ public class Scene implements GLEventListener {
         makeRGBTexture(gl, glu, texture, GL.GL_TEXTURE_2D, false);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+        
+        //create the terrain, water and skySphere display list
+        terrainDL = gl.glGenLists(1);
+        createWater(gl);
+        //create the robot display list
+        createRobot(gl);
 
 
 	}
