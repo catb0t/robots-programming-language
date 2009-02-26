@@ -1,6 +1,10 @@
 package plt;
 
 import java.io.*;			//added by soonhac @ 02/20/09
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLEventListener;
+import javax.media.opengl.glu.GLU;
 
 public class Terrain {
 
@@ -11,9 +15,13 @@ public class Terrain {
     private boolean zoomIn;
     private boolean zoomOut;
     
+    private int terrainDL;
+    GL gl;
 	
-	public Terrain()
+	public Terrain(GL inGL)
 	{
+		gl = inGL;
+		terrainDL = gl.glGenLists(1);
 		
 	}
 	
