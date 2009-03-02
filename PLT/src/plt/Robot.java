@@ -18,13 +18,22 @@ public class Robot {
 	
 	private int t  = 0;
 	
+	/* the phsyics function handles all the physics dealing with the robot, for example, when 
+	 * 
+	 */
+	public void phsyics()
+	{
+		
+	}
+	
+	
 	public void think()
 	{
 		t++;
 		float tempx = 10*(float)Math.cos((double)t/10000000.0);
 		float tempy = 10*(float)Math.sin((double)t/10000000.0);
 		
-		forwardDirection = new Vector3(tempx, 10, tempy);
+		forwardDirection = new Vector3(tempx, 5, tempy);
 		
 		
 	}
