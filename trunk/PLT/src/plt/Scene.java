@@ -16,17 +16,16 @@ public class Scene implements GLEventListener {
 	
 	protected float pyramidRotation;
 	protected float cubeRotation;
-	private int terrainTexture;
+
 	private GLU glu = new GLU();
 	private Camera cam = null;
 	private Terrain terrain = null;
 	public double DOUBLETROUBLEINMYROOM = 69;
-	
+	private int waterTexture;
 	public Robot player = null;
 
 	float t = 0;
 	
-	private int terrainDL;
 	private int waterDL;
 	private int skyDL;
 	private int robotDL;
@@ -49,7 +48,9 @@ public class Scene implements GLEventListener {
 		gl.glPopMatrix();
 		
 		//render water
-		drawWater(gl);
+		//
+		//drawWater(gl);
+		terrain.renderHeightMap(gl);
 					
 	}
 	
@@ -57,7 +58,7 @@ public class Scene implements GLEventListener {
 	{		
 		
 		gl.glPushMatrix();
-        gl.glBindTexture(GL.GL_TEXTURE_2D, terrainTexture);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, waterTexture);
 		gl.glScalef(100.0f, 0.0f, 100.0f);
 			gl.glCallList(waterDL);		
 		gl.glPopMatrix();
@@ -179,8 +180,8 @@ public class Scene implements GLEventListener {
 		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 		cam = new Camera();
 		gl.glEnable(GL.GL_TEXTURE_2D);
-        terrainTexture = genTexture(gl);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, terrainTexture);
+        waterTexture = genTexture(gl);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, waterTexture);
         TextureReader.Texture texture = null;
         try {
             texture = TextureReader.readTexture("media/terrain.jpg");
@@ -193,10 +194,12 @@ public class Scene implements GLEventListener {
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
         
         //create the terrain, water and skySphere display list
-        terrainDL = gl.glGenLists(1);
+        terrain = new Terrain(gl);
         createWater(gl);
         //create the robot display list
         createRobot(gl);
+
+        
 
 
 	}
