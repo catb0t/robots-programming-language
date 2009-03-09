@@ -19,16 +19,27 @@ public class Scene implements GLEventListener {
 
 	private GLU glu = new GLU();
 	private Camera cam = null;
-	private Terrain terrain = null;
+	public Terrain terrain = null;
 	public double DOUBLETROUBLEINMYROOM = 69;
 	private int waterTexture;
 	public Robot player = null;
-
+	OBJ_Model model = null;
+	
 	float t = 0;
 	
 	private int waterDL;
 	private int skyDL;
 	private int robotDL;
+	
+	//light
+    private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
+    private float[] lightDiffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+    private float[] lightPosition = {-5.0f, -5.0f, -5.0f, 0.0f};
+    
+    //fog
+    private int fogMode[] = {GL.GL_EXP, GL.GL_EXP2, GL.GL_LINEAR};	// Storage For Three Types Of Fog ( new )
+    private int fogfilter = 2;								// Which Fog Mode To Use      ( new )
+    private float fogColor[] = {0.5f, 0.5f, 0.5f, 1.0f};		// Fog Color               ( new )
 
 	public void display(GLAutoDrawable drawable) {
 		final GL gl = drawable.getGL();
@@ -37,20 +48,24 @@ public class Scene implements GLEventListener {
 		
 		//set the camera
 		cam.updatePosition(player.forwardDirection.x, player.forwardDirection.y, player.forwardDirection.z);
-		cam.lookAt(0, 0, 0);
+		cam.lookAt(player.x, player.y, player.z);
 		cam.updateCamera(gl, t++);
 
-
-
-		//render robot
-		gl.glPushMatrix();
-		gl.glCallList(robotDL);
-		gl.glPopMatrix();
 		
 		//render water
 		//
 		//drawWater(gl);
+		
+		//draw the terrain
 		terrain.renderHeightMap(gl);
+		
+		//render robot
+		physics();
+		gl.glPushMatrix();
+		gl.glTranslatef(player.x, player.y, player.z);
+		//gl.glCallList(robotDL);
+		model.render(gl);
+		gl.glPopMatrix();
 					
 	}
 	
@@ -88,6 +103,12 @@ public class Scene implements GLEventListener {
 			gl.glEnd();	
 	
 		gl.glEndList();
+	}
+	
+	protected void physics()
+	{
+		player.setY((int)terrain.terrainIntersection(player.getPosition()) );
+		
 	}
 	
 	protected void createRobot(GL gl){
@@ -173,7 +194,24 @@ public class Scene implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		final GL gl = drawable.getGL();
 		gl.glShadeModel(GL.GL_SMOOTH);
-		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+		gl.glColorMaterial ( GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE ) ;
+		
+		 gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, this.lightDiffuse, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, this.lightPosition, 0);
+        gl.glEnable(GL.GL_LIGHT1);
+        gl.glEnable(GL.GL_LIGHTING);
+        gl.glFogi(GL.GL_FOG_MODE, fogMode[fogfilter]);			// Fog Mode
+        gl.glFogfv(GL.GL_FOG_COLOR, fogColor, 0);					// Set Fog Color
+        gl.glFogf(GL.GL_FOG_DENSITY, 0.05f);						// How Dense Will The Fog Be
+        gl.glHint(GL.GL_FOG_HINT, GL.GL_DONT_CARE);					// Fog Hint Value
+        gl.glFogf(GL.GL_FOG_START, 25.0f);							// Fog Start Depth
+        gl.glFogf(GL.GL_FOG_END, 50.0f);							// Fog End Depth
+        gl.glEnable(GL.GL_FOG);									// Enables GL.GL_FOG
+        
+
+//        gl.glEnable(GL.GL_CULL_FACE);
+		gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		gl.glClearDepth(1.0f);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glDepthFunc(GL.GL_LEQUAL);
@@ -184,7 +222,7 @@ public class Scene implements GLEventListener {
         gl.glBindTexture(GL.GL_TEXTURE_2D, waterTexture);
         TextureReader.Texture texture = null;
         try {
-            texture = TextureReader.readTexture("media/terrain.jpg");
+            texture = TextureReader.readTexture("media/terrrain(256x256).jpg");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -199,6 +237,7 @@ public class Scene implements GLEventListener {
         //create the robot display list
         createRobot(gl);
 
+        model = new OBJ_Model(gl, "box.obj");
         
 
 
