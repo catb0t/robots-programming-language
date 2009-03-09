@@ -9,14 +9,15 @@ import javax.media.opengl.glu.GLU;
 
 public class Terrain {
 
-    private static final int MAP_SIZE = 1024;                        // Size Of Our .RAW Height Map (NEW)
-    private static final int STEP_SIZE = 16;                        // Width And Height Of Each Quad (NEW)
+    private static final int MAP_SIZE = 128;                        // Size Of Our .RAW Height Map (NEW)
+    private static final int STEP_SIZE = 1;                        // Width And Height Of Each Quad (NEW)
     private byte[] heightMap = new byte[MAP_SIZE * MAP_SIZE]; // Holds The Height Map Data (NEW)
     private float scaleValue = .15f;                        // Scale Value For The Terrain (NEW)
     private boolean zoomIn;
     private boolean zoomOut;
-    float scale = -0.1f;
-    float textureScale = 10;
+    float scaleXZ = 0.7f;
+    float scaleY = 0.1f;
+    float textureScale = 70f;
 	private GLU glu = new GLU();
 	private int terrainTexture;
     
@@ -30,7 +31,7 @@ public class Terrain {
 		
 		
         try {
-            loadRawFile("media/terrain.raw", heightMap);  // (NEW)
+            loadRawFile("media/terrain3.raw", heightMap);  // (NEW)
         } catch (IOException e) {
         	System.out.println("terrain map did not load...");
             throw new RuntimeException(e);
@@ -40,7 +41,7 @@ public class Terrain {
         gl.glBindTexture(GL.GL_TEXTURE_2D, terrainTexture);
         TextureReader.Texture texture = null;
         try {
-            texture = TextureReader.readTexture("media/terrain.jpg");
+            texture = TextureReader.readTexture("media/terrrain(256x256).jpg");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -77,6 +78,7 @@ public class Terrain {
     	gl.glPushMatrix();
         gl.glBindTexture(GL.GL_TEXTURE_2D, terrainTexture);
 		//gl.glScalef(100.0f, 0.0f, 100.0f);
+        gl.glScalef(scaleXZ, scaleY, scaleXZ);
 		gl.glTranslatef(-MAP_SIZE/2, 0, -MAP_SIZE/2);
         	gl.glCallList(terrainDL);		
 		gl.glPopMatrix();
@@ -87,68 +89,179 @@ public class Terrain {
     	terrainDL = gl.glGenLists(1);
 		gl.glNewList(terrainDL, GL.GL_COMPILE);
 	    	
-	        gl.glBegin(GL.GL_QUADS);
+	        gl.glBegin(GL.GL_TRIANGLES);
 	        gl.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	        
+	        Vector3[] vertex = new Vector3[4];
+	        Vector3[] texCoords = new Vector3[4];
+	        Vector3[] normals = new Vector3[4];
+	        
+	        gl.glEnable(GL.GL_LIGHTING);
 	
 	        for (int X = 0; X < (MAP_SIZE - STEP_SIZE); X += STEP_SIZE)
 	            for (int Y = 0; Y < (MAP_SIZE - STEP_SIZE); Y += STEP_SIZE) {
 	                // Get The (X, Y, Z) Value For The Bottom Left Vertex
 	                int x = X;
-	                int y = (int)(height(heightMap, X, Y)*scale);
+	                int y = (int)(height(heightMap, X, Y));
 	                int z = Y;
 	
 	                // Set The Color Value Of The Current Vertex
 	               // setVertexColor(gl, heightMap, x, z);
-	            	gl.glTexCoord2f(X/textureScale, Y/textureScale);
-	                gl.glVertex3i(x, y, z);                          // Send This Vertex To OpenGL To Be Rendered (Integer Points Are Faster)
+	                texCoords[0] = new Vector3(X/textureScale, Y/textureScale, 0);
+	                normals[0] = new Vector3(0.0f, 1.0f, 0.0f);
+	                vertex[0] = new Vector3(x, y, z);
+	           // 	gl.glTexCoord2f(X/textureScale, Y/textureScale);
+	            //	gl.glNormal3f(0.0f, 1.0f, 0.0f);
+	             //   gl.glVertex3i(x, y, z);                          // Send This Vertex To OpenGL To Be Rendered (Integer Points Are Faster)
 	
 	                // Get The (X, Y, Z) Value For The Top Left Vertex
 	                x = X;
-	                y = (int)(height(heightMap, X, Y + STEP_SIZE)*scale);
+	                y = (int)(height(heightMap, X, Y + STEP_SIZE));
 	                z = Y + STEP_SIZE;
 	
+	                
+	                texCoords[1] = new Vector3(X/textureScale, (Y + STEP_SIZE)/textureScale, 0);
+	                normals[1] = new Vector3(0.0f, 1.0f, 0.0f);
+	                vertex[1] = new Vector3(x, y, z);
+	                
+	                
 	                // Set The Color Value Of The Current Vertex
 	                //setVertexColor(gl, heightMap, x, z);
-	                gl.glTexCoord2f(X/textureScale, (Y + STEP_SIZE)/textureScale);
-	                gl.glVertex3i(x, y, z);	                         // Send This Vertex To OpenGL To Be Rendered
+	           //     gl.glTexCoord2f(X/textureScale, (Y + STEP_SIZE)/textureScale);
+	             //   gl.glNormal3f(0.0f, 1.0f, 0.0f);
+	               // gl.glVertex3i(x, y, z);	                         // Send This Vertex To OpenGL To Be Rendered
 	
 	                // Get The (X, Y, Z) Value For The Top Right Vertex
 	                x = X + STEP_SIZE;
-	                y = (int)(height(heightMap, X + STEP_SIZE, Y + STEP_SIZE)*scale);
+	                y = (int)(height(heightMap, X + STEP_SIZE, Y + STEP_SIZE));
 	                z = Y + STEP_SIZE;
 	
+	                texCoords[2] = new Vector3((X + STEP_SIZE)/textureScale, (Y + STEP_SIZE)/textureScale, 0);
+	                normals[2] = new Vector3(0.0f, 1.0f, 0.0f);
+	                vertex[2] = new Vector3(x, y, z);
+	                
 	                // Set The Color Value Of The Current Vertex
 	                //setVertexColor(gl, heightMap, x, z);
-	                gl.glTexCoord2f((X + STEP_SIZE)/textureScale, (Y + STEP_SIZE)/textureScale);
-	                gl.glVertex3i(x, y, z);                          // Send This Vertex To OpenGL To Be Rendered
+	   //             gl.glTexCoord2f((X + STEP_SIZE)/textureScale, (Y + STEP_SIZE)/textureScale);
+	     //           gl.glNormal3f(0.0f, 1.0f, 0.0f);
+	       //         gl.glVertex3i(x, y, z);                          // Send This Vertex To OpenGL To Be Rendered
 	
 	                // Get The (X, Y, Z) Value For The Bottom Right Vertex
 	                x = X + STEP_SIZE;
-	                y = (int)(height(heightMap, X + STEP_SIZE, Y)*scale);
+	                y = (int)(height(heightMap, X + STEP_SIZE, Y));
 	                z = Y;
 	
+	                
+	                texCoords[3] = new Vector3((X + STEP_SIZE)/textureScale, Y/textureScale, 0);
+	                normals[3] = new Vector3(0.0f, 1.0f, 0.0f);
+	                vertex[3] = new Vector3(x, y, z);
+	                
 	                // Set The Color Value Of The Current Vertex
 	                //setVertexColor(gl, heightMap, x, z);
-	                gl.glTexCoord2f((X + STEP_SIZE)/textureScale, Y/textureScale);
-	                gl.glVertex3i(x, y, z);                          // Send This Vertex To OpenGL To Be Rendered
+	         //       gl.glTexCoord2f((X + STEP_SIZE)/textureScale, Y/textureScale);
+	           //     gl.glNormal3f(0.0f, 1.0f, 0.0f);
+	             //   gl.glVertex3i(x, y, z);                          // Send This Vertex To OpenGL To Be Rendered
+	                
+	                
+	                //  03
+	                //  12
+	                //now calculate the normals for each triangle
+	                int vertexID = 0;
+	                Vector3 tempVertex1 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, ((int)vertex[vertexID].x + STEP_SIZE)%MAP_SIZE, (int)vertex[vertexID].z)), vertex[vertexID].z ); 
+	                Vector3 tempVertex2 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, (int)vertex[vertexID].x, ((int)vertex[vertexID].z + STEP_SIZE)%MAP_SIZE)), vertex[vertexID].z + STEP_SIZE ); 
+	                Vector3 direction1 = tempVertex1;
+	                Vector3 direction2 = tempVertex2;
+	                direction1 = direction1.add( vertex[vertexID].multiply(-1) );
+	                direction2 = direction2.add( vertex[vertexID].multiply(-1) );
+	                normals[vertexID] = direction1.cross(direction2);
+	                normals[vertexID].normalize();
+	                
+	                vertexID = 1;
+	                tempVertex1 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, ((int)vertex[vertexID].x + STEP_SIZE)%MAP_SIZE, (int)vertex[vertexID].z)), vertex[vertexID].z ); 
+	                tempVertex2 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, (int)vertex[vertexID].x, ((int)vertex[vertexID].z + STEP_SIZE)%MAP_SIZE)), vertex[vertexID].z + STEP_SIZE ); 
+	                direction1 = tempVertex1;
+	                direction2 = tempVertex2;
+	                direction1 = direction1.add( vertex[vertexID].multiply(-1) );
+	                direction2 = direction2.add( vertex[vertexID].multiply(-1) );
+	                normals[vertexID] = direction1.cross(direction2);
+	                normals[vertexID].normalize();
+	                
+	                vertexID = 2;
+	                tempVertex1 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, ((int)vertex[vertexID].x + STEP_SIZE)%MAP_SIZE, (int)vertex[vertexID].z)), vertex[vertexID].z ); 
+	                tempVertex2 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, (int)vertex[vertexID].x, ((int)vertex[vertexID].z + STEP_SIZE)%MAP_SIZE)), vertex[vertexID].z + STEP_SIZE ); 
+	                direction1 = tempVertex1;
+	                direction2 = tempVertex2;
+	                direction1 = direction1.add( vertex[vertexID].multiply(-1) );
+	                direction2 = direction2.add( vertex[vertexID].multiply(-1) );
+	                normals[vertexID] = direction1.cross(direction2);
+	                normals[vertexID].normalize();
+	                
+	                vertexID = 3;
+	                tempVertex1 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, ((int)vertex[vertexID].x + STEP_SIZE)%MAP_SIZE, (int)vertex[vertexID].z)), vertex[vertexID].z ); 
+	                tempVertex2 = new Vector3(vertex[vertexID].x + STEP_SIZE, (int)(height(heightMap, (int)vertex[vertexID].x, ((int)vertex[vertexID].z + STEP_SIZE)%MAP_SIZE)), vertex[vertexID].z + STEP_SIZE ); 
+	                direction1 = tempVertex1;
+	                direction2 = tempVertex2;
+	                direction1 = direction1.add( vertex[vertexID].multiply(-1) );
+	                direction2 = direction2.add( vertex[vertexID].multiply(-1) );
+	                normals[vertexID] = direction1.cross(direction2);
+	                normals[vertexID].normalize();
+	                
+	                
+	                
+	                //now create the 2 triangles 
+	                //first polygon
+	                vertexID = 2;
+	                gl.glTexCoord2f(texCoords[vertexID].x, texCoords[vertexID].y);
+		            gl.glNormal3f(normals[vertexID].x, normals[vertexID].y, normals[vertexID].z);
+		            gl.glVertex3i((int)vertex[vertexID].x, (int)vertex[vertexID].y, (int)vertex[vertexID].z);
+		            
+	                vertexID = 3;
+	                gl.glTexCoord2f(texCoords[vertexID].x, texCoords[vertexID].y);
+		            gl.glNormal3f(normals[vertexID].x, normals[vertexID].y, normals[vertexID].z);
+		            gl.glVertex3i((int)vertex[vertexID].x, (int)vertex[vertexID].y, (int)vertex[vertexID].z);
+
+	                vertexID = 0;
+	                gl.glTexCoord2f(texCoords[vertexID].x, texCoords[vertexID].y);
+		            gl.glNormal3f(normals[vertexID].x, normals[vertexID].y, normals[vertexID].z);
+		            gl.glVertex3i((int)vertex[vertexID].x, (int)vertex[vertexID].y, (int)vertex[vertexID].z);
+		            
+		            //second polygon
+	                vertexID = 1;
+	                gl.glTexCoord2f(texCoords[vertexID].x, texCoords[vertexID].y);
+		            gl.glNormal3f(normals[vertexID].x, normals[vertexID].y, normals[vertexID].z);
+		            gl.glVertex3i((int)vertex[vertexID].x, (int)vertex[vertexID].y, (int)vertex[vertexID].z);
+		            
+	                vertexID = 2;
+	                gl.glTexCoord2f(texCoords[vertexID].x, texCoords[vertexID].y);
+		            gl.glNormal3f(normals[vertexID].x, normals[vertexID].y, normals[vertexID].z);
+		            gl.glVertex3i((int)vertex[vertexID].x, (int)vertex[vertexID].y, (int)vertex[vertexID].z);
+		            
+	                vertexID = 0;
+	                gl.glTexCoord2f(texCoords[vertexID].x, texCoords[vertexID].y);
+		            gl.glNormal3f(normals[vertexID].x, normals[vertexID].y, normals[vertexID].z);
+		            gl.glVertex3i((int)vertex[vertexID].x, (int)vertex[vertexID].y, (int)vertex[vertexID].z);
+		            
+		            
 	            }
         	gl.glEnd();
         gl.glEndList();
     }
     
-    private float terrainIntersection(Vector3 position)
+    public float terrainIntersection(Vector3 position)
     {
     	Vector3 down = new Vector3(0, -1, 0);
     	//find the triangle which the position is currently over, need to translate and scale the position so it corresponds to the height map
+    	position.x /= scaleXZ;
+    	position.y /= scaleY;
+    	position.z /= scaleXZ;
     	position.x += MAP_SIZE/2;
     	position.z += MAP_SIZE/2;
-    	position.x *= scale;
-    	position.y *= scale;
+
     	
     	Vector3 position2 = position;
     	
     	float interpX = position2.x%STEP_SIZE;
-    	float interpY = position2.y%STEP_SIZE;
+    	float interpY = position2.z%STEP_SIZE;
     	interpX /= STEP_SIZE;
     	interpY /= STEP_SIZE;
     	
@@ -161,16 +274,16 @@ public class Terrain {
     	
     	
     	//get the 4 heights
-    	int h1 = (int)(height(heightMap, (int)position2.x, (int)position2.y)*scale);
-    	int h2 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.y)*scale);
-    	int h3 = (int)(height(heightMap, (int)position2.x, (int)position2.y + STEP_SIZE)*scale);
-    	int h4 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.y + STEP_SIZE)*scale);
+    	int h1 = (int)(height(heightMap, (int)position2.x, (int)position2.z));
+    	int h2 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.z));
+    	int h3 = (int)(height(heightMap, (int)position2.x, (int)position2.z + STEP_SIZE));
+    	int h4 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.z + STEP_SIZE));
     	
-    	float newHeightX = h1*(1-interpX) + h2*(interpX);
-    	float newHeightY = h3*(1-interpX) + h4*(interpX);
+    	float newHeightX = (float)h1*(1-interpX) + (float)h2*(interpX);
+    	float newHeightY = (float)h3*(1-interpX) + (float)h4*(interpX);
     	float newHeight = newHeightX*(1-interpY) + newHeightY*(interpY);
     	   	 	
-    	return newHeight;
+    	return newHeight*scaleY;
     }
     
     private void setVertexColor(GL gl, byte[] pHeightMap, int x, int y) {                 // Sets The Color Value For A Particular Index, Depending On The Height Index

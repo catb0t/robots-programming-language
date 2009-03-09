@@ -24,11 +24,10 @@ public class Main extends Frame {
 	    //create level object
 	    Level level = new Level("level1.lvl");
 	    
-	    //create the player object
-	    Robot player = new Robot();
-	    
 	    Scene scene = new Scene();
-
+	    //create the player object
+	    Robot player = new Robot(scene.terrain);
+	    
 	    canvas.addGLEventListener(scene);//new Scene());
 	    frame.setSize(1300, 900);
 	    frame.add(canvas);
