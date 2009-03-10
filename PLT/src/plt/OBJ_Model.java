@@ -27,7 +27,7 @@ public class OBJ_Model {
     	gl.glPushMatrix();
 //        gl.glBindTexture(GL.GL_TEXTURE_2D, terrainTexture);
 		//gl.glScalef(100.0f, 0.0f, 100.0f);
-        float scale = 1f;
+        float scale = 0.1f;
     	gl.glScalef(scale, scale, scale);
 	//	gl.glTranslatef(-MAP_SIZE/2, 0, -MAP_SIZE/2);
         	gl.glCallList(modelDL);		
@@ -36,6 +36,7 @@ public class OBJ_Model {
     
 	public void loadModel(String filename)
 	{ 
+		filename = "media/" + filename;
 		int vertCounter = 0;
 		int texCounter = 0;
 		int normCounter = 0;
@@ -46,7 +47,7 @@ public class OBJ_Model {
 		DataInputStream in = new DataInputStream(fstream);
 	    	BufferedReader br = new BufferedReader(new InputStreamReader(in));
 	    String strLine;
-	    while ((strLine = br.readLine() ) != null)   
+	    while ((strLine = br.readLine() ) != "end")   
 	    {
 	        // Print the content on the console
 	        System.out.println (strLine);
@@ -70,6 +71,10 @@ public class OBJ_Model {
 	      System.err.println("Error: " + e.getMessage());
 	    }
 
+		System.out.println("verts " + vertCounter);
+		System.out.println("texs " + texCounter);
+		System.out.println("norms " + normCounter);
+		
 		Vector3[] vertices = new Vector3[vertCounter];
 		Vector3[] texCoords = new Vector3[texCounter];
 		Vector3[] norms = new Vector3[normCounter];
@@ -117,33 +122,32 @@ public class OBJ_Model {
 		        		//first vertex
 		        		String firstVertex = st.nextToken();
 		        		StringTokenizer vertToken = new StringTokenizer(firstVertex, "/");
-		        		int vertID = Integer.valueOf(vertToken.nextToken());
-		        		int texID = Integer.valueOf(vertToken.nextToken());
-		        		int normID = Integer.valueOf(vertToken.nextToken());
-	             		gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
+		        		int vertID = Integer.valueOf(vertToken.nextToken())-1;
+		        		int texID = Integer.valueOf(vertToken.nextToken())-1;
+		        		int normID = Integer.valueOf(vertToken.nextToken())-1;
 		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].y);
 				        gl.glNormal3f(norms[normID].x, norms[normID].y, norms[normID].z);
+				        gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
 				           
 				        //second vertex
 				        firstVertex = st.nextToken();
 		        		vertToken = new StringTokenizer(firstVertex, "/");
-		        		vertID = Integer.valueOf(vertToken.nextToken());
-		        		texID = Integer.valueOf(vertToken.nextToken());
-		        		normID = Integer.valueOf(vertToken.nextToken());
-	             		gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
+		        		vertID = Integer.valueOf(vertToken.nextToken())-1;
+		        		texID = Integer.valueOf(vertToken.nextToken())-1;
+		        		normID = Integer.valueOf(vertToken.nextToken())-1;
 		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].y);
 				        gl.glNormal3f(norms[normID].x, norms[normID].y, norms[normID].z);
-				        
+	             		gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
+	             		
 				        //third vertex
 				        firstVertex = st.nextToken();
 		        		vertToken = new StringTokenizer(firstVertex, "/");
-		        		vertID = Integer.valueOf(vertToken.nextToken());
-		        		texID = Integer.valueOf(vertToken.nextToken());
-		        		normID = Integer.valueOf(vertToken.nextToken());
-	             		gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
+		        		vertID = Integer.valueOf(vertToken.nextToken())-1;
+		        		texID = Integer.valueOf(vertToken.nextToken())-1;
+		        		normID = Integer.valueOf(vertToken.nextToken())-1;
 		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].y);
 				        gl.glNormal3f(norms[normID].x, norms[normID].y, norms[normID].z);
-				        
+	             		gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
 		        		
 		        	}
 			        	
