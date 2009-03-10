@@ -64,7 +64,7 @@ public class Scene implements GLEventListener {
 		gl.glPushMatrix();
 		gl.glTranslatef(player.x, player.y, player.z);
 		//gl.glCallList(robotDL);
-		model.render(gl);
+			model.render(gl);
 		gl.glPopMatrix();
 					
 	}
@@ -196,7 +196,7 @@ public class Scene implements GLEventListener {
 		gl.glShadeModel(GL.GL_SMOOTH);
 		gl.glColorMaterial ( GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE ) ;
 		
-		 gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
+		gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
         gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, this.lightDiffuse, 0);
         gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, this.lightPosition, 0);
         gl.glEnable(GL.GL_LIGHT1);
@@ -210,7 +210,7 @@ public class Scene implements GLEventListener {
         gl.glEnable(GL.GL_FOG);									// Enables GL.GL_FOG
         
 
-//        gl.glEnable(GL.GL_CULL_FACE);
+        gl.glEnable(GL.GL_CULL_FACE);
 		gl.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		gl.glClearDepth(1.0f);
 		gl.glEnable(GL.GL_DEPTH_TEST);
@@ -237,7 +237,7 @@ public class Scene implements GLEventListener {
         //create the robot display list
         createRobot(gl);
 
-        model = new OBJ_Model(gl, "box.obj");
+        model = new OBJ_Model(gl, "sphere.obj");
         
 
 
