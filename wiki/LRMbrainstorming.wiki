@@ -1,0 +1,52 @@
+#summary One-sentence summary of this page.
+
+LRM brainstorming
+
+= Introduction =
+
+Add your content here.
+
+
+= Details =
+
+think (means)
+
+	say 		hello
+	{keyword (kw)}
+
+end
+
+// user defined procedures
+instruction <name> means
+
+done
+
+// program 2
+think
+	moveTo <global-coordinate-X> <global-coordinate-Y>
+end
+
+
+
+Grammar
+
+program := entry
+		;
+
+instruction := say expr
+		| moveTo numerical_expr numerical_expr
+		;
+
+say_expr := [anything]*$
+		;
+
+numberical_expr := 
+	;
+
+num_var := id
+	;
+
+entry := think 
+		{instruction}*
+	end
+	;
