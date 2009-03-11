@@ -24,6 +24,7 @@ instruction <name> means
 done
 
 // program 2
+
 think
 	moveTo <global-coordinate-X> <global-coordinate-Y>
 end
