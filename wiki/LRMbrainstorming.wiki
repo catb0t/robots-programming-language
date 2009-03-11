@@ -9,6 +9,7 @@ Add your content here.
 
 = Details =
 
+// program 1
 think (means)
 
 	say 		hello
@@ -16,7 +17,7 @@ think (means)
 
 end
 
-// user defined procedures
+// user defined procedures/functions
 instruction <name> means
 
 done
@@ -26,6 +27,11 @@ think
 	moveTo <global-coordinate-X> <global-coordinate-Y>
 end
 
+// program 3
+think
+remember enemy_locations is_a list
+enemy_locations = locateenemies
+end
 
 
 Grammar
