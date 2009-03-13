@@ -9,6 +9,10 @@ Add your content here.
 
 = Details =
 
+Loading a java class on-the-fly
+
+http://twit88.com/blog/2007/10/04/java-dynamic-loading-of-class-and-jar-file/
+
 // program 1
 
 think (means)
