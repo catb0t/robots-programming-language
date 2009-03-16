@@ -1,7 +1,5 @@
 #summary Using the Proof of Concept code
 
-Using the Proof of Concept code
-
 Add your content here.
 
 
