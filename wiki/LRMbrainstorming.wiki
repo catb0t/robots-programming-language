@@ -11,6 +11,7 @@ LRM brainstorming
 Loading a Java class on-the-fly (the first link is most relevant)
 
 http://www.exampledepot.com/egs/java.lang/ReloadClass.html
+
 http://twit88.com/blog/2007/10/04/java-dynamic-loading-of-class-and-jar-file/
 
 // program 1
