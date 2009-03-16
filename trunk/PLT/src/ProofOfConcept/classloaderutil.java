@@ -1,3 +1,5 @@
+//package ProofOfConcept;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -12,35 +14,17 @@ public class classloaderutil {
 			Thread.sleep(10000L);
 			System.out.println("Woken up now. Reloading class ...");
 			
-			addFile("/home/bruce/workspace/ROBOT/test/Robot.java");
+			//addFile("/home/bruce/workspace/ROBOT/src/ProofOfConcept/test/RobotReloadableClass.java");
+			reloadClass("/home/bruce/workspace/ROBOT/src/ProofOfConcept");
 		}
 	}
 
-    /**
-     * Add file to CLASSPATH
-     * @param s File name
-     * @throws IOException  IOException
-     */
-    public static void addFile(String s) throws IOException {
-        File f = new File(s);
-        addFile(f);
-    }
-
-    /**
-     * Add file to CLASSPATH
-     * @param f  File object
-     * @throws IOException IOException
-     */
-    public static void addFile(File f) throws IOException {
-        reloadClass(f.toURL());
-    }
-
-    public static void reloadClass(URL u) throws IOException {
+    public static void reloadClass(String str) throws IOException {
 
     	URL[] urls = null;
         try {
             // Convert the file object to a URL
-            File dir = new File(System.getProperty("user.dir") + File.separator + "test" + File.separator);
+            File dir = new File(/*System.getProperty("user.dir")*/str + File.separator + "test" + File.separator);
             URL url = dir.toURL();
             urls = new URL[]{url};
         } catch (Exception e) {
