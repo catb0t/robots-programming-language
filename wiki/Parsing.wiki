@@ -10,3 +10,4 @@ Please post links and information relevant to parsing here.
   * [http://cs.ua.edu/434/spring2005/SetupInstructions.pdf  Directions to use Jlex, CUP and JUnit]
   * [http://www.cs.princeton.edu/~appel/modern/java/JLex/current/manual.html Using Jlex]
   * [http://www2.cs.tum.edu/projects/cup/ Installing CUP]
+  * [http://www.cs.cornell.edu/Courses/cs412/2001sp/resources/skeleton.html Compiling JLex and Cup code]
