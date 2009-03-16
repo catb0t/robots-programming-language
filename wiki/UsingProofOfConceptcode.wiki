@@ -10,11 +10,11 @@ Using the Proof of Concept code
 Try not to use Eclipse to do this.
 
 
-1. Compile and run the two java files which are inside the ProofOfConcept folder.
+1. Compile and run the two java files which are inside the ProofOfConcept folder. You may need to modify the path passed to reloadClass() in main().
 
 2. Make sure that the subfolder called test is not in the class path.
 
-3. Step 1 should display a error with a path saying that RobotReloadableClassImpl was not found. Let this program run.
+3. Step 1 should display a error with a path saying that RobotReloadableClassImpl was not found or something. Let this program run.
 
 4. Compile the file RobotReloadableClassImpl.java with RobotReloadableClass.java in the class path
 
