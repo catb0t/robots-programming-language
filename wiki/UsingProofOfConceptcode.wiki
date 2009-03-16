@@ -7,6 +7,8 @@ Using the Proof of Concept code
 
 = Details =
 
+Try not to use Eclipse to do this.
+
 
 1. Compile and run the two java files which are inside the ProofOfConcept folder.
 
