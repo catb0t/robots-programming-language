@@ -16,3 +16,9 @@
     * Generally *do NOT use "test????? (e.g. testAlgorithm)" as function name except for test case*.
     * Download and run "SampleJUnit" from Source tab.
   # Integral Test
+    * Translator
+        * Sample code 1 <-> Java Code 1
+        * Sample code 2 <-> Java Code 2
+        * Sample code 3 <-> Java Code 3
+    * Integral Function
+        * Running the user program and testify its function
