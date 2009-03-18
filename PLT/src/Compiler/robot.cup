@@ -12,7 +12,7 @@ parser code {:
 		try {
 			robotProgram = "package Think;\n";
 			new parser(new Yylex(new BufferedReader(new FileReader("hello.robot")))).parse();
-			System.out.println("Translated Java code: Inside main\n" + robotProgram);
+			System.out.println("Translated Java code:\n" + robotProgram);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
