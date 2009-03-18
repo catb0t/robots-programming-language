@@ -1,0 +1,61 @@
+package Robot;
+
+import java_cup.runtime.*;
+import java.io.*;
+
+parser code {:
+	public static String robotProgram;
+	public static boolean bDebugFlag;
+
+	public static void main(String args[]) throws Exception {
+		bDebugFlag = false;
+		try {
+			robotProgram = "package Think;\n";
+			new parser(new Yylex(new BufferedReader(new FileReader("hello.robot")))).parse();
+			System.out.println("Translated Java code: Inside main\n" + robotProgram);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+:}
+
+terminal SEMI, PLUS, TIMES, LPAREN, RPAREN;
+terminal THINK, END, SAY, NEWLINE;
+terminal Integer NUMBER;
+terminal String	 ANYTHING;
+
+non terminal 			expr_list, expr_part;
+non terminal Integer 	expr;
+non terminal String		statement, entry, optnl;
+
+precedence left PLUS;
+precedence left TIMES;
+
+entry	::= optnl THINK NEWLINE statement:s END optnl	{: 	parser.robotProgram += "public class Robot {\n";
+															parser.robotProgram += "\tpublic void think() {\n";
+															parser.robotProgram += s;
+															parser.robotProgram += "\t}\n";
+															parser.robotProgram += "}\n";
+															RESULT = parser.robotProgram; :}
+;
+
+optnl 	::= NEWLINE optnl 
+			| /* empty */
+;
+
+statement ::= SAY ANYTHING:a NEWLINE	{: RESULT = "\t\tSystem.out.println(\"" + a + "\");\n"; :}
+;
+
+expr_list ::= expr_list expr_part 
+				| expr_part
+;
+
+expr_part ::= expr:e {: System.out.println(" = "+e+";"); :} 
+				SEMI
+;
+
+expr      ::= NUMBER:n					{: RESULT=n; :}
+        	| expr:l PLUS expr:r		{: RESULT=new Integer(l.intValue() + r.intValue()); :}
+	    	| expr:l TIMES expr:r 		{: RESULT=new Integer(l.intValue() * r.intValue()); :}
+	    	| LPAREN expr:e RPAREN		{: RESULT=e; :}
+;
