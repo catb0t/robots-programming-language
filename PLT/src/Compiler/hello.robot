@@ -1,5 +1,5 @@
 
-	thinking
+	think
 	say    hello world   	
 	end
 	
