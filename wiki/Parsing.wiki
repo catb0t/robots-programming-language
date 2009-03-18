@@ -12,10 +12,11 @@ Please post links and information relevant to parsing here.
   * [http://www2.cs.tum.edu/projects/cup/ Installing CUP]
   * [http://www.cs.cornell.edu/Courses/cs412/2001sp/resources/skeleton.html Compiling JLex and Cup code]
 
+
 = Compiling the compiler =
 
 Make sure that JFlex.jar and cup.jar are in the class path.
-These instructions are specifically for Linux but they should not be very different for other OSs. Let me know if you face issues compiling and running the code.
+These instructions are specifically for Linux but they do not differ too much form what you would do on other OSs. Let me know if you face issues compiling and running the code. Currently, the compiler reads a file called hello.robot from the current directory and sends the synthesized Java code to stdout.
 
 1. $ jflex robot.lex
 
