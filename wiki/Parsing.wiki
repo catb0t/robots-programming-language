@@ -11,3 +11,16 @@ Please post links and information relevant to parsing here.
   * [http://www.cs.princeton.edu/~appel/modern/java/JLex/current/manual.html Using Jlex]
   * [http://www2.cs.tum.edu/projects/cup/ Installing CUP]
   * [http://www.cs.cornell.edu/Courses/cs412/2001sp/resources/skeleton.html Compiling JLex and Cup code]
+
+= Compiling the compiler =
+
+Make sure that JFlex.jar and cup.jar are in the class path.
+These instructions are specifically for Linux but they should not be very different for other OSs. Let me know if you face issues compiling and running the code.
+
+1. $ jflex robot.lex
+
+2. $ java java_cup.Main robot.cup
+
+3. $ javac -d . parser.java sym.java Yylex.java
+
+4. $ java Robot.parser
