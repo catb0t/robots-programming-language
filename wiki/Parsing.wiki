@@ -11,6 +11,7 @@ Please post links and information relevant to parsing here.
   * [http://www.cs.princeton.edu/~appel/modern/java/JLex/current/manual.html Using Jlex]
   * [http://www2.cs.tum.edu/projects/cup/ Installing CUP]
   * [http://www.cs.cornell.edu/Courses/cs412/2001sp/resources/skeleton.html Compiling JLex and Cup code]
+  * [http://jflex.de/manual.html JFlex user manual]
 
 
 = Compiling the compiler =
