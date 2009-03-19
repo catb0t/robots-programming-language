@@ -2,13 +2,12 @@
 
 = Introduction =
 
-Using the Proof of Concept code
+Using the Proof of Concept code. Source Path: svn/trunk/PLT/src/ProofOfConcept/
 
 
 = Details =
 
 Try not to use Eclipse to do this.
-
 
 1. Compile and run the two java files which are inside the ProofOfConcept folder. You may need to modify the path passed to reloadClass() in main().
 
