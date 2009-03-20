@@ -2,10 +2,9 @@ package app;
 
 import java.awt.BorderLayout;
 import java.awt.TextArea;
-import java.awt.event.ActionEvent;
 import java.awt.event.*;
-import java.awt.GridLayout;
 import java.awt.*;
+import java.io.*;
 
 import javax.media.opengl.GLCanvas;
 import javax.swing.BoxLayout;
@@ -92,6 +91,8 @@ public class Main extends JFrame implements ActionListener{
 		
 		editArea = new TextArea("Add your text here",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		start = new JButton("Run!");
+		start.setActionCommand("Run!");		//032009 by joseph
+		start.addActionListener(this);		//032009 by joseph
 		
 		editor.add(editArea);
 		editor.add(start);
@@ -145,7 +146,28 @@ public class Main extends JFrame implements ActionListener{
 	}
 	
 	public void actionPerformed (ActionEvent e) {
-		System.exit(0);
+		//System.exit(0);		//032009 by joseph
+		if ("Run!".equals(e.getActionCommand())) {	//032009 by joseph
+			System.out.println("Start Compliler");
+			try {
+				//Save the contents of TextArea to a text file.
+				System.out.println(editArea.getText());
+				
+				File file=new File("robotcode.txt");
+				PrintWriter out = new PrintWriter(new FileWriter(file));
+				out.print(editArea.getText());
+				out.close();
+
+				//Run compiler with robotcode.txt
+				Runtime.getRuntime().exec("..\\Compiler\\make"); // "C:\\Windows\\Explorer.exe");
+				
+				//Run Application
+				//Runtime.getRuntime().exec(".\\app\\java main");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 	
 	public static void main (String[] args) {
