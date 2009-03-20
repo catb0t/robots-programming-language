@@ -1,7 +1,10 @@
 package app;
 
+import app.Vector3;
+
 import java.io.*;
 import java.util.*;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -93,17 +96,19 @@ public class OBJ_Model {
 				DataInputStream in = new DataInputStream(fstream);
 			    	BufferedReader br = new BufferedReader(new InputStreamReader(in));
 			    String strLine;
-			    while ((strLine = br.readLine() ) != null)   
+			    while ((strLine = br.readLine() ).compareTo("end") != 0)   
 			    {
 			        // Print the content on the console
-			        System.out.println (strLine);
+			        //System.out.println (strLine);
 			        StringTokenizer st = new StringTokenizer(strLine);
 			        //while (st.hasMoreTokens()) {
 			        //    System.out.println(st.nextToken());
 			        String token = st.nextToken();
 		        	if(token.compareTo("v") == 0)
 		        	{
-		        		vertices[vertCounter2] = new Vector3( Float.valueOf(st.nextToken()), Float.valueOf(st.nextToken()), Float.valueOf(st.nextToken()) );
+		        		float x = Float.valueOf(st.nextToken());
+		        		//System.out.println(x);
+		        		vertices[vertCounter2] = new Vector3( x, Float.valueOf(st.nextToken()), Float.valueOf(st.nextToken()) );
 		        		vertCounter2++;
 		        	}
 		        	if(token.compareTo("vt") == 0)
@@ -125,30 +130,33 @@ public class OBJ_Model {
 		        		int vertID = Integer.valueOf(vertToken.nextToken())-1;
 		        		int texID = Integer.valueOf(vertToken.nextToken())-1;
 		        		int normID = Integer.valueOf(vertToken.nextToken())-1;
-		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].y);
-				        gl.glNormal3f(norms[normID].x, norms[normID].y, norms[normID].z);
-				        gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
-				           
+		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].z);
+				        gl.glNormal3f(-norms[normID].y, -norms[normID].z, -norms[normID].x);
+				        gl.glVertex3f(vertices[vertID].y, vertices[vertID].z, vertices[vertID].x);
+				        //gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
+				        
 				        //second vertex
 				        firstVertex = st.nextToken();
 		        		vertToken = new StringTokenizer(firstVertex, "/");
 		        		vertID = Integer.valueOf(vertToken.nextToken())-1;
 		        		texID = Integer.valueOf(vertToken.nextToken())-1;
 		        		normID = Integer.valueOf(vertToken.nextToken())-1;
-		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].y);
-				        gl.glNormal3f(norms[normID].x, norms[normID].y, norms[normID].z);
-	             		gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
-	             		
+		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].z);
+				        gl.glNormal3f(-norms[normID].y, -norms[normID].z, -norms[normID].x);
+	             		gl.glVertex3f(vertices[vertID].y, vertices[vertID].z, vertices[vertID].x);
+				        //gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
+				        
 				        //third vertex
 				        firstVertex = st.nextToken();
 		        		vertToken = new StringTokenizer(firstVertex, "/");
 		        		vertID = Integer.valueOf(vertToken.nextToken())-1;
 		        		texID = Integer.valueOf(vertToken.nextToken())-1;
 		        		normID = Integer.valueOf(vertToken.nextToken())-1;
-		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].y);
-				        gl.glNormal3f(norms[normID].x, norms[normID].y, norms[normID].z);
-	             		gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
-		        		
+		        		gl.glTexCoord2f(texCoords[texID].x, texCoords[texID].z);
+				        gl.glNormal3f(-norms[normID].y, -norms[normID].z, -norms[normID].x);
+	             		gl.glVertex3f(vertices[vertID].y, vertices[vertID].z, vertices[vertID].x);
+				        //gl.glVertex3f(vertices[vertID].x, vertices[vertID].y, vertices[vertID].z);
+				        
 		        	}
 			        	
 			    }
