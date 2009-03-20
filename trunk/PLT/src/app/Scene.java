@@ -7,8 +7,13 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 
-import java.io.IOException;
+import app.Camera;
+import app.OBJ_Model;
+import app.Robot;
+import app.Terrain;
+import app.TextureReader;
 
+import java.io.IOException;
 
 
 
@@ -24,6 +29,7 @@ public class Scene implements GLEventListener {
 	public double DOUBLETROUBLEINMYROOM = 69;
 	private int waterTexture;
 	public Robot player = null;
+	public Robot playerAvatar = null;
 	OBJ_Model model = null;
 	
 	float t = 0;
@@ -34,7 +40,7 @@ public class Scene implements GLEventListener {
 	
 	//light
     private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
-    private float[] lightDiffuse = {1.0f, 1.0f, 1.0f, 1.0f};
+    private float[] lightDiffuse = {0.5f, 0.5f, 0.5f, 1.0f};
     private float[] lightPosition = {-5.0f, -5.0f, -5.0f, 0.0f};
     
     //fog
@@ -49,8 +55,12 @@ public class Scene implements GLEventListener {
 		
 		//set the camera
 		cam.updatePosition(player.forwardDirection.x, player.forwardDirection.y, player.forwardDirection.z);
-		cam.lookAt(player.x, player.y, player.z);
+		cam.lookAt(player.position.x, player.position.y, player.position.z);
 		cam.updateCamera(gl, t++);
+		lightPosition[0] = 0.5f;//lightDirection.x;
+		lightPosition[1] = -0.5f;//lightDirection.y;
+		lightPosition[2] = 0.5f;//lightDirection.z;
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, this.lightPosition, 0);
 
 		
 		//render water
@@ -63,9 +73,10 @@ public class Scene implements GLEventListener {
 		//render robot
 		physics();
 		gl.glPushMatrix();
-		gl.glTranslatef(player.x, player.y, player.z);
+		gl.glTranslatef(player.position.x, player.position.y, player.position.z);
 		//gl.glCallList(robotDL);
-			model.render(gl);
+	//		model.render(gl);
+	//		playerAvatar.renderRobot(gl);
 		gl.glPopMatrix();
 					
 	}
@@ -240,10 +251,14 @@ public class Scene implements GLEventListener {
 
         model = new OBJ_Model(gl, "sphere.obj");
         
+        playerAvatar = new Robot(gl, terrain);
+        player = new Robot(terrain);
+        
 
 
 	}
 
+	
 	//@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
 		final GL gl = drawable.getGL();
