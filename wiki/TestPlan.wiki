@@ -22,3 +22,8 @@
         * Sample code 3 <-> Java Code 3
     * Integral Function
         * Running the user program and evaluate its functionality
+             * Move a robot
+             * Patrol a robot
+             * Find and shoot enemy
+             * Find resources
+             * Destroy all enemies  
