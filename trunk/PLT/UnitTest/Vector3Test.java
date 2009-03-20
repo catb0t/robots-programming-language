@@ -12,9 +12,9 @@ public class Vector3Test {
 
 	@Test
 	public void testAdd() {
-		plt.Vector3 tester = new plt.Vector3(1,2,3);
-		plt.Vector3 result = new plt.Vector3();
-		result=tester.add(new plt.Vector3(3,4,5));
+		app.Vector3 tester = new app.Vector3(1,2,3);
+		app.Vector3 result = new app.Vector3();
+		result=tester.add(new app.Vector3(3,4,5));
 		assertEquals("Result", 4, result.x);
 		assertEquals("Result", 6, result.y);
 		assertEquals("Result", 8, result.z);
@@ -22,8 +22,8 @@ public class Vector3Test {
 	
 	@Test
 	public void testMultiply(){
-		plt.Vector3 tester = new plt.Vector3(1,2,3);
-		plt.Vector3 result = new plt.Vector3();
+		app.Vector3 tester = new app.Vector3(1,2,3);
+		app.Vector3 result = new app.Vector3();
 		result=tester.multiply((float)3.0);
 		assertEquals("Result", 3, result.x);
 		assertEquals("Result", 6, result.y);
@@ -32,7 +32,7 @@ public class Vector3Test {
 	
 	@Test
 	public void testDistance(){
-		plt.Vector3 tester = new plt.Vector3(1,2,3);
+		app.Vector3 tester = new app.Vector3(1,2,3);
 		assertEquals("Result", Math.sqrt(1*1+2*2+3*3), tester.distance());
 	}
 }
