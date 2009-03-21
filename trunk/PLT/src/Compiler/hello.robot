@@ -1,6 +1,12 @@
 
-	think
-	say    hello world   	
-	end
+	mynumber#
+	boolean?
+	dsfenemy!
+fflocation@
+	
+
+think
+say    hello world   	
+end
 	
 	
