@@ -48,14 +48,14 @@ precedence left TIMES;
 
 program			::= optnl declaration optnl entry optnl functions optnl;
 
-declaration		::=	variable_name NEWLINE declaration
+declaration		::=	variable_name NEWLINE optnl declaration
      				| variable_name assign_op value NEWLINE declaration
 					| /* empty */
 ;
 
 variable_name	::=	NUMBER_NAME:nn		{:	parser.globalDeclarations += "\tpublic double " + nn.substring(0, nn.length() - 1) + ";\n";
 											RESULT = nn; :}
-					| LIST_NAME:ln		{:	parser.globalDeclarations += "\tpublic List " + ln.substring(0, ln.length() - 1) + ";\n";
+					| LIST_NAME:ln		{:	parser.globalDeclarations += "\tpublic List " + ln.substring(0, ln.length() - 3) + ";\n";
 											RESULT = ln; :}
 					| BOOLEAN_NAME:bn	{:	parser.globalDeclarations += "\tpublic boolean " + bn.substring(0, bn.length() - 1) + ";\n";
 											RESULT = bn; :}
@@ -94,7 +94,7 @@ assign_op		::=	EQUALS
 					| IS
 ;
 
-entry			::= THINK NEWLINE statement:s END	{: 	parser.robotProgram += "public class Robot {\n" + parser.globalDeclarations + "\n";
+entry			::= THINK NEWLINE optnl statement:s optnl END	{: 	parser.robotProgram += "public class Robot {\n" + parser.globalDeclarations + "\n";
 																	parser.robotProgram += "\tpublic void think() {\n";
 																	parser.robotProgram += s;
 																	parser.robotProgram += "\t}\n";
