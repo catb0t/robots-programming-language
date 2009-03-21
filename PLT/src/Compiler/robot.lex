@@ -12,10 +12,11 @@ import java_cup.runtime.Symbol;
 %char
 %column
 %ignorecase
-%state COMMENTS, SAYSTATE, THINKSTATE
+%state COMMENTS, SAYSTATE
 
 anything=[^ \t\r\f\n].+
 whitespace=[ \t\r\f]
+identifier=[a-z][a-z0-9_]*
 
 %%
 
@@ -44,6 +45,65 @@ whitespace=[ \t\r\f]
 							return new Symbol(sym.NEWLINE); 
 						}
 
+<YYINITIAL>	"="			{	if(parser.bDebugFlag) {
+								System.out.println("matched " + yytext());
+							}
+							return new Symbol(sym.EQUALS);
+						}
+
+<YYINITIAL>	"is"		{	if(parser.bDebugFlag) {
+								System.out.println("matched " + yytext());
+							}
+							return new Symbol(sym.IS);
+						}
+
+<YYINITIAL> {identifier}	{	if(parser.bDebugFlag) {
+									System.out.println("matched " + yytext());
+								}
+								return new Symbol(sym.FUNCTION_NAME, new String(yytext()));
+							}
+
+<YYINITIAL> {identifier}\#	{	if(parser.bDebugFlag) {
+									System.out.println("matched " + yytext());
+								}
+								return new Symbol(sym.NUMBER_NAME, new String(yytext()));
+							}
+
+<YYINITIAL> {identifier}\?	{	if(parser.bDebugFlag) {
+									System.out.println("matched " + yytext());
+								}
+								return new Symbol(sym.BOOLEAN_NAME, new String(yytext()));
+							}
+
+<YYINITIAL> {identifier}\%	{	if(parser.bDebugFlag) {
+									System.out.println("matched " + yytext());
+								}
+								return new Symbol(sym.PERCENTAGE_NAME, new String(yytext()));
+							}
+
+<YYINITIAL> {identifier}\@	{	if(parser.bDebugFlag) {
+									System.out.println("matched " + yytext());
+								}
+								return new Symbol(sym.LOCATION_NAME, new String(yytext()));
+							}
+
+<YYINITIAL> {identifier}\!	{	if(parser.bDebugFlag) {
+									System.out.println("matched " + yytext());
+								}
+								return new Symbol(sym.ENEMY_NAME, new String(yytext()));
+							}
+
+<YYINITIAL> {identifier}\$	{	if(parser.bDebugFlag) {
+									System.out.println("matched " + yytext());
+								}
+								return new Symbol(sym.RESOURCE_NAME, new String(yytext()));
+							}
+
+<YYINITIAL> {identifier}\.\.\.	{	if(parser.bDebugFlag) {
+										System.out.println("matched " + yytext());
+									}
+									return new Symbol(sym.LIST_NAME, new String(yytext()));
+								}
 
 <SAYSTATE>	{whitespace}	{	if(parser.bDebugFlag) {
 									System.out.println("matched whitespace");
