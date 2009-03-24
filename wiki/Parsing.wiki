@@ -12,7 +12,7 @@ Please post links and information relevant to parsing here.
   * [http://www2.cs.tum.edu/projects/cup/ Installing CUP]
   * [http://www.cs.cornell.edu/Courses/cs412/2001sp/resources/skeleton.html Compiling JLex and Cup code]
   * [http://jflex.de/manual.html JFlex user manual]
-
+  * [http://www.rose-hulman.edu/class/csse/csse404/Handouts/CUPLEX.html Installing/Using the CUP/JFlex Plug-In for Eclipse]
 
 = Compiling the compiler =
 
