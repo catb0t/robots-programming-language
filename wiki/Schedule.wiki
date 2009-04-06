@@ -1,6 +1,17 @@
 #Project Schedule
 
+=Major Schedule=
+    * Ten-minute project presentations in class. : *Apr 27 and 29*
+    * Final project report & Demo: *May 11-12*
 
-* Ten-minute project presentations in class. : Apr 27 and 29
-* Final project report & Demo: May 11-12
-.
+=Task List=
+    *Software
+         * Application
+              *
+         * Compiler
+              * Simple version (Hello robot...) : Apr 10
+         * Integration Test and Debugging : Apr 28 ~ May 5
+         * Release Final version : May 6
+    *Documentation
+         * Presentation : Apr 22
+         * Final Project Report : May 6
