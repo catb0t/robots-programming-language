@@ -13,8 +13,13 @@ public class Robot {
 	
 	private int energy;
 	
+	float max_speed=1;
+	
 	public Vector3 forwardDirection = null;
 	public Vector3 position = null;
+	
+	LinkedList<Enemy> enemy_list;
+	LinkedList<Resource> resource_list;
 	
 	Vector3 direction = null;
 	Terrain terrain;
@@ -72,7 +77,7 @@ public class Robot {
 	
 	private int t  = 0;
 	
-	/* the phsyics function handles all the physics dealing with the robot, for example, when 
+	/* the physics function handles all the physics dealing with the robot, for example, when 
 	 * 
 	 */
 	public void setY(int Y)
@@ -101,9 +106,86 @@ public class Robot {
 	}
 	
 	
+	public void say (String s)
+	{
+		System.out.println(s);
+	}
 	
 	
+	public void move_to (Vector3 location, float speed)
+	{
+		Vector3 direction = new Vector3(location.x - position.x, location.y - position.y, location.z - position.z);
+		float step = speed*max_speed;
+		
+		position = new Vector3(position.x+ step*direction.x, position.y+ step*direction.y, position.z+ step*direction.z);
+	}
 	
+	public void shoot ()
+	{
+		
+	}
 	
+	public void ping ()
+	{
+		energy = energy - 5;
+	}
+	
+	public double distance (Vector3 origin, Vector3 goal)
+	{
+		return Math.sqrt(Math.pow(origin.x - goal.x, 2)+Math.pow(origin.y - goal.y, 2)+Math.pow(origin.z - goal.z, 2));
+	}
+	
+	public LinkedList<Enemy> get_enemies ()
+	{
+		return enemy_list;
+	}
+	
+	public LinkedList<Resource> get_ressources ()
+	{
+		return resource_list;
+	}
+	
+	public void get_environment_height ()
+	{
+		
+	}
+	
+	public void sort_enemy_distance ()
+	{
+		
+	}
+	
+	public void revert_Enemy ()
+	{
+		LinkedList<Enemy> sol = new LinkedList<Enemy>();
+		for (int i=0; i<enemy_list.size(); i++)
+		{
+			sol.add(enemy_list.removeLast());
+		}
+	}
+	
+	public void revert_Resource ()
+	{
+		LinkedList<Resource> sol = new LinkedList<Resource>();
+		for (int i=0; i<resource_list.size(); i++)
+		{
+			sol.add(resource_list.removeLast());
+		}
+	}
+	
+	public void modify_list ()
+	{
+		
+	}
+	
+	public double get_random_num ()
+	{
+		return Math.random();
+	}
+	
+	public boolean flip_coin (double s)
+	{
+		return (Math.random()>s);
+	}
 
 }
