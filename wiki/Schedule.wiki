@@ -7,11 +7,10 @@
 =Task List=
     * Software
          * Application
-              * GUI
-              * standard output simulation
-              * Robot generic class
+              * GUI : load file + save file + run
+              * standard output simulation : 
               * include automatic class loader
-              * 3D viewer
+              * 3D viewer : last thing to do
          * Compiler
               * Simple version (Hello robot...) : Apr 10
               * translation from token to java code
@@ -26,6 +25,10 @@
              * Initialize : Apr 28
              * Review : May 4
              * Release : *May 6*
+
+=Thoughts=
+First, test without automatic class loader and without 3D viewer.
+Use standard output
 
 = Weekly Meeting =
     * *Monday and Wednesday 5:30 ~ 7:00* @ CS Lounge (after class every week)
