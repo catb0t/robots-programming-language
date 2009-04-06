@@ -7,9 +7,12 @@
 =Task List=
     * Software
          * Application
-              *
+              * GUI
+              * Robot generic class
+              * include automatic class loader
          * Compiler
               * Simple version (Hello robot...) : Apr 10
+              * translation from token to java code
          * Integration Test and Debugging : Apr 28 ~ May 5
          * Release Final version : *May 6*
     * Documentation
