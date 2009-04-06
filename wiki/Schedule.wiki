@@ -23,5 +23,5 @@
              * Release : *May 6*
 
 = Weekly Meeting =
-    * Monday and Wednesday 5:30 ~ 7:00 @ CS Lounge (after class every week)
-    * Friday 4:30 ~ 6:00 @ CS Lounge
+    * *Monday and Wednesday 5:30 ~ 7:00* @ CS Lounge (after class every week)
+    * *Friday 4:30 ~ 6:00* @ CS Lounge
