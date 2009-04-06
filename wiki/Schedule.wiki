@@ -1,4 +1,4 @@
-#Project Schedule.
+##summary Project Schedule.
 
 =Major Schedule=
     * Ten-minute project presentations in class. : *Apr 27 and 29*
