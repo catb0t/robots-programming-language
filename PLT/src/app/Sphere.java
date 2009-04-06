@@ -1,4 +1,6 @@
-package plt;
+package app;
+
+
 
 public class Sphere {
 
@@ -10,9 +12,9 @@ public class Sphere {
 	    const float TWOPI  = 6.28318530717958f;
 	    const float PIDIV2 = 1.57079632679489f;
 
-	    float theta1 = 0.0;
-	    float theta2 = 0.0;
-	    float theta3 = 0.0;
+	    float theta1 = 0.0f;
+	    float theta2 = 0.0f;
+	    float theta3 = 0.0f;
 
 	    float ex = 0.0f;
 	    float ey = 0.0f;
