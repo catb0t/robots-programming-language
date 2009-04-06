@@ -5,13 +5,13 @@
     * Final project report & Demo: *May 11-12*
 
 =Task List=
-    *Software
+    * Software
          * Application
               *
          * Compiler
               * Simple version (Hello robot...) : Apr 10
          * Integration Test and Debugging : Apr 28 ~ May 5
          * Release Final version : May 6
-    *Documentation
+    * Documentation
          * Presentation : Apr 22
          * Final Project Report : May 6
