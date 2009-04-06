@@ -8,8 +8,10 @@
     * Software
          * Application
               * GUI
+              * standard output simulation
               * Robot generic class
               * include automatic class loader
+              * 3D viewer
          * Compiler
               * Simple version (Hello robot...) : Apr 10
               * translation from token to java code
