@@ -8,6 +8,7 @@
     * Software
          * Application
               * GUI : load file + save file + run : Aurelien for Apr 10
+              * standard ROBOT library
               * standard output simulation : 
               * include automatic class loader
               * 3D viewer : last thing to do
