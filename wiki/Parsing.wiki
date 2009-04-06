@@ -25,7 +25,11 @@ These instructions are specifically for Linux but they do not differ too much fo
 
 1. $ java java_cup.Main robot.cup
 
-2. $ jflex robot.lex
+2. $ jflex robot.lex 
+
+OR 
+
+java -cp JLex.jar JLex.Main robot.lex
 
 3. $ javac -d . parser.java sym.java Yylex.java
 
