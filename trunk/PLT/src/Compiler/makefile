@@ -8,8 +8,12 @@ Yylex.java	:	robot.lex
 parser.java sym.java	:	robot.cup
 	java -classpath "../../lib/cup-0.10k.jar" java_cup.Main -expect 90 robot.cup
 	
-test:
+hello:
 	java -classpath ".:../../lib/cup-0.10k.jar" Robot.parser hello.robot hello.java
+
+hello2:
+	java -classpath ".:../../lib/cup-0.10k.jar" Robot.parser hello2.robot hello2.java
+
 	
 clean:
-	rm ./Robot/parser.class ./Robot/sym.class ./Robot/Yylex.class ./Robot/CUP\\\$parse\\\\$actions.class Yylex.java parser.java sym.java
+	rm ./Robot/parser.class ./Robot/sym.class ./Robot/Yylex.class ./Robot/CUP\$$parser\$$actions.class Yylex.java parser.java sym.java
