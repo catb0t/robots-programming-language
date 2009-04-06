@@ -7,7 +7,7 @@
 =Task List=
     * Software
          * Application
-              * GUI : load file + save file + run
+              * GUI : load file + save file + run : Aurelien for Apr 10
               * standard output simulation : 
               * include automatic class loader
               * 3D viewer : last thing to do
