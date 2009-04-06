@@ -6,4 +6,4 @@ Yylex.java	:	robot.lex
 	jflex robot.lex
 
 parser.java sym.java	:	robot.cup
-	java java_cup.Main -expect 3 robot.cup
+	java java_cup.Main -expect 90 robot.cup

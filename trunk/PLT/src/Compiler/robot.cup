@@ -21,55 +21,72 @@ parser code {:
 		try {
 			robotProgram = "package Think;\n";
 			globalDeclarations = "";
-			new parser(new Yylex(new BufferedReader(new FileReader("hello.robot")))).parse();
-			System.out.println("Translated Java code:\n" + robotProgram);
+			new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).parse();
+			
+			// dump generated java code to files
+			FileWriter fwTranslatedCode = new FileWriter(args[1], false);
+			BufferedWriter bwTranslatedCode = new BufferedWriter(new FileWriter(args[1], false));
+			robotProgram.replaceAll("\n", System.getProperty("line.separator"));
+			bwTranslatedCode.write(robotProgram);
+			bwTranslatedCode.close();
+
+			//System.out.println("Translated Java code:\n" + robotProgram);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 	}
 :}
 
-terminal 			SEMI, PLUS, TIMES, LPAREN, RPAREN;
+/* Terminals (tokens returned by the scanner) */
+terminal 			SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
 terminal 			THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
-terminal			GIVES, NOTHING, MEANS;
+terminal			GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal Integer	NUMBER;
+terminal Double		NUMBER_EXPRESSION;
 terminal String	 	ANYTHING;
-terminal String	 	NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME; 
+terminal String	 	NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME;
 terminal String	 	ENEMY_NAME, RESOURCE_NAME, LIST_NAME, FUNCTION_NAME;
 
+/* Non-terminals */
 non terminal 			expr_list, expr_part;
 non terminal Integer 	expr;
 non terminal String		statement, entry, variable_name, program, return_value;
-non terminal			optnl, declaration, assign_op, value;
+non terminal			optnl, assign_op, value;
 non terminal String		function_name, function, functions, argument;
+non terminal String		boolean_final, base_value, declaration, boolean_expression;
+non terminal String		arithmetic_expression, arithmetic_operator;
 
-precedence left PLUS;
-precedence left TIMES;
+/* Precedences */
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE;
 
+precedence left OR;
+precedence left AND;
+precedence right NOT;
+
+
+/* The Grammar */
 program			::= optnl declaration optnl entry optnl functions optnl;
 
-declaration		::=	variable_name NEWLINE optnl declaration
-     				| variable_name assign_op value NEWLINE declaration
-					| /* empty */
+declaration		::=	variable_name:vn NEWLINE optnl declaration:dcl					{: RESULT = vn + ";\n" + dcl; parser.globalDeclarations = RESULT; :}
+     				| variable_name:vn assign_op value:val NEWLINE declaration:dcl	{: RESULT = vn + " = " + val + ";\n" + dcl; parser.globalDeclarations = RESULT; :}
+					| /* empty */													{: RESULT = ""; parser.globalDeclarations = RESULT; :}
 ;
 
-variable_name	::=	NUMBER_NAME:nn		{:	parser.globalDeclarations += "\tpublic double " + nn.substring(0, nn.length() - 1) + ";\n";
-											RESULT = nn; :}
-					| LIST_NAME:ln		{:	parser.globalDeclarations += "\tpublic List " + ln.substring(0, ln.length() - 3) + ";\n";
-											RESULT = ln; :}
-					| BOOLEAN_NAME:bn	{:	parser.globalDeclarations += "\tpublic boolean " + bn.substring(0, bn.length() - 1) + ";\n";
-											RESULT = bn; :}
-					| PERCENTAGE_NAME:pn	{:	parser.globalDeclarations += "\tpublic Percentage " + pn.substring(0, pn.length() - 1) + ";\n";
-												RESULT = pn; :}
-					| LOCATION_NAME:ln	{:	parser.globalDeclarations += "\tpublic Location " + ln.substring(0, ln.length() - 1) + ";\n";
-											RESULT = ln; :}
-					| ENEMY_NAME:en		{:	parser.globalDeclarations += "\tpublic Enemy " + en.substring(0, en.length() - 1) + ";\n";
-											RESULT = en; :}
-					| RESOURCE_NAME:rn	{:	parser.globalDeclarations += "\tpublic boolean " + rn.substring(0, rn.length() - 1) + ";\n";
-											RESULT = rn; :}
-;
-
-value			::= variable_name
+variable_name	::=	NUMBER_NAME:nn		{:	RESULT = "\tpublic double " + nn.substring(0, nn.length() - 1);
+											/* RESULT = nn; */ :}
+					| LIST_NAME:ln		{:	RESULT = "\tpublic List " + ln.substring(0, ln.length() - 3);
+											/* RESULT = ln; */ :}
+					| BOOLEAN_NAME:bn	{:	RESULT = "\tpublic boolean " + bn.substring(0, bn.length() - 1);
+											/* RESULT = bn; */ :}
+					| PERCENTAGE_NAME:pn	{:	RESULT = "\tpublic Percentage " + pn.substring(0, pn.length() - 1);
+												/* RESULT = pn; */ :}
+					| LOCATION_NAME:ln	{:	RESULT = "\tpublic Location " + ln.substring(0, ln.length() - 1);
+											/* RESULT = ln; */ :}
+					| ENEMY_NAME:en		{:	RESULT = "\tpublic Enemy " + en.substring(0, en.length() - 1);
+											/* RESULT = en; */ :}
+					| RESOURCE_NAME:rn	{:	RESULT = "\tpublic boolean " + rn.substring(0, rn.length() - 1);
+											/* RESULT = rn; */ :}
 ;
 
 function_name 	::=	FUNCTION_NAME
@@ -90,7 +107,40 @@ argument		::=	value argument
 					| /* empty */
 ;
 
-assign_op		::=	EQUALS 
+value			::= variable_name:vn	{:	RESULT = vn; :}
+					| base_value:bv		{:	RESULT = bv; :}
+;
+
+base_value		::=	boolean_final:bf		{:	RESULT = bf;			:}
+					| NUMBER_EXPRESSION:ne	{:	RESULT = ne.toString();	:}
+					| boolean_expression:be	{:	RESULT = be;			:}
+					| arithmetic_expression
+;
+
+arithmetic_expression	::=	arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2	{:	RESULT = ae1 + ao + ae2;					:}
+							| NUMBER_NAME:nn 															{:	RESULT = nn.substring(0, nn.length() - 1);	:}
+							| LPAREN arithmetic_expression:ae RPAREN									{:	RESULT = "( " + ae + " )";					:}
+;
+
+arithmetic_operator	::=	PLUS		{: RESULT = "+"; :}
+						| MINUS		{: RESULT = "-"; :}
+						| TIMES		{: RESULT = "*"; :}
+						| DIVIDE	{: RESULT = "/"; :}
+;
+
+boolean_expression	::=	boolean_expression:be1 OR boolean_expression:be2	{:	RESULT = be1 + " || " + be2;				:}
+						| boolean_expression:be1 AND boolean_expression:be2	{:	RESULT = be1 + " && " + be2;				:}
+						| NOT boolean_expression:be							{:	RESULT = "!" + be;							:}
+						| LPAREN boolean_expression:be RPAREN				{:	RESULT = "( " + be + " )";					:}
+						| BOOLEAN_NAME:bn									{:	RESULT = bn.substring(0, bn.length() - 1);	:}
+						| boolean_final:bf									{:	RESULT = bf;								:}
+;
+
+boolean_final	::=	TRUE		{:	RESULT = "true";	:}
+					| FALSE		{:	RESULT = "false";	:}
+;
+
+assign_op		::=	EQUALS
 					| IS
 ;
 
