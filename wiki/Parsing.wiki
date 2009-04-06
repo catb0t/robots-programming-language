@@ -29,7 +29,7 @@ These instructions are specifically for Linux but they do not differ too much fo
 
 OR 
 
-java -cp JLex.jar JLex.Main robot.lex
+java -cp JFLex.jar JFLex.Main robot.lex
 
 3. $ javac -d . parser.java sym.java Yylex.java
 
