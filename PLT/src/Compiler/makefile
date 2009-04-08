@@ -2,8 +2,8 @@
 ./Robot/parser.class ./Robot/sym.class ./Robot/Yylex.class ./Robot/CUP$parse$actions.class	:	parser.java sym.java Yylex.java parser.java
 	javac -classpath "../../lib/cup-0.10k.jar" -d . parser.java sym.java Yylex.java
 
-Yylex.java	:	robot.lex
-	java -classpath "../../lib/JFlex-1.4.1.jar" JFlex.Main robot.lex
+Yylex.java	:	robot.jflex
+	java -classpath "../../lib/JFlex-1.4.1.jar" JFlex.Main robot.jflex
 
 parser.java sym.java	:	robot.cup
 	java -classpath "../../lib/cup-0.10k.jar" java_cup.Main -dump_states -dump_grammar -expect 4 robot.cup > grammar 2>&1
