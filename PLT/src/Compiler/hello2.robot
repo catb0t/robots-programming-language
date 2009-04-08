@@ -1,6 +1,10 @@
 
+mybool? is TRUE
 mynumber# = 546.45
-think
+
+	yourbool? = mybool?
+
+Think
 
 say    hello world   	
 end
