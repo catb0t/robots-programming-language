@@ -154,6 +154,7 @@ public class Robot {
 	public void sort_enemy_distance ()
 	{
 		//quicksort
+		Percentage p = new Percentage(3);
 	}
 	
 	public void revert_Enemy ()
