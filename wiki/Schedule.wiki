@@ -9,12 +9,15 @@
          * Application
               * GUI : load file + save file + run : Aurelien for Apr 10
               * standard ROBOT library
+              * new classes : Enemy, Resources, Percentage and their methods
               * standard output simulation : 
               * include automatic class loader
               * 3D viewer : last thing to do
          * Compiler
               * Simple version (Hello robot...) : Apr 10
+              * map from ROBOT classes to Java classes
               * translation from token to java code
+              * Intermediate representation design
          * Integration Test and Debugging : Apr 28 ~ May 5
          * Release Final version : *May 6*
     * Documentation
