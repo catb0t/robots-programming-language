@@ -34,6 +34,8 @@
   * First, test without automatic class loader and without 3D viewer.
   * Use standard output.
   * IR design
+  * overload each operator by a function. ex : "+" -> "Func.add(param1,param2)" to avoid type checking
+  * keep track of the line in Lex program : "Func.add(param1,param2,line number)" to give a good error feedback to the user
 
 = Weekly Meeting =
     * *Monday and Wednesday 5:30 ~ 6:30* @ CS Lounge (after class every week)
