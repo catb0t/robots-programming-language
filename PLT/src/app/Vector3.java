@@ -42,9 +42,12 @@ public class Vector3 {
 	public void normalize()
 	{
 		float d = (float)Math.sqrt(x*x + y*y + z*z);
-		x = x/d;
-		y = y/d;
-		z = z/d;	
+		if (d!=0)
+		{
+			x = x/d;
+			y = y/d;
+			z = z/d;
+		}
 	}
 	
 	public float distance()
