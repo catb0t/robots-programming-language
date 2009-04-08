@@ -4,83 +4,83 @@ import java_cup.runtime.*;
 import java.io.*;
 import java.util.*;
 
-/* value	::= variable_name
-			| base_value
-			| boolean_expression
-			| arithmetic_expression
-			| constant_expression of variable_name
-			| my constant_expression
-			| constant_value */
+/* value   ::= variable_name
+         | base_value
+         | boolean_expression
+         | arithmetic_expression
+         | constant_expression of variable_name
+         | my constant_expression
+         | constant_value */
 
 parser code {:
-	public static String  robotProgram;
-	public static String  globalDeclarations;
-	public static boolean bDebugFlag;
-	/* stores a basic symbol table */
-	public static HashMap<String, String> variableMap;
-	
-	public static String temp;
-	
-	public static boolean isNameDeclared(String name) {
-		return variableMap.containsKey(name);
-	}
-	
-	public static boolean isDeclared(String name, String type) {
-		String str = (String) variableMap.get(name);
+   public static String  robotProgram;
+   public static String  globalDeclarations;
+   public static boolean bDebugFlag;
+   /* stores a basic symbol table */
+   public static HashMap<String, String> variableMap;
+   
+   public static String temp;
+   
+   public static boolean isNameDeclared(String name) {
+      return variableMap.containsKey(name);
+   }
+   
+   public static boolean isDeclared(String name, String type) {
+      String str = (String) variableMap.get(name);
 
-		if(str != null && str.equals(type))
-			return true;
-		return false;
-	}
-	
-	public static boolean declareVariable(String name, String type) {
-		if(!isDeclared(name, type)) {
-			variableMap.put(name, type);
-			return true;
-		}
-		return false;
-	}
+      if (str != null && str.equals(type))
+         return true;
+      return false;
+   }
+   
+   public static boolean declareVariable(String name, String type) {
+      if (!isDeclared(name, type)) {
+         variableMap.put(name, type);
+         return true;
+      }
+      return false;
+   }
 
-	public static void main(String args[]) throws Exception {
-		bDebugFlag = true;
-		try {
-			robotProgram = "package Think;\n";
-			globalDeclarations = "";
-			variableMap = new HashMap<String, String>();
-			new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).parse();
-			
-			// dump generated java code to files
-			FileWriter fwTranslatedCode = new FileWriter(args[1], false);
-			BufferedWriter bwTranslatedCode = new BufferedWriter(new FileWriter(args[1], false));
-			robotProgram.replaceAll("\n", System.getProperty("line.separator"));
-			bwTranslatedCode.write(robotProgram);
-			bwTranslatedCode.close();
+   public static void main(String args[]) throws Exception {
+      bDebugFlag = true;
+      try {
+         robotProgram = "package Think;\n";
+         globalDeclarations = "";
+         variableMap = new HashMap<String, String>();
+         new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).parse();
+         
+         // dump generated java code to files
+         FileWriter fwTranslatedCode = new FileWriter(args[1], false);
+         BufferedWriter bwTranslatedCode = new BufferedWriter(new FileWriter(args[1], false));
+         robotProgram.replaceAll("\n", System.getProperty("line.separator"));
+         bwTranslatedCode.write(robotProgram);
+         bwTranslatedCode.close();
 
-			//System.out.println("Translated Java code:\n" + robotProgram);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
+         //System.out.println("Translated Java code:\n" + robotProgram);
+      } catch (Exception e) {
+         System.out.println(e.getMessage());
+      }
+   }
 :}
 
 /* Terminals (tokens returned by the scanner) */
-terminal 			SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
-terminal 			THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
-terminal			GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
-terminal Integer	NUMBER;
-terminal Double		NUMBER_EXPRESSION;
-terminal String	 	ANYTHING;
-terminal String	 	NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME;
-terminal String	 	ENEMY_NAME, RESOURCE_NAME, LIST_NAME, FUNCTION_NAME;
+terminal         SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
+terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
+terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
+terminal Integer NUMBER;
+terminal Double  NUMBER_EXPRESSION;
+terminal String  ANYTHING;
+terminal String  NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME;
+terminal String  ENEMY_NAME, RESOURCE_NAME, LIST_NAME, FUNCTION_NAME;
 
 /* Non-terminals */
-non terminal 			expr_list, expr_part;
-non terminal Integer 	expr;
-non terminal String		statement, entry, variable_name, program, return_value;
-non terminal			optnl, assign_op, value;
-non terminal String		function_name, function, functions, argument;
-non terminal String		boolean_final, base_value, declaration, boolean_expression;
-non terminal String		arithmetic_expression, arithmetic_operator;
+non terminal         expr_list, expr_part;
+non terminal Integer expr;
+non terminal String  statement, entry, variable_name, program, return_value;
+non terminal         optnl, assign_op, value;
+non terminal String  function_name, function, functions, argument;
+non terminal String  boolean_final, base_value, declaration, boolean_expression;
+non terminal String  arithmetic_expression, arithmetic_operator;
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -92,147 +92,216 @@ precedence right NOT;
 
 
 /* The Grammar */
-program			::= optnl declaration optnl entry optnl functions optnl;
+program         ::= optnl declaration
+                    optnl entry
+                    optnl functions
+                    optnl;
 
-declaration		::=	variable_name:vn NEWLINE optnl declaration:dcl					{: RESULT = vn + ";\n" + dcl; parser.globalDeclarations = RESULT; :}
-     				| variable_name:vn assign_op value:val NEWLINE optnl declaration:dcl	{: RESULT = vn + " = " + val + ";\n" + dcl; parser.globalDeclarations = RESULT; :}
-					| /* empty */													{: RESULT = ""; parser.globalDeclarations = RESULT; :}
+declaration     ::= variable_name:vn NEWLINE 
+                    optnl declaration:dcl
+                    {:
+                       RESULT = vn + ";\n" + dcl;
+                       parser.globalDeclarations = RESULT;
+                    :}
+                 |
+                    variable_name:vn assign_op value:val NEWLINE 
+                    optnl declaration:dcl
+                    {: 
+                       RESULT = vn + " = " + val + ";\n" + dcl;
+                       parser.globalDeclarations = RESULT;
+                    :}
+                 |
+                    /* empty */
+                    {: 
+                       RESULT = "";
+                       parser.globalDeclarations = RESULT;
+                    :}
 ;
 
-variable_name	::=	NUMBER_NAME:nn		{:	parser.temp = nn.substring(0, nn.length() - 1);
-											if(!parser.isDeclared(parser.temp, "#")) {
-												RESULT = "\tpublic double " + parser.temp;
-												parser.declareVariable(parser.temp, "#");
-											} else {
-												RESULT = parser.temp;
-											} :}
+variable_name   ::= NUMBER_NAME:nn
+                    {:
+                       parser.temp = nn.substring(0, nn.length() - 1);
+                       if (!parser.isDeclared(parser.temp, "#")) {
+                          RESULT = "\tpublic double " + parser.temp;
+                          parser.declareVariable(parser.temp, "#");
+                       } else {
+                          RESULT = parser.temp;
+                       }
+                    :}
+                 |
+                    LIST_NAME:ln
+                    {:
+                       parser.temp = ln.substring(0, ln.length() - 3);
+                       if (!parser.isDeclared(parser.temp, "#")) {
+                          RESULT = "\tpublic List " + parser.temp;
+                          parser.declareVariable(parser.temp, "...");
+                       } else {
+                          RESULT = parser.temp;
+                       }
+                    :}
+                |
+                    BOOLEAN_NAME:bn
+                    {:
+                       parser.temp = bn.substring(0, bn.length() - 1);
+                       if (!parser.isDeclared(parser.temp, "?")) {
+                          RESULT = "\tpublic boolean " + parser.temp;
+                          parser.declareVariable(parser.temp, "?");
+                       } else {
+                          RESULT = parser.temp;
+                       }
+                    :}
+                |
+                    PERCENTAGE_NAME:pn
+                    {:
+                       parser.temp = pn.substring(0, pn.length() - 1);
+                       if (!parser.isDeclared(parser.temp, "#")) {
+                          RESULT = "\tpublic Percentage " + parser.temp;
+                          parser.declareVariable(parser.temp, "%");
+                       } else {
+                          RESULT = parser.temp;
+                       }
+                    :}
 
-					| LIST_NAME:ln		{:	parser.temp = ln.substring(0, ln.length() - 3);
-											if(!parser.isDeclared(parser.temp, "#")) {
-												RESULT = "\tpublic List " + parser.temp;
-												parser.declareVariable(parser.temp, "...");
-											} else {
-												RESULT = parser.temp;
-											} :}
-
-					| BOOLEAN_NAME:bn	{:	parser.temp = bn.substring(0, bn.length() - 1);
-											if(!parser.isDeclared(parser.temp, "?")) {
-												RESULT = "\tpublic boolean " + parser.temp;
-												parser.declareVariable(parser.temp, "?");
-											} else {
-												RESULT = parser.temp;
-											} :}
-
-					| PERCENTAGE_NAME:pn	{:	parser.temp = pn.substring(0, pn.length() - 1);
-												if(!parser.isDeclared(parser.temp, "#")) {
-													RESULT = "\tpublic Percentage " + parser.temp;
-													parser.declareVariable(parser.temp, "%");
-												} else {
-													RESULT = parser.temp;
-												} :}
-
-					| LOCATION_NAME:ln	{:	parser.temp = ln.substring(0, ln.length() - 1);
-											if(!parser.isDeclared(parser.temp, "@")) {
-												RESULT = "\tpublic Location " + parser.temp;
-												parser.declareVariable(parser.temp, "@");
-											} else {
-												RESULT = parser.temp;
-											} :}
-
-					| ENEMY_NAME:en		{:	parser.temp = en.substring(0, en.length() - 1);
-											if(!parser.isDeclared(parser.temp, "!")) {
-												RESULT = "\tpublic Enemy " + parser.temp;
-												parser.declareVariable(parser.temp, "!");
-											} else {
-												RESULT = parser.temp;
-											} :}
-
-					| RESOURCE_NAME:rn	{:	parser.temp = rn.substring(0, rn.length() - 1);
-											if(!parser.isDeclared(parser.temp, "$")) {
-												RESULT = "\tpublic Resource " + parser.temp;
-												parser.declareVariable(parser.temp, "$");
-											} else {
-												RESULT = parser.temp;
-											} :}
+                |
+                    LOCATION_NAME:ln
+                    {:
+                       parser.temp = ln.substring(0, ln.length() - 1);
+                       if (!parser.isDeclared(parser.temp, "@")) {
+                          RESULT = "\tpublic Location " + parser.temp;
+                          parser.declareVariable(parser.temp, "@");
+                       } else {
+                          RESULT = parser.temp;
+                       }
+                    :}
+                |
+                    ENEMY_NAME:en
+                    {:
+                       parser.temp = en.substring(0, en.length() - 1);
+                       if (!parser.isDeclared(parser.temp, "!")) {
+                          RESULT = "\tpublic Enemy " + parser.temp;
+                          parser.declareVariable(parser.temp, "!");
+                       } else {
+                          RESULT = parser.temp;
+                       }
+                    :}
+                |
+                    RESOURCE_NAME:rn
+                    {:
+                       parser.temp = rn.substring(0, rn.length() - 1);
+                       if (!parser.isDeclared(parser.temp, "$")) {
+                          RESULT = "\tpublic Resource " + parser.temp;
+                          parser.declareVariable(parser.temp, "$");
+                       } else {
+                          RESULT = parser.temp;
+                       }
+                    :}
 ;
 
-function_name 	::=	FUNCTION_NAME
+function_name   ::=   FUNCTION_NAME
 ;
 
-functions		::=	function NEWLINE functions
-					| /* empty */
+functions       ::=   function NEWLINE
+                      functions
+                |
+                      /* empty */
 ;
 
-function		::=	INSTRUCTION function_name WITH argument MEANS NEWLINE statement GIVES return_value
+function        ::=   INSTRUCTION function_name WITH argument MEANS NEWLINE
+                      statement
+                      GIVES return_value
 ;
 
-return_value	::= value
-					| NOTHING
+return_value    ::=   value
+                |
+                      NOTHING
 ;
 
-argument		::=	value argument
-					| /* empty */
+argument        ::=   value argument
+                |
+                      /* empty */
 ;
 
-value			::= variable_name:vn	{:	RESULT = vn; :}
-					| base_value:bv		{:	RESULT = bv; :}
+value           ::=   variable_name:vn       {:   RESULT = vn; :}
+                |
+                      base_value:bv          {:   RESULT = bv; :}
 ;
 
-base_value		::=	NUMBER_EXPRESSION:ne	{:	RESULT = ne.toString();	:}
-					| boolean_expression:be	{:	RESULT = be;			:}
-					| arithmetic_expression
+base_value      ::=   NUMBER_EXPRESSION:ne   {:   RESULT = ne.toString();   :}
+                |
+                      boolean_expression:be  {:   RESULT = be;              :}
+                |
+                      arithmetic_expression
 ;
 
-arithmetic_expression	::=	arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2	{:	RESULT = ae1 + ao + ae2;					:}
-							| LPAREN arithmetic_expression:ae RPAREN									{:	RESULT = "( " + ae + " )";					:}
+arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2
+                              {:
+                                 RESULT = ae1 + ao + ae2;
+                              :}
+                        |
+                              LPAREN arithmetic_expression:ae RPAREN
+                              {:
+                                 RESULT = "( " + ae + " )";
+                              :}
 ;
 
-arithmetic_operator	::=	PLUS		{: RESULT = "+"; :}
-						| MINUS		{: RESULT = "-"; :}
-						| TIMES		{: RESULT = "*"; :}
-						| DIVIDE	{: RESULT = "/"; :}
+arithmetic_operator     ::=   PLUS     {: RESULT = "+"; :}
+                        |     MINUS    {: RESULT = "-"; :}
+                        |     TIMES    {: RESULT = "*"; :}
+                        |     DIVIDE   {: RESULT = "/"; :}
 ;
 
-boolean_expression	::=	boolean_expression:be1 OR boolean_expression:be2	{:	RESULT = be1 + " || " + be2;				:}
-						| boolean_expression:be1 AND boolean_expression:be2	{:	RESULT = be1 + " && " + be2;				:}
-						| NOT boolean_expression:be							{:	RESULT = "!" + be;							:}
-						| LPAREN boolean_expression:be RPAREN				{:	RESULT = "( " + be + " )";					:}
-						| boolean_final:bf									{:	RESULT = bf;								:}
+boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2   {:   RESULT = be1 + " || " + be2; :}
+                        |     boolean_expression:be1 AND boolean_expression:be2  {:   RESULT = be1 + " && " + be2; :}
+                        |     NOT boolean_expression:be                          {:   RESULT = "!" + be;           :}
+                        |     LPAREN boolean_expression:be RPAREN                {:   RESULT = "( " + be + " )";   :}
+                        |     boolean_final:bf                                   {:   RESULT = bf;                 :}
 ;
 
-boolean_final	::=	TRUE		{:	RESULT = "true";	:}
-					| FALSE		{:	RESULT = "false";	:}
+boolean_final           ::=   TRUE  {:   RESULT = "true";   :}
+                        |     FALSE {:   RESULT = "false";  :}
 ;
 
-assign_op		::=	EQUALS
-					| IS
+assign_op               ::=   EQUALS
+                        |     IS
 ;
 
-entry			::= THINK NEWLINE optnl statement:s optnl END	{: 	parser.robotProgram += "public class Robot {\n" + parser.globalDeclarations + "\n";
-																	parser.robotProgram += "\tpublic void think() {\n";
-																	parser.robotProgram += s;
-																	parser.robotProgram += "\t}\n";
-																	parser.robotProgram += "}\n";
-																	RESULT = parser.robotProgram; :}
+entry                   ::=   THINK NEWLINE
+                              optnl statement:s
+                              optnl END
+                              {:
+                                 parser.robotProgram += "public class Robot {\n" + parser.globalDeclarations + "\n";
+                                 parser.robotProgram += "\tpublic void think() {\n";
+                                 parser.robotProgram += s;
+                                 parser.robotProgram += "\t}\n";
+                                 parser.robotProgram += "}\n";
+                                 RESULT = parser.robotProgram;
+                              :}
 ;
 
-optnl 			::= optnl NEWLINE
-					| /* empty */
+optnl                   ::=   optnl NEWLINE
+                        |
+                              /* empty */
 ;
 
-statement 		::= SAY ANYTHING:a NEWLINE	{: RESULT = "\t\tSystem.out.println(\"" + a + "\");\n"; :}
+statement               ::=   SAY ANYTHING:a NEWLINE
+                              {:
+                                 RESULT = "\t\tSystem.out.println(\"" + a + "\");\n";
+                              :}
 ;
 
-expr_list 		::= expr_list expr_part 
-					| expr_part
+expr_list               ::=   expr_list expr_part 
+                        |     expr_part
 ;
 
-expr_part 		::= expr:e {: System.out.println(" = "+e+";"); :} 
-					SEMI
+expr_part               ::=   expr:e
+                              {:
+                                 System.out.println(" = "+e+";");
+                              :} 
+                              SEMI
 ;
 
-expr			::=	NUMBER:n					{: RESULT=n; :}
-        			| expr:l PLUS expr:r		{: RESULT=new Integer(l.intValue() + r.intValue()); :}
-	    			| expr:l TIMES expr:r 		{: RESULT=new Integer(l.intValue() * r.intValue()); :}
-	    			| LPAREN expr:e RPAREN		{: RESULT=e; :}
+expr                    ::=   NUMBER:n               {: RESULT=n;                                        :}
+                        |     expr:l PLUS expr:r     {: RESULT=new Integer(l.intValue() + r.intValue()); :}
+                        |     expr:l TIMES expr:r    {: RESULT=new Integer(l.intValue() * r.intValue()); :}
+                        |     LPAREN expr:e RPAREN   {: RESULT=e;                                        :}
 ;
