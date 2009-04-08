@@ -122,7 +122,8 @@ public class Robot {
 	
 	public void shoot ()
 	{
-		
+		//decrease energy
+		//shoot
 	}
 	
 	public void ping ()
@@ -147,12 +148,12 @@ public class Robot {
 	
 	public void get_environment_height ()
 	{
-		
+		//don't use it now
 	}
 	
 	public void sort_enemy_distance ()
 	{
-		
+		//quicksort
 	}
 	
 	public void revert_Enemy ()
