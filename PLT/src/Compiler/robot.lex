@@ -15,6 +15,7 @@ import java_cup.runtime.Symbol;
 %char
 %column
 %ignorecase
+%caseless
 %state COMMENTS, SAYSTATE
 
 anything=[^ \t\r\f\n].+
