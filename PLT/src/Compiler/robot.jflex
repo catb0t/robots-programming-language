@@ -2,12 +2,13 @@ package Robot;
 
 import java_cup.runtime.Symbol;
 
-/* anything is defined as any string not beginning with whitespace 
-	We to define it this way coz otherwise leading whitespace shows up as part of the string
-	which is probably not what the user intended 
-	
-	[0-9]+ 	{ return new Symbol(sym.NUMBER, new Integer(yytext())); }
-	*/
+/*
+   anything is defined as any string not beginning with whitespace 
+   We to define it this way coz otherwise leading whitespace shows up as part of the string
+   which is probably not what the user intended 
+   
+   [0-9]+    { return new Symbol(sym.NUMBER, new Integer(yytext())); }
+*/
 
 %%
 %cup
@@ -26,135 +27,199 @@ number={digits}(\.{digits})?(E[+-]?{digits})?
 
 %%
 
-<YYINITIAL>	{
+<YYINITIAL>   {
 
-	"think" 	{	if(parser.bDebugFlag) {
-						System.out.println("matched think"); 
-					}
-					return new Symbol(sym.THINK); }
+   "think"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched think"); 
+                  }
+                  return new Symbol(sym.THINK);
+         }
 
-	"end"		{	if(parser.bDebugFlag) {
-						System.out.println("matched end");
-					}
-					return new Symbol(sym.END); }
+   "end"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched end");
+                  }
+                  return new Symbol(sym.END);
+         }
 
-	"say"		{	if(parser.bDebugFlag) {
-						System.out.println("matched say");
-					}
-					yybegin(SAYSTATE);
-					return new Symbol(sym.SAY); }
+   "say"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched say");
+                  }
+                  yybegin(SAYSTATE);
+                  return new Symbol(sym.SAY);
+         }
 
-	\n			{	if(parser.bDebugFlag) {
-						System.out.println("matched newline");
-					}
-					return new Symbol(sym.NEWLINE); }
+   \n   
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched newline");
+                  }
+                  return new Symbol(sym.NEWLINE); }
 
-	"="			{	if(parser.bDebugFlag) {
-						System.out.println("matched " + yytext());
-					}
-					return new Symbol(sym.EQUALS); }
+   "="
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.EQUALS);
+         }
 
-	"is"		{	if(parser.bDebugFlag) {
-						System.out.println("matched " + yytext());
-					}
-					return new Symbol(sym.IS); }
+   "is"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.IS); }
 
-	{identifier}	{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.FUNCTION_NAME, new String(yytext())); }
+   {identifier}
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.FUNCTION_NAME, new String(yytext()));
+         }
 
-	{identifier}\#	{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.NUMBER_NAME, new String(yytext())); }
+   {identifier}\#
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.NUMBER_NAME, new String(yytext()));
+         }
 
-	{identifier}\?	{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.BOOLEAN_NAME, new String(yytext())); }
+   {identifier}\?
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.BOOLEAN_NAME, new String(yytext()));
+         }
 
-	{identifier}\%	{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.PERCENTAGE_NAME, new String(yytext())); }
+   {identifier}\%
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.PERCENTAGE_NAME, new String(yytext()));
+         }
 
-	{identifier}\@	{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.LOCATION_NAME, new String(yytext()));	}
+   {identifier}\@
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.LOCATION_NAME, new String(yytext()));
+         }
 
-	{identifier}\!	{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.ENEMY_NAME, new String(yytext())); }
+   {identifier}\!
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.ENEMY_NAME, new String(yytext()));
+         }
 
-	{identifier}\$	{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.RESOURCE_NAME, new String(yytext())); }
+   {identifier}\$
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.RESOURCE_NAME, new String(yytext()));
+         }
 
-	{identifier}\.\.\.	{	if(parser.bDebugFlag) {
-								System.out.println("matched " + yytext());
-							}
-							return new Symbol(sym.LIST_NAME, new String(yytext())); }
+   {identifier}\.\.\.
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.LIST_NAME, new String(yytext()));
+         }
 
-	"true"			{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.TRUE); }
+   "true"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.TRUE);
+         }
 
-	"false"			{	if(parser.bDebugFlag) {
-							System.out.println("matched " + yytext());
-						}
-						return new Symbol(sym.FALSE); }
+   "false"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.FALSE);
+         }
 
-	"//"			{	if(parser.bDebugFlag) {
-							System.out.println("matched comments " + yytext());
-						}
-						yybegin(COMMENTS);
-						/* ignore comments */ }
+   "//"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched comments " + yytext());
+                  }
+                  yybegin(COMMENTS);
+                  /* ignore comments */
+         }
 
-	{number}		{	if(parser.bDebugFlag) {
-							System.out.println("matched number " + yytext());
-						}
-						return new Symbol(sym.NUMBER_EXPRESSION, new Double(yytext())); }
+   {number}
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched number " + yytext());
+                  }
+                  return new Symbol(sym.NUMBER_EXPRESSION, new Double(yytext()));
+         }
 
-	";" 	{ return new Symbol(sym.SEMI); }
-	"+" 	{ return new Symbol(sym.PLUS); }
-	"*" 	{ return new Symbol(sym.TIMES); }
-	"(" 	{ return new Symbol(sym.LPAREN); }
-	")" 	{ return new Symbol(sym.RPAREN); }
-	
-	{whitespace}	{	if(parser.bDebugFlag) {
-							System.out.println("matched whitespace");
-						}
-						/* ignore white space. */ }
+   ";"   { return new Symbol(sym.SEMI);   }
+   "+"   { return new Symbol(sym.PLUS);   }
+   "*"   { return new Symbol(sym.TIMES);  }
+   "("   { return new Symbol(sym.LPAREN); }
+   ")"   { return new Symbol(sym.RPAREN); }
+   
+   {whitespace}
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched whitespace");
+            }
+            /* ignore white space. */
+         }
 }
 
-<SAYSTATE>	{
+<SAYSTATE>   {
 
-	{whitespace}	{	if(parser.bDebugFlag) {
-							System.out.println("matched whitespace");
-						}
-						/* ignore white space. */ }
+   {whitespace}
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched whitespace");
+            }
+            /* ignore white space. */
+         }
 
-	{anything}		{	if(parser.bDebugFlag) {
-							System.out.println("matched saystate anything");
-						}
-						yybegin(YYINITIAL);
-						return new Symbol(sym.ANYTHING, new String(yytext())); }
+   {anything}
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched saystate anything");
+            }
+            yybegin(YYINITIAL);
+            return new Symbol(sym.ANYTHING, new String(yytext()));
+         }
 }
 
-<COMMENTS>	{
-	.+			{	if(parser.bDebugFlag) {
-						System.out.println("matched comments " + yytext());
-					}
-					/* ignore comments */ 
-					yybegin(YYINITIAL); }
+<COMMENTS>   {
+   .+
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched comments " + yytext());
+            }
+            /* ignore comments */ 
+            yybegin(YYINITIAL);
+         }
 }
-				
-						
 
-.	{	System.err.println("Illegal character: " + yytext() + "\nLine number: " + yyline + "\nColumn number: " + yycolumn);
-		System.exit(0); }
+.   {
+      System.err.println("Illegal character: " + yytext() + "\nLine number: " + yyline + "\nColumn number: " + yycolumn);
+      System.exit(0);
+}
