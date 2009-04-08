@@ -9,8 +9,8 @@
          * Application
               * GUI : load file + save file + run : Aurelien for Apr 10
               * standard ROBOT library
-              * new classes : Enemy, Resources, Percentage and their methods
-              * standard output simulation : 
+              * new classes : Enemy, Resources, Percentage and their methods : Aurelien for Apr 10
+              * standard output simulation
               * include automatic class loader
               * 3D viewer : last thing to do
          * Compiler
@@ -32,7 +32,8 @@
 
 =Thoughts=
 First, test without automatic class loader and without 3D viewer.
-Use standard output
+Use standard output.
+IR design
 
 = Weekly Meeting =
     * *Monday and Wednesday 5:30 ~ 6:30* @ CS Lounge (after class every week)
