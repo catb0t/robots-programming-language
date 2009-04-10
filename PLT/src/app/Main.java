@@ -33,6 +33,9 @@ public class Main extends JFrame implements ActionListener{
 	JButton start; 
 	JMenuBar menu;
 	
+	String filename;
+	boolean fileChanged = false;
+	
 	
 	public Main () {
 		super();
@@ -41,7 +44,6 @@ public class Main extends JFrame implements ActionListener{
 	
 	public void init () {
 		
-		
 		this.setName("ROBOT");
 		
 		this.setLayout(new BorderLayout());
@@ -49,13 +51,30 @@ public class Main extends JFrame implements ActionListener{
 		menu = new JMenuBar();
 		
 		JMenu file = new JMenu("File");
-		file.add(new JMenuItem("New"));
-		file.add(new JMenuItem("Open"));
-		file.add(new JMenuItem("Save"));
-		file.add(new JMenuItem("Save As"));
-		//file.add(new JMenu("plop"));
+		
+		JMenuItem newFile = new JMenuItem("New");
+		newFile.setActionCommand("new");
+		newFile.addActionListener(this);
+		file.add(newFile);
+		
+		
+		JMenuItem open = new JMenuItem("Open");
+		open.setActionCommand("open");
+		open.addActionListener(this);
+		file.add(open);
+		
+		JMenuItem save = new JMenuItem("Save");
+		save.setActionCommand("save");
+		save.addActionListener(this);
+		file.add(save);
+		
+		JMenuItem saveAs = new JMenuItem("Save As");
+		saveAs.setActionCommand("saveas");
+		saveAs.addActionListener(this);
+		file.add(saveAs);
 		
 		JMenuItem exit = new JMenuItem("Exit");
+		exit.setActionCommand("exit");
 		exit.addActionListener(this);
 		file.add(exit);
 		
@@ -90,6 +109,7 @@ public class Main extends JFrame implements ActionListener{
 		editor.setMinimumSize(new Dimension(300,100));
 		
 		editArea = new TextArea("Add your text here",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		
 		start = new JButton("Run!");
 		start.setActionCommand("Run!");		//032009 by joseph
 		start.addActionListener(this);		//032009 by joseph
@@ -167,6 +187,43 @@ public class Main extends JFrame implements ActionListener{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		}
+		else if ("new".equals(e.getActionCommand())) {
+			System.out.println("new File");
+			
+			if (fileChanged) {
+				
+			}
+			else {
+				editArea.setText("");
+				filename = null;
+			}
+		}
+		else if ("save".equals(e.getActionCommand())) {
+			System.out.println("save file");
+			
+			if (filename==null) {
+				//go to saveas
+				this.actionPerformed(new ActionEvent(this, 0, "saveas"));
+			}
+		}
+		else if ("saveas".equals(e.getActionCommand())) {
+			System.out.println("save file as");
+			
+			//filename = ;
+		}
+		else if ("open".equals(e.getActionCommand())) {
+			System.out.println("open file");
+			
+			if (fileChanged) {
+				
+			}
+			else {
+				
+			}
+		}
+		else if ("exit".equals(e.getActionCommand())) {
+			System.exit(0);
 		}
 	}
 	
