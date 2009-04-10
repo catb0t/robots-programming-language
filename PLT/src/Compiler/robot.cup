@@ -13,20 +13,22 @@ import java.util.*;
          | constant_value */
 
 parser code {:
-   public static String  robotProgram;
-   public static String  globalDeclarations;
-   public static boolean bDebugFlag;
-   /* stores a basic symbol table */
-   public static HashMap<String, String> variableMap;
-   
-   public static String temp;
-   
-   public static boolean isNameDeclared(String name) {
-      return variableMap.containsKey(name);
-   }
-   
-   public static boolean isDeclared(String name, String type) {
-      String str = (String) variableMap.get(name);
+	public static String  robotProgram;
+	public static String  globalDeclarations;
+	public static boolean bDebugFlag;
+	/* stores a basic symbol table */
+	public static HashMap<String, String> variableMap;
+	
+	public static String temp;
+	
+	/* code related to symbol table: we have a very basic one coz java
+	 is supposed to take care of the rest */
+	public static boolean isNameDeclared(String name) {
+		return variableMap.containsKey(name);
+	}
+	
+	public static boolean isDeclared(String name, String type) {
+		String str = (String) variableMap.get(name);
 
       if (str != null && str.equals(type))
          return true;
@@ -49,7 +51,7 @@ parser code {:
          variableMap = new HashMap<String, String>();
          new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).parse();
          
-         // dump generated java code to files
+         // dump generated java code to file
          FileWriter fwTranslatedCode = new FileWriter(args[1], false);
          BufferedWriter bwTranslatedCode = new BufferedWriter(new FileWriter(args[1], false));
          robotProgram.replaceAll("\n", System.getProperty("line.separator"));
@@ -67,6 +69,7 @@ parser code {:
 terminal         SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
 terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
 terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
+terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT;
 terminal Integer NUMBER;
 terminal Double  NUMBER_EXPRESSION;
 terminal String  ANYTHING;
@@ -80,7 +83,7 @@ non terminal String  statement, entry, variable_name, program, return_value;
 non terminal         optnl, assign_op, value;
 non terminal String  function_name, function, functions, argument;
 non terminal String  boolean_final, base_value, declaration, boolean_expression;
-non terminal String  arithmetic_expression, arithmetic_operator;
+non terminal String  arithmetic_expression, arithmetic_operator, constant_value;
 
 /* Precedences */
 precedence left PLUS, MINUS;
@@ -197,18 +200,18 @@ variable_name   ::= NUMBER_NAME:nn
                     :}
 ;
 
-function_name   ::=   FUNCTION_NAME
-;
-
-functions       ::=   function NEWLINE
+functions       ::=   function optnl
                       functions
                 |
                       /* empty */
 ;
 
-function        ::=   INSTRUCTION function_name WITH argument MEANS NEWLINE
-                      statement
-                      GIVES return_value
+function        ::=   INSTRUCTION function_name WITH argument MEANS NEWLINE optnl
+                      statement optnl
+                      GIVES return_value NEWLINE
+;
+
+function_name   ::=   FUNCTION_NAME
 ;
 
 return_value    ::=   value
@@ -224,13 +227,13 @@ argument        ::=   value argument
 value           ::=   variable_name:vn       {:   RESULT = vn; :}
                 |
                       base_value:bv          {:   RESULT = bv; :}
+                |
+                      constant_value:cv      {:   RESULT = cv; :}
 ;
 
-base_value      ::=   NUMBER_EXPRESSION:ne   {:   RESULT = ne.toString();   :}
+base_value      ::=   boolean_expression:be    {:   RESULT = be; :}
                 |
-                      boolean_expression:be  {:   RESULT = be;              :}
-                |
-                      arithmetic_expression
+                      arithmetic_expression:ae {:   RESULT = ae; :}
 ;
 
 arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2
@@ -242,12 +245,17 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               {:
                                  RESULT = "( " + ae + " )";
                               :}
+                        |
+                              NUMBER_EXPRESSION:ne
+                              {:
+                                 RESULT = ne.toString();
+                              :}
 ;
 
-arithmetic_operator     ::=   PLUS     {: RESULT = "+"; :}
-                        |     MINUS    {: RESULT = "-"; :}
-                        |     TIMES    {: RESULT = "*"; :}
-                        |     DIVIDE   {: RESULT = "/"; :}
+arithmetic_operator     ::=   PLUS     {: RESULT = " + "; :}
+                        |     MINUS    {: RESULT = " - "; :}
+                        |     TIMES    {: RESULT = " * "; :}
+                        |     DIVIDE   {: RESULT = " / "; :}
 ;
 
 boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2   {:   RESULT = be1 + " || " + be2; :}
@@ -278,6 +286,12 @@ entry                   ::=   THINK NEWLINE
                               :}
 ;
 
+constant_value          ::=   MAX_HASH      {: RESULT = "Double.MAX_VALUE";    :}
+                        |     MIN_HASH		{: RESULT = "Double.MIN_VALUE";    :}
+                        |     NOTHING_NOT	{: /* to do */ RESULT = "NOTHING"; :}
+                        |     NOWHERE_AT	{: /* to do */ RESULT = "NOWHERE"; :}
+;
+
 optnl                   ::=   optnl NEWLINE
                         |
                               /* empty */
@@ -287,6 +301,8 @@ statement               ::=   SAY ANYTHING:a NEWLINE
                               {:
                                  RESULT = "\t\tSystem.out.println(\"" + a + "\");\n";
                               :}
+                        |
+                              /* empty */
 ;
 
 expr_list               ::=   expr_list expr_part 
