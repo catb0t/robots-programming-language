@@ -2,6 +2,7 @@ package app;
 
 import java.awt.BorderLayout;
 import java.awt.TextArea;
+import java.awt.FileDialog;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 import com.sun.opengl.util.Animator;
 
@@ -113,8 +115,8 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		editArea = new TextArea("Add your text here",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		editArea.addTextListener(this);
 		
-		start = new JButton("Run!");
-		start.setActionCommand("Run!");		//032009 by joseph
+		start = new JButton("Run");
+		start.setActionCommand("Run");		//032009 by joseph
 		start.addActionListener(this);		//032009 by joseph
 		
 		editor.add(editArea);
@@ -173,7 +175,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	
 	public void actionPerformed (ActionEvent event) {
 		//System.exit(0);		//032009 by joseph
-		if ("Run!".equals(event.getActionCommand())) {	//032009 by joseph
+		if ("Run".equals(event.getActionCommand())) {	//032009 by joseph
 			System.out.println("Start Compliler");
 			
 			try {
@@ -215,7 +217,26 @@ public class Main extends JFrame implements ActionListener, TextListener{
 			System.out.println("new File");
 			
 			if (fileChanged) {
+				Object[] options = {"Yes", "No", "Cancel"};
+				int choice = JOptionPane.showOptionDialog(this,
+														  "Do you want to save you current file ?",
+														  "Save changes",
+														  JOptionPane.YES_NO_CANCEL_OPTION,
+														  JOptionPane.QUESTION_MESSAGE,
+														  null,
+														  options,
+														  options[2]);
 				
+				if (choice==0) {
+					this.actionPerformed(new ActionEvent(this, 0, "save"));
+				}
+				else if (choice==1) {
+					editArea.setText("");
+					filename = null;
+				}
+				else if (choice==2) {
+					return;
+				}
 			}
 			else {
 				editArea.setText("");
@@ -251,36 +272,89 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		else if ("saveas".equals(event.getActionCommand())) {
 			System.out.println("save file as");
 			
-			//filename = ;
+			FileDialog filedialog = new FileDialog(this, "save file", FileDialog.SAVE);
+			filedialog.setVisible(true);
+			
+			String name = filedialog.getFile();
+			if (name ==  null) {
+				return;
+			}
+
+			filename = filedialog.getDirectory()+name+".robot";
+			
 			this.actionPerformed(new ActionEvent(this, 0, "save"));
 		}
 		else if ("open".equals(event.getActionCommand())) {
 			System.out.println("open file");
 			
 			if (fileChanged) {
-				//ask for save
-			}
-			else {
-				try {
-					BufferedReader in = new BufferedReader(new FileReader("Robottest.txt"));
-			        String str;
-			        String sol = "";
-			        while ((str = in.readLine()) != null) {
-			            sol+=str+"\n";
-			        }
-			        in.close();
-					
-			        editArea.setText(sol);
-			        
-				} catch (IOException e) {
-					e.printStackTrace();
+				Object[] options = {"Yes", "No", "Cancel"};
+				int choice = JOptionPane.showOptionDialog(this,
+														  "Do you want to save you current file ?",
+														  "Save changes",
+														  JOptionPane.YES_NO_CANCEL_OPTION,
+														  JOptionPane.QUESTION_MESSAGE,
+														  null,
+														  options,
+														  options[2]);
+				
+				if (choice==0) {
+					this.actionPerformed(new ActionEvent(this, 0, "save"));
+				}
+				else if (choice==2) {
+					return;
 				}
 			}
-			
+				
+			FileDialog filedialog = new FileDialog(this, "open file", FileDialog.LOAD);
+			filedialog.setVisible(true);
+
+			String name = filedialog.getFile();
+			if (name ==  null) {
+				return;
+			}
+
+			filename = filedialog.getDirectory()+name;
+
+			try {
+				BufferedReader in = new BufferedReader(new FileReader(filename));
+				String str;
+				String sol = "";
+				while ((str = in.readLine()) != null) {
+					sol+=str+"\n";
+				}
+				in.close();
+
+				editArea.setText(sol);
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
 			editArea.addTextListener(this);
 			fileChanged = false;
 		}
 		else if ("exit".equals(event.getActionCommand())) {
+			
+			if (fileChanged)
+			{
+				Object[] options = {"Yes", "No", "Cancel"};
+				int choice = JOptionPane.showOptionDialog(this,
+														  "Do you want to save you current file ?",
+														  "Save changes",
+														  JOptionPane.YES_NO_CANCEL_OPTION,
+														  JOptionPane.QUESTION_MESSAGE,
+														  null,
+														  options,
+														  options[2]);
+				
+				if (choice==0) {
+					this.actionPerformed(new ActionEvent(this, 0, "save"));
+				}
+				else if (choice==2) {
+					return;
+				}
+			}
 			System.exit(0);
 		}
 	}
