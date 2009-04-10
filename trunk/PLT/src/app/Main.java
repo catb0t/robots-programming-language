@@ -174,8 +174,8 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	}
 	
 	public void actionPerformed (ActionEvent event) {
-		//System.exit(0);		//032009 by joseph
-		if ("Run".equals(event.getActionCommand())) {	//032009 by joseph
+		
+		if ("Run".equals(event.getActionCommand())) {
 			System.out.println("Start Compliler");
 			
 			try {
@@ -188,32 +188,17 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				compiler.setFileName("tempcode.robot");
 				compiler.run();
 				
+				file.delete();
+				
 				//autoload file
+				
+				//run simulation
+				///////create the robot
+				///////run think
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
-			/*
-			try {
-				//Save the contents of TextArea to a text file.
-				System.out.println(editArea.getText());
-				
-				File file=new File("robotcode.txt");
-				PrintWriter out = new PrintWriter(new FileWriter(file));
-				out.print(editArea.getText());
-				out.close();
-
-				//Run compiler with robotcode.txt
-				Runtime.getRuntime().exec("..\\Compiler\\make"); // "C:\\Windows\\Explorer.exe");
-				
-				//Run Application
-				//Runtime.getRuntime().exec(".\\app\\java main");
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			*/
 		}
 		else if ("new".equals(event.getActionCommand())) {
 			System.out.println("new File");
