@@ -3,11 +3,9 @@ package app;
 public class Compiler {
 	
 	private String inputFile;
-	private String outputFile;
 	
 	public Compiler() {
 		inputFile = null;
-		outputFile = null;
 	}
 	
 	public Compiler (String s)
@@ -21,7 +19,7 @@ public class Compiler {
 	
 	public void run () {
 		try {
-			//String[] command = {"parser", inputFile, outputFile};
+			//String[] command = {"parser", inputFile, "MyRobot.java"};
 			String[] command = {"/Applications/Preview.app/Contents/MacOS/Preview", "/Users/aurelien/Pictures/chou.jpg"};
 			Runtime.getRuntime().exec(command);
 		} catch (Exception e) {
