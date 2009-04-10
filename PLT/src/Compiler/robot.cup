@@ -67,7 +67,7 @@ parser code {:
 
 /* Terminals (tokens returned by the scanner) */
 terminal         SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
-terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
+terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH, MOVE_TO;
 terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT;
 terminal Integer NUMBER;

@@ -20,6 +20,7 @@ import java_cup.runtime.Symbol;
 
 anything=[^ \t\r\f\n].+
 whitespace=[ \t\r\f]
+block={whitespace}*(\||\+---)
 identifier=[a-z][a-z0-9_]*
 digits=[0-9]+
 number={digits}(\.{digits})?(E[+-]?{digits})?
@@ -29,6 +30,14 @@ min_hash=min\#
 %%
 
 <YYINITIAL>   {
+
+   ^{block}+
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched block");
+            }
+            /* ignore block stuff */
+         }
 
    "think"
          {
@@ -53,6 +62,13 @@ min_hash=min\#
                   }
                   yybegin(SAYSTATE);
                   return new Symbol(sym.SAY);
+         }
+   "move_to"
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched move_to");
+                  }
+                  return new Symbol(sym.MOVE_TO);
          }
    instruction
          {
@@ -112,9 +128,25 @@ min_hash=min\#
    "is"
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched is: " + yytext());
                   }
                   return new Symbol(sym.IS); }
+
+   true
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched true1");
+                  }
+                  return new Symbol(sym.TRUE);
+         }
+
+   false
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched false1");
+                  }
+                  return new Symbol(sym.FALSE);
+         }
 
    {identifier}
          {
@@ -180,22 +212,6 @@ min_hash=min\#
                   return new Symbol(sym.LIST_NAME, new String(yytext()));
          }
 
-   true
-         {
-                  if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
-                  }
-                  return new Symbol(sym.TRUE);
-         }
-
-   false
-         {
-                  if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
-                  }
-                  return new Symbol(sym.FALSE);
-         }
-
    {max_hash}
          {
                   if (parser.bDebugFlag) {
@@ -244,6 +260,7 @@ min_hash=min\#
             }
             /* ignore white space. */
          }
+
 }
 
 <SAYSTATE>   {
