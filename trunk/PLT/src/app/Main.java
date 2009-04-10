@@ -19,7 +19,7 @@ import javax.swing.JList;
 
 import com.sun.opengl.util.Animator;
 
-public class Main extends JFrame implements ActionListener{
+public class Main extends JFrame implements ActionListener, TextListener{
 	
 	private static final long serialVersionUID = 7633042051769682994L;
 	
@@ -35,6 +35,8 @@ public class Main extends JFrame implements ActionListener{
 	
 	String filename;
 	boolean fileChanged = false;
+	
+	Compiler compiler;
 	
 	
 	public Main () {
@@ -109,6 +111,7 @@ public class Main extends JFrame implements ActionListener{
 		editor.setMinimumSize(new Dimension(300,100));
 		
 		editArea = new TextArea("Add your text here",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		editArea.addTextListener(this);
 		
 		start = new JButton("Run!");
 		start.setActionCommand("Run!");		//032009 by joseph
@@ -123,6 +126,9 @@ public class Main extends JFrame implements ActionListener{
 		tools_write.setBorder(null);
 		tools_write.setOneTouchExpandable(true);
 		
+		
+		//set the compiler
+		compiler = new Compiler();
 		
 		//set the 3d viewer
 		GLCanvas view3D = new GLCanvas();
@@ -165,10 +171,26 @@ public class Main extends JFrame implements ActionListener{
 		
 	}
 	
-	public void actionPerformed (ActionEvent e) {
+	public void actionPerformed (ActionEvent event) {
 		//System.exit(0);		//032009 by joseph
-		if ("Run!".equals(e.getActionCommand())) {	//032009 by joseph
+		if ("Run!".equals(event.getActionCommand())) {	//032009 by joseph
 			System.out.println("Start Compliler");
+			
+			try {
+				
+				File file = new File("robotcode.inp");
+				PrintWriter out = new PrintWriter(new FileWriter(file));
+				out.print(editArea.getText());
+				out.close();
+				
+				compiler.setFileName("robotcode.inp");
+				compiler.run();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			/*
 			try {
 				//Save the contents of TextArea to a text file.
 				System.out.println(editArea.getText());
@@ -187,8 +209,9 @@ public class Main extends JFrame implements ActionListener{
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			*/
 		}
-		else if ("new".equals(e.getActionCommand())) {
+		else if ("new".equals(event.getActionCommand())) {
 			System.out.println("new File");
 			
 			if (fileChanged) {
@@ -198,33 +221,73 @@ public class Main extends JFrame implements ActionListener{
 				editArea.setText("");
 				filename = null;
 			}
+			fileChanged = false;
+			editArea.removeTextListener(this);
+			editArea.addTextListener(this);
 		}
-		else if ("save".equals(e.getActionCommand())) {
+		else if ("save".equals(event.getActionCommand())) {
 			System.out.println("save file");
 			
 			if (filename==null) {
 				//go to saveas
 				this.actionPerformed(new ActionEvent(this, 0, "saveas"));
 			}
+			else {
+				try {
+					
+					File file = new File(filename);
+					PrintWriter out = new PrintWriter(new FileWriter(file));
+					out.print(editArea.getText());
+					out.close();
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			fileChanged = false;
+			editArea.addTextListener(this);
 		}
-		else if ("saveas".equals(e.getActionCommand())) {
+		else if ("saveas".equals(event.getActionCommand())) {
 			System.out.println("save file as");
 			
 			//filename = ;
+			this.actionPerformed(new ActionEvent(this, 0, "save"));
 		}
-		else if ("open".equals(e.getActionCommand())) {
+		else if ("open".equals(event.getActionCommand())) {
 			System.out.println("open file");
 			
 			if (fileChanged) {
-				
+				//ask for save
 			}
 			else {
-				
+				try {
+					BufferedReader in = new BufferedReader(new FileReader("Robottest.txt"));
+			        String str;
+			        String sol = "";
+			        while ((str = in.readLine()) != null) {
+			            sol+=str+"\n";
+			        }
+			        in.close();
+					
+			        editArea.setText(sol);
+			        
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
+			
+			editArea.addTextListener(this);
+			fileChanged = false;
 		}
-		else if ("exit".equals(e.getActionCommand())) {
+		else if ("exit".equals(event.getActionCommand())) {
 			System.exit(0);
 		}
+	}
+	
+	public void textValueChanged (TextEvent event) {
+		fileChanged = true;
+		editArea.removeTextListener(this);
 	}
 	
 	public static void main (String[] args) {
