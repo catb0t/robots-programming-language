@@ -16,7 +16,6 @@ import java_cup.runtime.Symbol;
 %char
 %column
 %ignorecase
-%caseless
 %state COMMENTS, SAYSTATE
 
 anything=[^ \t\r\f\n].+
@@ -24,6 +23,8 @@ whitespace=[ \t\r\f]
 identifier=[a-z][a-z0-9_]*
 digits=[0-9]+
 number={digits}(\.{digits})?(E[+-]?{digits})?
+max_hash=max\#
+min_hash=min\#
 
 %%
 
@@ -52,6 +53,45 @@ number={digits}(\.{digits})?(E[+-]?{digits})?
                   }
                   yybegin(SAYSTATE);
                   return new Symbol(sym.SAY);
+         }
+   instruction
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.INSTRUCTION); 
+         }
+
+   with
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.WITH); 
+         }
+
+   means
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.MEANS); 
+         }
+
+   gives
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.GIVES); 
+         }
+
+   nothing
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.NOTHING); 
          }
 
    \n   
@@ -140,7 +180,7 @@ number={digits}(\.{digits})?(E[+-]?{digits})?
                   return new Symbol(sym.LIST_NAME, new String(yytext()));
          }
 
-   "true"
+   true
          {
                   if (parser.bDebugFlag) {
                      System.out.println("matched " + yytext());
@@ -148,12 +188,28 @@ number={digits}(\.{digits})?(E[+-]?{digits})?
                   return new Symbol(sym.TRUE);
          }
 
-   "false"
+   false
          {
                   if (parser.bDebugFlag) {
                      System.out.println("matched " + yytext());
                   }
                   return new Symbol(sym.FALSE);
+         }
+
+   {max_hash}
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.MAX_HASH);
+         }
+
+   {min_hash}
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.MIN_HASH);
          }
 
    "//"
@@ -175,7 +231,9 @@ number={digits}(\.{digits})?(E[+-]?{digits})?
 
    ";"   { return new Symbol(sym.SEMI);   }
    "+"   { return new Symbol(sym.PLUS);   }
+   "-"   { return new Symbol(sym.MINUS);  }
    "*"   { return new Symbol(sym.TIMES);  }
+   "/"   { return new Symbol(sym.DIVIDE); }
    "("   { return new Symbol(sym.LPAREN); }
    ")"   { return new Symbol(sym.RPAREN); }
    
