@@ -180,13 +180,15 @@ public class Main extends JFrame implements ActionListener, TextListener{
 			
 			try {
 				
-				File file = new File("robotcode.inp");
+				File file = new File("tempcode.robot");
 				PrintWriter out = new PrintWriter(new FileWriter(file));
 				out.print(editArea.getText());
 				out.close();
 				
-				compiler.setFileName("robotcode.inp");
+				compiler.setFileName("tempcode.robot");
 				compiler.run();
+				
+				//autoload file
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -232,7 +234,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				}
 				else if (choice==1) {
 					editArea.setText("");
-					filename = null;
+					filename = null; 
 				}
 				else if (choice==2) {
 					return;
