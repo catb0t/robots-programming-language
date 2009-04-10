@@ -59,6 +59,11 @@ public class Robot {
 		position = new Vector3(0, 0, 0);
 	}
 	
+	//This is for only UnitTest.
+	public Robot() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public void renderRobot(GL gl)
 	{
 		float scale = 30;
