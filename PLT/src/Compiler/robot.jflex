@@ -21,7 +21,7 @@ import java_cup.runtime.Symbol;
 anything=[^ \t\r\f\n].+
 whitespace=[ \t\r\f]
 block={whitespace}*(\||\+---)
-identifier=[a-z][a-z0-9_]*
+identifier=[a-z][a-zA-Z0-9_]*
 digits=[0-9]+
 number={digits}(\.{digits})?(E[+-]?{digits})?
 max_hash=max\#
@@ -131,6 +131,15 @@ min_hash=min\#
                      System.out.println("matched is: " + yytext());
                   }
                   return new Symbol(sym.IS); }
+                  
+    of
+	     {
+	              if (parser.bDebugFlag) {
+                     System.out.println("matched of: " + yytext());
+                  }
+                  return new Symbol(sym.OF);
+	     }
+
 
    true
          {
@@ -235,6 +244,14 @@ min_hash=min\#
                   }
                   yybegin(COMMENTS);
                   /* ignore comments */
+         }
+
+   {digits}(st|th|nd)
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched integer_index: " + yytext());
+                  }
+                  return new Symbol(sym.INT_IDX, new String(yytext()));
          }
 
    {number}
