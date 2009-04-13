@@ -95,6 +95,9 @@ public class Robot {
 		return new Vector3(position.x, position.y, position.z);
 	}
 	
+	public Vector2 getPositionVector2(){
+		return new Vector2(position.x,position.y);
+	}
 	
 	public void think()
 	{
@@ -123,6 +126,10 @@ public class Robot {
 		float step = speed*max_speed;
 		
 		position = new Vector3(position.x+ step*direction.x, position.y+ step*direction.y, position.z+ step*direction.z);
+	}
+	
+	public void move_to (Vector2 location, float speed){
+		
 	}
 	
 	public void shoot ()

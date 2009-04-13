@@ -6,6 +6,9 @@ public class Enemy {
 	public Vector3 position;
 	private float energy;
 	
+	public Enemy(){
+		
+	}
 	
 	public String toString()
 	{
