@@ -442,12 +442,27 @@ statement               ::=   call:cl optnl statement:stmt
 
 function_call           ::=   function_name:fn
                               arguments_act:args
-                              NEWLINE            {:  RESULT = "\t\t" + fn + "(" + args + ");\n";    :}
+                              NEWLINE
+                              {:
+                                 // remove the final ,<space> : (arg1, arg2, ,<space>)
+                                 args = args.trim();
+                                 if (args.endsWith(",")) {
+                         	    args = args.substring(0, args.length() - 1);
+                                 }
+                                 RESULT = "\t\t" + fn + "(" + args + ");\n";
+                              :}
 ;
 
-arguments_act           ::=   value arguments_act
+arguments_act           ::=   value:arg arguments_act:args
+                              {:
+                                 RESULT = arg + ", " + args;
+                              :}
+
                         |     
                               /* empty */
+                              {:
+                                 RESULT = "";
+                              :}
 ;
 
 local_declaration       ::=   variable_name_local:vnl NEWLINE 
