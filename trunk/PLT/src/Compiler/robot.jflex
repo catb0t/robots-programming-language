@@ -21,9 +21,10 @@ import java_cup.runtime.Symbol;
 anything=[^ \t\r\f\n].+
 whitespace=[ \t\r\f]
 block={whitespace}*(\||\+---)
-identifier=[a-z][a-zA-Z0-9_]*
+identifier=[a-zA-Z][a-zA-Z0-9_]*
 digits=[0-9]+
 number={digits}(\.{digits})?(E[+-]?{digits})?
+percentage={digits}%
 max_hash=max\#
 min_hash=min\#
 
@@ -63,14 +64,14 @@ min_hash=min\#
                   yybegin(SAYSTATE);
                   return new Symbol(sym.SAY);
          }
-   "move_to"
+/*   "move_to"
          {
                   if (parser.bDebugFlag) {
                      System.out.println("matched move_to");
                   }
                   return new Symbol(sym.MOVE_TO);
          }
-   instruction
+*/ instruction
          {
                   if (parser.bDebugFlag) {
                      System.out.println("matched " + yytext());
@@ -160,7 +161,7 @@ min_hash=min\#
    {identifier}
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id function name: " + yytext());
                   }
                   return new Symbol(sym.FUNCTION_NAME, new String(yytext()));
          }
@@ -168,7 +169,7 @@ min_hash=min\#
    {identifier}\#
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id number: " + yytext());
                   }
                   return new Symbol(sym.NUMBER_NAME, new String(yytext()));
          }
@@ -176,7 +177,7 @@ min_hash=min\#
    {identifier}\?
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id bool: " + yytext());
                   }
                   return new Symbol(sym.BOOLEAN_NAME, new String(yytext()));
          }
@@ -184,7 +185,7 @@ min_hash=min\#
    {identifier}\%
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id percent: " + yytext());
                   }
                   return new Symbol(sym.PERCENTAGE_NAME, new String(yytext()));
          }
@@ -192,7 +193,7 @@ min_hash=min\#
    {identifier}\@
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id loc: " + yytext());
                   }
                   return new Symbol(sym.LOCATION_NAME, new String(yytext()));
          }
@@ -200,7 +201,7 @@ min_hash=min\#
    {identifier}\!
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id enemy: " + yytext());
                   }
                   return new Symbol(sym.ENEMY_NAME, new String(yytext()));
          }
@@ -208,7 +209,7 @@ min_hash=min\#
    {identifier}\$
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id resource: " + yytext());
                   }
                   return new Symbol(sym.RESOURCE_NAME, new String(yytext()));
          }
@@ -216,7 +217,7 @@ min_hash=min\#
    {identifier}\.\.\.
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched id list: " + yytext());
                   }
                   return new Symbol(sym.LIST_NAME, new String(yytext()));
          }
@@ -224,7 +225,7 @@ min_hash=min\#
    {max_hash}
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched max_hash: " + yytext());
                   }
                   return new Symbol(sym.MAX_HASH);
          }
@@ -232,7 +233,7 @@ min_hash=min\#
    {min_hash}
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched min_hash: " + yytext());
                   }
                   return new Symbol(sym.MIN_HASH);
          }
@@ -240,10 +241,17 @@ min_hash=min\#
    "//"
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched comments " + yytext());
+                     System.out.println("matched comments: " + yytext());
                   }
                   yybegin(COMMENTS);
                   /* ignore comments */
+         }
+   {percentage}
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched percentage: " + yytext());
+                  }
+                  return new Symbol(sym.NUMBER_PERCENTAGE, new String(yytext()));
          }
 
    {digits}(st|th|nd)
@@ -257,7 +265,7 @@ min_hash=min\#
    {number}
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched number " + yytext());
+                     System.out.println("matched number: " + yytext());
                   }
                   return new Symbol(sym.NUMBER_EXPRESSION, new Double(yytext()));
          }

@@ -72,6 +72,7 @@ terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT, OF, SELF;
 terminal Integer NUMBER;
 terminal Double  NUMBER_EXPRESSION;
+terminal String  NUMBER_PERCENTAGE;
 terminal String  ANYTHING, INT_IDX;
 terminal String  NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME;
 terminal String  ENEMY_NAME, RESOURCE_NAME, LIST_NAME, FUNCTION_NAME;
@@ -81,11 +82,12 @@ non terminal         expr_list, expr_part;
 non terminal Integer expr;
 non terminal String  statement, entry, variable_name, program, return_value;
 non terminal         optnl, assign_op;
-non terminal String  function_name, function, functions, variable_name_local, arguments;
+non terminal String  function_name, function, functions, variable_name_local;
 non terminal String  boolean_final, base_value, declaration, boolean_expression;
 non terminal String  arithmetic_expression, arithmetic_operator, constant_value;
 non terminal String  value, call, field_access, local_declaration;
 non terminal String  field_name;
+non terminal String  argument, arguments, arguments_act, function_call;
 
 /* Precedences */
 precedence right OF;
@@ -377,6 +379,11 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               {:
                                  RESULT = ne.toString();
                               :}
+                        |
+                              NUMBER_PERCENTAGE:pe
+                              {:
+                                 RESULT = pe.toString();
+                              :}
 ;
 
 arithmetic_operator     ::=   PLUS     {: RESULT = " + "; :}
@@ -433,6 +440,16 @@ statement               ::=   call:cl optnl statement:stmt
                               {: RESULT = ""; :}
 ;
 
+function_call           ::=   function_name:fn
+                              arguments_act:args
+                              NEWLINE            {:  RESULT = "\t\t" + fn + "(" + args + ");\n";    :}
+;
+
+arguments_act           ::=   value arguments_act
+                        |     
+                              /* empty */
+;
+
 local_declaration       ::=   variable_name_local:vnl NEWLINE 
                               /*optnl local_declaration:dcl*/
                               {:
@@ -454,6 +471,11 @@ local_declaration       ::=   variable_name_local:vnl NEWLINE
 call                    ::=   SAY ANYTHING:a NEWLINE
                               {:
                                  RESULT = "\t\tSystem.out.println(\"" + a + "\");\n";
+                              :}
+                        |
+                              function_call:fc
+                              {:
+                                 RESULT = fc;
                               :}
 ;
 
