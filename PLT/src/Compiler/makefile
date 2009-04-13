@@ -14,6 +14,8 @@ hello:
 hello2:
 	java -classpath ".:../../lib/cup-0.10k.jar" Robot.parser hello2.robot hello2.java
 
+tutorial2:
+	java -classpath ".:../../lib/cup-0.10k.jar" Robot.parser tutorial2.robot tutorial2.java
 	
 clean:
 	rm ./Robot/parser.class ./Robot/sym.class ./Robot/Yylex.class ./Robot/CUP\$$parser\$$actions.class Yylex.java parser.java sym.java
