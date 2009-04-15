@@ -20,7 +20,8 @@ public class Compiler {
 	public void run () {
 		try {
 			//String[] command = {"parser", inputFile, "MyRobot.java"};
-			String[] command = {"/Applications/Preview.app/Contents/MacOS/Preview", "/Users/aurelien/Pictures/chou.jpg"};
+			String[] command = {"java", "-jar", "JointEM.jar"};
+			//String[] command = {"/Applications/Preview.app/Contents/MacOS/Preview", "/Users/aurelien/Pictures/chou.jpg"};
 			Runtime.getRuntime().exec(command);
 		} catch (Exception e) {
 			e.printStackTrace();

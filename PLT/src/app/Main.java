@@ -192,6 +192,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				
 				//autoload file
 				
+				
 				//run simulation
 				///////create the robot
 				///////run think
