@@ -18,51 +18,88 @@ parser code {:
 	public static boolean bDebugFlag;
 	/* stores a basic symbol table */
 	public static HashMap<String, String> variableMap;
+        public static Stack<String> currentScope;
 	
 	public static String temp;
 	
 	/* code related to symbol table: we have a very basic one coz java
 	 is supposed to take care of the rest */
-	public static boolean isNameDeclared(String name) {
+        /*
+        public static boolean isNameDeclared(String name) {
 	  return variableMap.containsKey(name);
 	}
-	
-	public static boolean isDeclared(String name, String type) {
-      String str = (String) variableMap.get(name);
 
-      if (str != null && str.equals(type))
-         return true;
-      return false;
-   }
-   
-   public static boolean declareVariable(String name, String type) {
-      if (!isDeclared(name, type)) {
-         variableMap.put(name, type);
-         return true;
-      }
-      return false;
-   }
+	public static boolean isNameDeclared(String name, String function) {
+	  return isNameDeclared(function.concat(name));
+	}
+	*/
+        public static boolean isDeclared(String name, String type) {
+           String str = (String) variableMap.get(name);
 
-   public static void main(String args[]) throws Exception {
-      bDebugFlag = true;
-      try {
-         robotProgram = "package Think;\n";
-         globalDeclarations = "";
-         variableMap = new HashMap<String, String>();
-         new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).parse();
-         
-         // dump generated java code to file
-         FileWriter fwTranslatedCode = new FileWriter(args[1], false);
-         BufferedWriter bwTranslatedCode = new BufferedWriter(new FileWriter(args[1], false));
-         robotProgram.replaceAll("\n", System.getProperty("line.separator"));
-         bwTranslatedCode.write(robotProgram);
-         bwTranslatedCode.close();
+           if (str != null && str.equals(type)) {
+              System.out.println(name + " is ALREADY defined!"); 
+              return true;
+           } else {
+              System.out.println(name + " is NOT defined!"); 
+              return false;
+           }
+        }
 
-         //System.out.println("Translated Java code:\n" + robotProgram);
-      } catch (Exception e) {
-         System.out.println(e.getMessage());
-      }
-   }
+        /*
+        public static boolean isDeclared(String name, String type, String scope) {
+           return isDeclared(scope.concat(name), type);
+        }
+        */
+        public static boolean declareVariable(String name, String type) {
+           if (!isDeclared(name, type)) {
+              System.out.println("Declaring " + name); 
+              variableMap.put(name, type);
+              return true;
+           } else {
+              return false;
+           }
+        }
+
+        public static boolean declareVariable(String name, String type, String scope) {
+           return declareVariable(scope.concat(name), type);
+        }
+
+        public static void changeScope(String scope) {
+           currentScope.push(scope);
+           System.out.println("Changing scope: " + scope);
+        }
+
+        public static void endScope() {
+           String scope = currentScope.pop();
+           System.out.println("Ending scope: " + scope);
+           // TODO: We should remove references of all variables that belong to the scope we're exiting 
+           // In other words, once we're done in a block, variables that belong to that block
+           // should be thrown out
+        }
+
+
+        public static void main(String args[]) throws Exception {
+           bDebugFlag = true;
+           try {
+              robotProgram = "package Think;\n";
+              globalDeclarations = "";
+              variableMap = new HashMap<String, String>();
+              currentScope = new Stack<String>();
+
+              new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).parse();
+
+              // dump generated java code to file
+              FileWriter fwTranslatedCode = new FileWriter(args[1], false);
+              BufferedWriter bwTranslatedCode = new BufferedWriter(new FileWriter(args[1], false));
+              robotProgram.replaceAll("\n", System.getProperty("line.separator"));
+              bwTranslatedCode.write(robotProgram);
+              bwTranslatedCode.close();
+
+              //System.out.println("Translated Java code:\n" + robotProgram);
+           } catch (Exception e) {
+              System.out.println(e.getMessage());
+           }
+        }
 :}
 
 /* Terminals (tokens returned by the scanner) */
@@ -125,6 +162,12 @@ declaration     ::= variable_name:vn NEWLINE
                        RESULT = vn + " = " + val + ";\n" + dcl;
                     :}*/
                  |
+                    variable_name:vn assign_op value:val NEWLINE
+                    optnl declaration:dcl
+                    {:
+                       RESULT = vn + " = " + val + ";\n" + dcl;
+                    :}
+                 |
                     field_access:fa assign_op value:val NEWLINE
                     optnl declaration:dcl
                     {:
@@ -137,25 +180,25 @@ declaration     ::= variable_name:vn NEWLINE
                     :}
 ;
 
-field_access    ::= field_name:fn OF field_access:fa
+field_access    ::= field_name:fn OF value:fa
                     {:
                        RESULT = fa + "." + fn;
                     :}
                 |   
-                    INT_IDX:idx OF field_access:fa
+                    INT_IDX:idx OF value:fa
                     {:
                        RESULT = fa + "[" + idx.substring(0, idx.length() - 2) + "]";
                     :}
-                |   
+                /*|   
                     variable_name:vn
                     {:
                        RESULT = vn;
-                    :}
+                    :} 
                 |   
                     SELF
                     {:
                        RESULT = "this";
-                    :}
+                    :}*/
 ;
 
 field_name      ::=  NUMBER_NAME:nn
@@ -195,6 +238,11 @@ field_name      ::=  NUMBER_NAME:nn
                     :}
 ;
 
+// TODO: We don't need to call isDeclared, it's already being called in declare variable
+// See local_variable to see shorter usage
+// Also, I was thinking that we can add a Java Enum to enumerate our types and enter
+// associated information like the corresponding Java type, postfix, etc.  Would be much
+// cleaner than typing those things every time, I think
 variable_name   ::= NUMBER_NAME:nn
                     {:
                        parser.temp = nn.substring(0, nn.length() - 1);
@@ -209,7 +257,7 @@ variable_name   ::= NUMBER_NAME:nn
                     LIST_NAME:ln
                     {:
                        parser.temp = ln.substring(0, ln.length() - 3);
-                       if (!parser.isDeclared(parser.temp, "#")) {
+                       if (!parser.isDeclared(parser.temp, "...")) {
                           RESULT = "\tpublic List " + parser.temp;
                           parser.declareVariable(parser.temp, "...");
                        } else {
@@ -231,7 +279,7 @@ variable_name   ::= NUMBER_NAME:nn
                     PERCENTAGE_NAME:pn
                     {:
                        parser.temp = pn.substring(0, pn.length() - 1);
-                       if (!parser.isDeclared(parser.temp, "#")) {
+                       if (!parser.isDeclared(parser.temp, "%")) {
                           RESULT = "\tpublic Percentage " + parser.temp;
                           parser.declareVariable(parser.temp, "%");
                        } else {
@@ -280,7 +328,8 @@ functions       ::=   function:fn optnl
                       /* empty */            {: RESULT = ""; :}
 ;
 
-function        ::=   INSTRUCTION function_name:fn WITH arguments:arg MEANS NEWLINE optnl
+function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
+                      WITH arguments:arg MEANS NEWLINE optnl
                       /*local_declaration:ldcl optnl*/
                       statement:stat optnl
                       GIVES return_value:rv NEWLINE
@@ -292,6 +341,7 @@ function        ::=   INSTRUCTION function_name:fn WITH arguments:arg MEANS NEWL
                          }
                          RESULT = "\n\tpublic static " + rv + " " + fn + "(" + arg + ")";
                          RESULT += " {\n" /*+ ldcl*/ + "\n" + stat + "\n\t}";
+                         parser.endScope();
                       :}
 ;
 
@@ -318,46 +368,108 @@ arguments        ::=   variable_name_local:arg arguments:args
 variable_name_local  ::=  
                     NUMBER_NAME:nn
                     {:
-                       RESULT = "double " + nn.substring(0, nn.length() - 1);
+                       parser.temp = nn.substring(0, nn.length() - 1);
+                       
+                       if (parser.declareVariable(parser.temp, "#", parser.currentScope.peek())) {
+                          RESULT = "double ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
                     :}
                  |
                     LIST_NAME:ln
                     {:
-                       RESULT = "List " + ln.substring(0, ln.length() - 3);
+                       parser.temp = ln.substring(0, ln.length() - 3);
+                       
+                       if (parser.declareVariable(parser.temp, "...", parser.currentScope.peek())) {
+                          RESULT = "List ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
                     :}
                 |
                     BOOLEAN_NAME:bn
                     {:
-                       RESULT = "boolean " + bn.substring(0, bn.length() - 1);
+                       parser.temp = bn.substring(0, bn.length() - 1);
+                       
+                       if (parser.declareVariable(parser.temp, "?", parser.currentScope.peek())) {
+                          RESULT = "boolean ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
                     :}
                 |
                     PERCENTAGE_NAME:pn
                     {:
-                       RESULT = "Percentage " + pn.substring(0, pn.length() - 1);
+                       parser.temp = pn.substring(0, pn.length() - 1);
+                       
+                       if (parser.declareVariable(parser.temp, "%", parser.currentScope.peek())) {
+                          RESULT = "Percentage ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
                     :}
 
                 |
                     LOCATION_NAME:ln
                     {:
-                       RESULT = "Location " + ln.substring(0, ln.length() - 1);
+                       parser.temp = ln.substring(0, ln.length() - 1);
+                       
+                       if (parser.declareVariable(parser.temp, "@", parser.currentScope.peek())) {
+                          RESULT = "Location ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
                     :}
                 |
                     ENEMY_NAME:en
                     {:
-                       RESULT = "Enemy " + en.substring(0, en.length() - 1);
+                       parser.temp = en.substring(0, en.length() - 1);
+                       
+                       if (parser.declareVariable(parser.temp, "!", parser.currentScope.peek())) {
+                          RESULT = "Enemy ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
                     :}
                 |
                     RESOURCE_NAME:rn
                     {:
-                       RESULT = "Resource " + rn.substring(0, rn.length() - 1);
+                       parser.temp = rn.substring(0, rn.length() - 1);
+                       
+                       if (parser.declareVariable(parser.temp, "$", parser.currentScope.peek())) {
+                          RESULT = "Resource ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
                     :}
 ;
 
-value           ::=   variable_name:vn       {:   RESULT = vn; :}
+value           ::=   field_name:fn          {:   RESULT = fn;     :}
                 |
-                      base_value:bv          {:   RESULT = bv; :}
+                      base_value:bv          {:   RESULT = bv;     :}
                 |
-                      constant_value:cv      {:   RESULT = cv; :}
+                      constant_value:cv      {:   RESULT = cv;     :}
+                |
+                      function_call:fc       {:   RESULT = fc;     :}
+                |
+                      field_access:fa        {:   RESULT = fa;     :}
+                |
+                      SELF                   {:   RESULT = "this"; :}
 ;
 
 base_value      ::=   boolean_expression:be    {:   RESULT = be; :}
@@ -407,7 +519,7 @@ assign_op               ::=   EQUALS
                         |     IS
 ;
 
-entry                   ::=   THINK NEWLINE
+entry                   ::=   THINK {: parser.changeScope("think"); :} NEWLINE
                               /*optnl local_declaration:ldcl*/
                               optnl statement:s
                               optnl END
@@ -416,6 +528,7 @@ entry                   ::=   THINK NEWLINE
                                  //RESULT += ldcl;
                                  RESULT += s;
                                  RESULT += "\t}\n";
+                                 parser.endScope();
                               :}
 ;
 
@@ -469,6 +582,12 @@ local_declaration       ::=   variable_name_local:vnl NEWLINE
                               /*optnl local_declaration:dcl*/
                               {:
                                  RESULT = "\t\t" + vnl + ";\n"/* + dcl*/;
+                              :}
+                        |
+                              variable_name_local:vnl assign_op value:val NEWLINE
+                              /*optnl local_declaration:dcl*/
+                              {:
+                                 RESULT = "\t\t" + vnl + " = " + val + ";\n" /*+ dcl*/;
                               :}
                         |
                               field_access:fa assign_op value:val NEWLINE

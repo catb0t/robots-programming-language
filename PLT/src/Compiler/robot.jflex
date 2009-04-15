@@ -121,7 +121,7 @@ min_hash=min\#
    "="
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched " + yytext());
+                     System.out.println("matched equals: " + yytext());
                   }
                   return new Symbol(sym.EQUALS);
          }
@@ -134,12 +134,19 @@ min_hash=min\#
                   return new Symbol(sym.IS); }
                   
     of
-	     {
-	              if (parser.bDebugFlag) {
+	  {
+	          if (parser.bDebugFlag) {
                      System.out.println("matched of: " + yytext());
                   }
                   return new Symbol(sym.OF);
-	     }
+	  }
+    self
+	  {
+	          if (parser.bDebugFlag) {
+                     System.out.println("matched self: " + yytext());
+                  }
+                  return new Symbol(sym.SELF);
+	  }
 
 
    true
