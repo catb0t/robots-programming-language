@@ -165,68 +165,36 @@ min_hash=min\#
                   return new Symbol(sym.FALSE);
          }
 
-   {identifier}
+   if
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched id function name: " + yytext());
+                     System.out.println("matched if: " + yytext());
                   }
-                  return new Symbol(sym.FUNCTION_NAME, new String(yytext()));
+                  return new Symbol(sym.IF);
+         }
+         
+   then
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched then: " + yytext());
+                  }
+                  return new Symbol(sym.THEN);
          }
 
-   {identifier}\#
+   else
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched id number: " + yytext());
+                     System.out.println("matched else: " + yytext());
                   }
-                  return new Symbol(sym.NUMBER_NAME, new String(yytext()));
-         }
+                  return new Symbol(sym.ELSE);
+         }         
 
-   {identifier}\?
+   done
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched id bool: " + yytext());
+                     System.out.println("matched done: " + yytext());
                   }
-                  return new Symbol(sym.BOOLEAN_NAME, new String(yytext()));
-         }
-
-   {identifier}\%
-         {
-                  if (parser.bDebugFlag) {
-                     System.out.println("matched id percent: " + yytext());
-                  }
-                  return new Symbol(sym.PERCENTAGE_NAME, new String(yytext()));
-         }
-
-   {identifier}\@
-         {
-                  if (parser.bDebugFlag) {
-                     System.out.println("matched id loc: " + yytext());
-                  }
-                  return new Symbol(sym.LOCATION_NAME, new String(yytext()));
-         }
-
-   {identifier}\!
-         {
-                  if (parser.bDebugFlag) {
-                     System.out.println("matched id enemy: " + yytext());
-                  }
-                  return new Symbol(sym.ENEMY_NAME, new String(yytext()));
-         }
-
-   {identifier}\$
-         {
-                  if (parser.bDebugFlag) {
-                     System.out.println("matched id resource: " + yytext());
-                  }
-                  return new Symbol(sym.RESOURCE_NAME, new String(yytext()));
-         }
-
-   {identifier}\.\.\.
-         {
-                  if (parser.bDebugFlag) {
-                     System.out.println("matched id list: " + yytext());
-                  }
-                  return new Symbol(sym.LIST_NAME, new String(yytext()));
+                  return new Symbol(sym.DONE);
          }
 
    {max_hash}
@@ -243,6 +211,94 @@ min_hash=min\#
                      System.out.println("matched min_hash: " + yytext());
                   }
                   return new Symbol(sym.MIN_HASH);
+         }
+
+   {identifier}
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched id function name: " + yytext());
+                  }
+                  return new Symbol(sym.FUNCTION_NAME, new String(yytext()));
+         }
+
+   {identifier}\#(\.\.\.)?
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched id number/number_list: " + yytext());
+                  }
+                  /* check if list type */
+                  if(yytext().endsWith("...")) {
+                     return new Symbol(sym.NUMBER_LIST, new String(yytext()));
+                  }
+                  return new Symbol(sym.NUMBER_NAME, new String(yytext()));
+         }
+
+   {identifier}\?(\.\.\.)?
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched boolean/boolean_list" + yytext());
+                  }
+                  /* check if list type */
+                  if(yytext().endsWith("...")) {
+                     return new Symbol(sym.BOOLEAN_LIST, new String(yytext()));
+                  }
+                  return new Symbol(sym.BOOLEAN_NAME, new String(yytext()));
+         }
+
+   {identifier}\%(\.\.\.)?
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched percentage/percentage_list" + yytext());
+                  }
+                  /* check if list type */
+                  if(yytext().endsWith("...")) {
+                     return new Symbol(sym.PERCENTAGE_LIST, new String(yytext()));
+                  }
+                  return new Symbol(sym.PERCENTAGE_NAME, new String(yytext()));
+         }
+
+   {identifier}\@(\.\.\.)?
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched id loc/loc_list: " + yytext());
+                  }
+                  /* check if list type */
+                  if(yytext().endsWith("...")) {
+                     return new Symbol(sym.LOCATION_LIST, new String(yytext()));
+                  }
+                  return new Symbol(sym.LOCATION_NAME, new String(yytext()));
+         }
+
+   {identifier}\!(\.\.\.)?
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched id enemy/enemy_list: " + yytext());
+                  }
+                  /* check if list type */
+                  if(yytext().endsWith("...")) {
+                     return new Symbol(sym.ENEMY_LIST, new String(yytext()));
+                  }
+                  return new Symbol(sym.ENEMY_NAME, new String(yytext()));
+         }
+
+   {identifier}\$(\.\.\.)?
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched id resource/resource_list: " + yytext());
+                  }
+                  /* check if list type */
+                  if(yytext().endsWith("...")) {
+                     return new Symbol(sym.RESOURCE_LIST, new String(yytext()));
+                  }
+                  return new Symbol(sym.RESOURCE_NAME, new String(yytext()));
+         }
+
+   {identifier}\.\.\.
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched id list: " + yytext());
+                  }
+                  return new Symbol(sym.LIST_NAME, new String(yytext()));
          }
 
    "//"
