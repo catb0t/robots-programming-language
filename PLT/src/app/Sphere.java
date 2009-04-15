@@ -1,16 +1,23 @@
 package app;
 
+import javax.media.opengl.GL;
+
 
 
 public class Sphere {
 
+	GL gl;
 	
-	
-	void renderSphere( float cx, float cy, float cz, float r, int p )
+	public Sphere(GL ingl)
 	{
-	    const float PI     = 3.14159265358979f;
-	    const float TWOPI  = 6.28318530717958f;
-	    const float PIDIV2 = 1.57079632679489f;
+		gl = ingl;
+	}
+	
+	void renderSphere( float cx, float cy, float cz, float r, int p)
+	{
+	    float PI     = 3.14159265358979f;
+	    float TWOPI  = 6.28318530717958f;
+	    float PIDIV2 = 1.57079632679489f;
 
 	    float theta1 = 0.0f;
 	    float theta2 = 0.0f;
@@ -35,47 +42,47 @@ public class Sphere {
 	    // If the sphere is too small, just render a OpenGL point instead.
 	    if( p < 4 || r <= 0 ) 
 	    {
-	        glBegin( GL_POINTS );
-	        glVertex3f( cx, cy, cz );
-	        glEnd();
+	        gl.glBegin( GL.GL_POINTS );
+	        gl.glVertex3f( cx, cy, cz );
+	        gl.glEnd();
 	        return;
 	    }
 
-	    for( int i = 0; i < p/2; ++i )
+	    for( int i = 0; i <= p/2; i++ )
 	    {
 	        theta1 = i * TWOPI / p - PIDIV2;
 	        theta2 = (i + 1) * TWOPI / p - PIDIV2;
 
-	        glBegin( GL_TRIANGLE_STRIP );
+	        gl.glBegin( GL.GL_TRIANGLE_STRIP );
 	        {
-	            for( int j = 0; j <= p; ++j )
+	            for( int j = p; j >= 0; --j )
 	            {
 	                theta3 = j * TWOPI / p;
 
-	                ex = cosf(theta2) * cosf(theta3);
-	                ey = sinf(theta2);
-	                ez = cosf(theta2) * sinf(theta3);
+	                ex = (float)(Math.cos(theta2) * Math.cos(theta3));
+	                ey = (float)(Math.sin(theta2));
+	                ez = (float)(Math.cos(theta2) * Math.sin(theta3));
 	                px = cx + r * ex;
 	                py = cy + r * ey;
 	                pz = cz + r * ez;
 
-	                glNormal3f( ex, ey, ez );
-	                glTexCoord2f( -(j/(float)p) , 2*(i+1)/(float)p );
-	                glVertex3f( px, py, pz );
+	                gl.glNormal3f( ex, ey, ez );
+	                gl.glTexCoord2f( -(j/(float)p) , 2*(i+1)/(float)p );
+	                gl.glVertex3f( px, py, pz );
 
-	                ex = cosf(theta1) * cosf(theta3);
-	                ey = sinf(theta1);
-	                ez = cosf(theta1) * sinf(theta3);
+	                ex = (float)(Math.cos(theta1) * Math.cos(theta3));
+	                ey = (float)(Math.sin(theta1));
+	                ez = (float)(Math.cos(theta1) * Math.sin(theta3));
 	                px = cx + r * ex;
 	                py = cy + r * ey;
 	                pz = cz + r * ez;
 
-	                glNormal3f( ex, ey, ez );
-	                glTexCoord2f( -(j/(float)p), 2*i/(float)p );
-	                glVertex3f( px, py, pz );
+	                gl.glNormal3f( ex, ey, ez );
+	                gl.glTexCoord2f( -(j/(float)p), 2*i/(float)p );
+	                gl.glVertex3f( px, py, pz );
 	            }
 	        }
-	        glEnd();
+	        gl.glEnd();
 	    }
 	}
 	

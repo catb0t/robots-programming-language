@@ -6,6 +6,8 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
+import app.TextureReader;
+import app.Robot;
 
 public class Robot {
 	
@@ -14,6 +16,8 @@ public class Robot {
 	private int energy;
 	
 	float max_speed=1;
+	
+	private GLU glu = new GLU();
 	
 	public Vector3 forwardDirection = null;
 	public Vector3 position = null;
@@ -24,12 +28,12 @@ public class Robot {
 	Vector3 direction = null;
 	Terrain terrain;
 	OBJ_Model robot_head;
-	OBJ_Model robot_mouth;
-	OBJ_Model robot_lefteye;
-	OBJ_Model robot_leftear;
-	OBJ_Model robot_leftear_ball;
 	OBJ_Model robot_torso;
-	OBJ_Model robot_shoulders;
+
+	Sphere sphere = null;
+	
+    private int robotTexture;
+    private int laserTexture;
 	
 	
 	public Robot(Terrain t)
@@ -45,35 +49,187 @@ public class Robot {
 		forwardDirection = new Vector3(0, 0, -1);
 		terrain = t;
 		
-//		robot_head = new OBJ_Model(gl, "robot/robot_head.obj");
-//		robot_mouth = new OBJ_Model(gl, "robot/robot_mouth.obj");
-//		robot_lefteye = new OBJ_Model(gl, "robot/robot_lefteye.obj");
-//		robot_leftear = new OBJ_Model(gl, "robot/robot_leftear.obj");
-//		robot_leftear_ball = new OBJ_Model(gl, "robot/robot_leftear_ball.obj");
-		
-		robot_torso = new OBJ_Model(gl, "robot/robot_torso.obj");
-//		robot_shoulders = new OBJ_Model(gl, "robot/robot_shoulders.obj");
+		robot_head = new OBJ_Model(gl, "robot/robotHead.obj");	
+		robot_torso = new OBJ_Model(gl, "robot/robotTorso.obj");
+
 		
 		
 		forwardDirection = new Vector3(0, 0, -1);
 		position = new Vector3(0, 0, 0);
+		
+		sphere = new Sphere(gl);
+		
+		robotTexture = genTexture(gl);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, robotTexture);
+        TextureReader.Texture texture = null;
+		gl.glEnable(GL.GL_TEXTURE_2D);
+
+        //TextureReader.Texture waterTexture = null;
+        try {
+        	texture = TextureReader.readTexture("media/robot/robotTexture.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        makeRGBTexture(gl, glu, texture, GL.GL_TEXTURE_2D, false);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+
+
+		laserTexture = genTexture(gl);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, laserTexture);
+        texture = null;
+        //TextureReader.Texture waterTexture = null;
+        try {
+        	texture = TextureReader.readTexture("media/robot/red.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        makeRGBTexture(gl, glu, texture, GL.GL_TEXTURE_2D, false);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+
+        
 	}
 	
 	//This is for only UnitTest.
 	public Robot() {
 		// TODO Auto-generated constructor stub
 	}
+	
+  private void makeRGBTexture(GL gl, GLU glu, TextureReader.Texture img, 
+            int target, boolean mipmapped) {
+        
+        if (mipmapped) {
+            glu.gluBuild2DMipmaps(target, GL.GL_RGB8, img.getWidth(), 
+                    img.getHeight(), GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img.getPixels());
+        } else {
+            gl.glTexImage2D(target, 0, GL.GL_RGB, img.getWidth(), 
+                    img.getHeight(), 0, GL.GL_RGB, GL.GL_UNSIGNED_BYTE, img.getPixels());
+        }
+    }
+	
+    private int genTexture(GL gl) {
+        final int[] tmp = new int[1];
+        gl.glGenTextures(1, tmp, 0);
+        return tmp[0];
+    }
 
-	public void renderRobot(GL gl)
+	public void renderRobot(GL gl, float time)
 	{
-		float scale = 30;
+        gl.glBindTexture(GL.GL_TEXTURE_2D, robotTexture);
+		float scale = 0.5f;
+//		gl.glTranslatef(0, -6, 0);
 		gl.glScalef(scale, scale, scale);
-		//robot_head.render(gl);
+		gl.glPushMatrix();
+			float height = (float)(Math.cos(time)*Math.cos(time + 3.14f));
+			gl.glTranslatef(0, 7 + height, 0);
+			sphere.renderSphere(0,0,0, 0.5f, 15);
+
+			gl.glTranslatef(0, -1.3f, 0);
+			sphere.renderSphere(0,0,0, 0.8f, 15);
+			
+			//left arm
+			gl.glPushMatrix();
+				float leftArm = (float)Math.cos(time);
+				gl.glTranslatef(1.1f, 0.4f, leftArm*0.5f);
+				sphere.renderSphere(0,0,0, 0.4f, 15);
+				
+				gl.glTranslatef(0.2f, -0.6f, leftArm*0.4f);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(0.1f, -0.5f, leftArm*0.45f);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(0.1f, -0.4f, leftArm*0.5f);
+				sphere.renderSphere(0,0,0, 0.22f, 15);
+				
+				gl.glTranslatef(0.1f, -0.4f, leftArm*0.6f);
+				sphere.renderSphere(0,0,0, 0.215f, 15);
+			gl.glPopMatrix();
+			
+			//right arm
+			gl.glPushMatrix();
+				float rightArm = (float)Math.cos(time + 3.14f);
+				gl.glTranslatef(-1.1f, 0.4f, rightArm*0.5f);
+				sphere.renderSphere(0,0,0, 0.4f, 15);
+				
+				gl.glTranslatef(-0.2f, -0.6f, rightArm*0.4f);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.5f, rightArm*0.45f);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.4f, rightArm*0.5f);
+				sphere.renderSphere(0,0,0, 0.22f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.4f, rightArm*0.6f);
+				sphere.renderSphere(0,0,0, 0.215f, 15);
+			gl.glPopMatrix();
+		
+		
+			gl.glTranslatef(0, -1.0f, 0);
+			sphere.renderSphere(0,0,0, 0.5f, 15);
+
+			gl.glTranslatef(0, -0.9f, 0);
+			sphere.renderSphere(0,0,0, 0.3f, 15);
+			
+			//left leg
+			gl.glPushMatrix();
+				float leftLeg = (float)Math.cos(time + 1.57f);
+				gl.glTranslatef(0.6f, -0.2f - leftLeg*0.1f, rightArm*0.1f);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(0.1f, -0.6f - leftLeg*0.1f, rightArm*0.25f);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(0.05f, -0.6f - leftLeg*0.1f, rightArm*0.35f);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(0.025f, -0.55f - leftLeg*0.1f, rightArm*0.475f);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(0.0125f, -0.45f - leftLeg*0.1f, rightArm*0.6f);
+				sphere.renderSphere(0,0,0, 0.215f, 15);
+				
+				gl.glTranslatef(0.0f, -0.45f - leftLeg*0.1f, rightArm*0.7f);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+			gl.glPopMatrix();
+			
+			//right leg
+			gl.glPushMatrix();
+				float rightLeg = (float)Math.cos(time + 1.57f + 3.14f);
+				gl.glTranslatef(-0.6f, -0.2f - rightLeg*0.1f, leftArm*0.1f);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.6f - rightLeg*0.1f, leftArm*0.25f);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(-0.05f, -0.6f - rightLeg*0.1f, leftArm*0.35f);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(-0.025f, -0.55f - rightLeg*0.1f, leftArm*0.475f);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(-0.0125f, -0.45f - rightLeg*0.1f, leftArm*0.6f);
+				sphere.renderSphere(0,0,0, 0.215f, 15);
+				
+				gl.glTranslatef(-0.0f, -0.45f - rightLeg*0.1f, leftArm*0.7f);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+			gl.glPopMatrix();
+			
+			
+		
+		gl.glPopMatrix();
+
+			
+	//	robot_head.render(gl);
 		//robot_mouth.render(gl);
 	//	robot_lefteye.render(gl);
 	//	robot_leftear.render(gl);
 	//	robot_leftear_ball.render(gl);
-		robot_torso.render(gl);
+	//	robot_torso.render(gl);
 	//	robot_shoulders.render(gl);
 		
 		
