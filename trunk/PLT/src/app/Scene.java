@@ -27,10 +27,12 @@ public class Scene implements GLEventListener {
 	private Camera cam = null;
 	public Terrain terrain = null;
 	public double DOUBLETROUBLEINMYROOM = 69;
-	private int waterTexture;
+
 	public Robot player = null;
 	public Robot playerAvatar = null;
 	OBJ_Model model = null;
+	
+    private int waterTexture;
 	
 	float t = 0;
 	
@@ -47,6 +49,8 @@ public class Scene implements GLEventListener {
     private int fogMode[] = {GL.GL_EXP, GL.GL_EXP2, GL.GL_LINEAR};	// Storage For Three Types Of Fog ( new )
     private int fogfilter = 2;								// Which Fog Mode To Use      ( new )
     private float fogColor[] = {0.5f, 0.5f, 0.5f, 1.0f};		// Fog Color               ( new )
+    
+    float time = 0;
 
 	public void display(GLAutoDrawable drawable) {
 		final GL gl = drawable.getGL();
@@ -69,6 +73,9 @@ public class Scene implements GLEventListener {
 		
 		//draw the terrain
 		terrain.renderHeightMap(gl);
+		drawWater(gl);
+		Sphere sphere = new Sphere(gl);
+
 		
 		//render robot
 		physics();
@@ -76,7 +83,9 @@ public class Scene implements GLEventListener {
 		gl.glTranslatef(player.position.x, player.position.y, player.position.z);
 		//gl.glCallList(robotDL);
 	//		model.render(gl);
-	//		playerAvatar.renderRobot(gl);
+
+			time += 0.04f;
+			playerAvatar.renderRobot(gl, time);
 		gl.glPopMatrix();
 					
 	}
@@ -86,7 +95,7 @@ public class Scene implements GLEventListener {
 		
 		gl.glPushMatrix();
         gl.glBindTexture(GL.GL_TEXTURE_2D, waterTexture);
-		gl.glScalef(100.0f, 0.0f, 100.0f);
+		gl.glScalef(1000.0f, 0.0f, 1000.0f);
 			gl.glCallList(waterDL);		
 		gl.glPopMatrix();
 	}
@@ -99,18 +108,18 @@ public class Scene implements GLEventListener {
 			gl.glBegin(GL.GL_TRIANGLES);
 			gl.glColor3f(1.0f,1.0f, 1.0f);
 			
-			gl.glTexCoord2f(1.0f, 0.0f);
+			gl.glTexCoord2f(100.0f, 0.0f);
 			gl.glVertex3f( 1.0f, 0.0f, -1.0f);
 			gl.glTexCoord2f(0.0f, 0.0f);
 			gl.glVertex3f(-1.0f, 0.0f, -1.0f);
-			gl.glTexCoord2f(1.0f, 1.0f);
+			gl.glTexCoord2f(100.0f, 100.0f);
 			gl.glVertex3f( 1.0f, 0.0f,  1.0f);
 			
-			gl.glTexCoord2f(1.0f, 1.0f);
+			gl.glTexCoord2f(100.0f, 100.0f);
 			gl.glVertex3f( 1.0f, 0.0f,  1.0f);
 			gl.glTexCoord2f(0.0f, 0.0f);
 			gl.glVertex3f(-1.0f, 0.0f, -1.0f);
-			gl.glTexCoord2f(0.0f, 1.0f);
+			gl.glTexCoord2f(0.0f, 100.0f);
 			gl.glVertex3f( -1.0f, 0.0f, 1.0f);
 			gl.glEnd();	
 	
@@ -229,12 +238,15 @@ public class Scene implements GLEventListener {
 		gl.glDepthFunc(GL.GL_LEQUAL);
 		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 		cam = new Camera();
-		gl.glEnable(GL.GL_TEXTURE_2D);
-        waterTexture = genTexture(gl);
+		
+		waterTexture = genTexture(gl);
         gl.glBindTexture(GL.GL_TEXTURE_2D, waterTexture);
         TextureReader.Texture texture = null;
+		gl.glEnable(GL.GL_TEXTURE_2D);
+
+        //TextureReader.Texture waterTexture = null;
         try {
-            texture = TextureReader.readTexture("media/terrrain(256x256).jpg");
+        	texture = TextureReader.readTexture("media/water_deep.png");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -243,6 +255,7 @@ public class Scene implements GLEventListener {
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
         
+       
         //create the terrain, water and skySphere display list
         terrain = new Terrain(gl);
         createWater(gl);
