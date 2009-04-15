@@ -24,7 +24,7 @@ block={whitespace}*(\||\+---)
 identifier=[a-zA-Z][a-zA-Z0-9_]*
 digits=[0-9]+
 number={digits}(\.{digits})?(E[+-]?{digits})?
-percentage={digits}%
+percentage={number}%
 max_hash=max\#
 min_hash=min\#
 
