@@ -16,6 +16,7 @@ parser code {:
 	public static String  robotProgram;
 	public static String  globalDeclarations;
 	public static boolean bDebugFlag;
+
 	/* stores a basic symbol table */
 	public static HashMap<String, String> variableMap;
         public static Stack<String> currentScope;
@@ -107,12 +108,15 @@ terminal         SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
 terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
 terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT, OF, SELF;
+terminal         IF, THEN, ELSE, DONE;
 terminal Integer NUMBER;
 terminal Double  NUMBER_EXPRESSION;
 terminal String  NUMBER_PERCENTAGE;
 terminal String  ANYTHING, INT_IDX;
 terminal String  NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME;
 terminal String  ENEMY_NAME, RESOURCE_NAME, LIST_NAME, FUNCTION_NAME;
+terminal String  NUMBER_LIST, BOOLEAN_LIST, PERCENTAGE_LIST, LOCATION_LIST;
+terminal String  ENEMY_LIST, RESOURCE_LIST;
 
 /* Non-terminals */
 non terminal         expr_list, expr_part;
@@ -124,6 +128,7 @@ non terminal String  boolean_final, base_value, declaration, boolean_expression;
 non terminal String  arithmetic_expression, arithmetic_operator, constant_value;
 non terminal String  value, call, field_access, local_declaration;
 non terminal String  field_name;
+non terminal String  conditional, else_statement;
 non terminal String  argument, arguments, arguments_act, function_call;
 
 /* Precedences */
@@ -206,6 +211,11 @@ field_name      ::=  NUMBER_NAME:nn
                        RESULT = nn.substring(0, nn.length() - 1);
                      :}
                  |
+                     NUMBER_LIST:nl
+                     {:
+                       RESULT = nl.substring(0, nl.length() - 4);
+                     :}
+                 |
                     LIST_NAME:ln
                     {:
                        RESULT = ln.substring(0, ln.length() - 3);
@@ -225,6 +235,11 @@ field_name      ::=  NUMBER_NAME:nn
                     LOCATION_NAME:ln
                     {:
                        RESULT = ln.substring(0, ln.length() - 1);
+                    :}
+                |
+                    LOCATION_LIST:ll
+                    {:
+                       RESULT = ll.substring(0, ll.length() - 4);
                     :}
                 |
                     ENEMY_NAME:en
@@ -379,6 +394,19 @@ variable_name_local  ::=
                        RESULT += parser.temp;
                     :}
                  |
+                    NUMBER_LIST:nl
+                    {:
+                       parser.temp = nl.substring(0, nl.length() - 4);
+                       
+                       if (parser.declareVariable(parser.temp, "#...", parser.currentScope.peek())) {
+                          RESULT = "double[] ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
+                    :}
+                 |
                     LIST_NAME:ln
                     {:
                        parser.temp = ln.substring(0, ln.length() - 3);
@@ -425,6 +453,19 @@ variable_name_local  ::=
                        
                        if (parser.declareVariable(parser.temp, "@", parser.currentScope.peek())) {
                           RESULT = "Location ";
+                       } else {
+                          RESULT = "";
+                       }
+                       
+                       RESULT += parser.temp;
+                    :}
+                |
+                    LOCATION_LIST:ll
+                    {:
+                       parser.temp = ll.substring(0, ll.length() - 1);
+                       
+                       if (parser.declareVariable(parser.temp, "@...", parser.currentScope.peek())) {
+                          RESULT = "Location[] ";
                        } else {
                           RESULT = "";
                        }
@@ -549,15 +590,26 @@ statement               ::=   call:cl optnl statement:stmt
                               local_declaration:ldcl optnl statement:stmt
                               {: RESULT = ldcl + stmt; :}
                         |
+                              conditional:cond optnl statement:stmt
+                              {: RESULT = cond + stmt; :}
+                        |
                               /* empty */
                               {: RESULT = ""; :}
+;
+
+conditional             ::=   IF boolean_expression THEN NEWLINE
+                              statement else_statement DONE NEWLINE
+;
+
+else_statement          ::=   ELSE NEWLINE statement
+                        |     /* empty */
 ;
 
 function_call           ::=   function_name:fn
                               arguments_act:args
                               NEWLINE
                               {:
-                                 // remove the final ,<space> : (arg1, arg2, ,<space>)
+                                 // remove the final ,<space> : (arg1, arg2,<space>)
                                  args = args.trim();
                                  if (args.endsWith(",")) {
                          	    args = args.substring(0, args.length() - 1);
@@ -579,27 +631,19 @@ arguments_act           ::=   value:arg arguments_act:args
 ;
 
 local_declaration       ::=   variable_name_local:vnl NEWLINE 
-                              /*optnl local_declaration:dcl*/
                               {:
                                  RESULT = "\t\t" + vnl + ";\n"/* + dcl*/;
                               :}
                         |
                               variable_name_local:vnl assign_op value:val NEWLINE
-                              /*optnl local_declaration:dcl*/
                               {:
                                  RESULT = "\t\t" + vnl + " = " + val + ";\n" /*+ dcl*/;
                               :}
                         |
                               field_access:fa assign_op value:val NEWLINE
-                              /*optnl local_declaration:dcl*/
                               {:
                                  RESULT = "\t\t" + fa + " = " + val + ";\n" /*+ dcl*/;
                               :}
-                        /*|*/
-                              ///* empty */
-                              /*{:
-                                 RESULT = "";
-                              :}*/
 ;
 
 call                    ::=   SAY ANYTHING:a NEWLINE
