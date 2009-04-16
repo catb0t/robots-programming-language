@@ -66,7 +66,7 @@ public class Sphere {
 	                py = cy + r * ey;
 	                pz = cz + r * ez;
 
-	                gl.glNormal3f( ex, ey, ez );
+	                gl.glNormal3f( -ex, -ey, -ez );
 	                gl.glTexCoord2f( -(j/(float)p) , 2*(i+1)/(float)p );
 	                gl.glVertex3f( px, py, pz );
 
@@ -77,7 +77,7 @@ public class Sphere {
 	                py = cy + r * ey;
 	                pz = cz + r * ez;
 
-	                gl.glNormal3f( ex, ey, ez );
+	                gl.glNormal3f( -ex, -ey, -ez );
 	                gl.glTexCoord2f( -(j/(float)p), 2*i/(float)p );
 	                gl.glVertex3f( px, py, pz );
 	            }

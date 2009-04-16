@@ -80,12 +80,17 @@ public class Scene implements GLEventListener {
 		//render robot
 		physics();
 		gl.glPushMatrix();
-		gl.glTranslatef(player.position.x, player.position.y, player.position.z);
-		//gl.glCallList(robotDL);
-	//		model.render(gl);
+			float[] lightAmbient = {1.5f, 1.5f, 1.5f, 1.0f};
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient, 0);
+		
+			gl.glTranslatef(player.position.x, player.position.y, player.position.z);
+			//gl.glCallList(robotDL);
+		//		model.render(gl);
 
 			time += 0.04f;
 			playerAvatar.renderRobot(gl, time);
+			
+			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
 		gl.glPopMatrix();
 					
 	}
