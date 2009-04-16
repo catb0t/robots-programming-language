@@ -21,6 +21,7 @@ public class Robot {
 	
 	public Vector3 forwardDirection = null;
 	public Vector3 position = null;
+	public Vector3 goal = null;
 	
 	LinkedList<Enemy> enemy_list;
 	LinkedList<Resource> resource_list;
@@ -32,6 +33,7 @@ public class Robot {
 
 	Sphere sphere = null;
 	
+	private int robotFace;
     private int robotTexture;
     private int laserTexture;
 	
@@ -47,6 +49,7 @@ public class Robot {
 	{
 		gl = g;
 		forwardDirection = new Vector3(0, 0, -1);
+
 		terrain = t;
 		
 		robot_head = new OBJ_Model(gl, "robot/robotHead.obj");	
@@ -56,17 +59,37 @@ public class Robot {
 		
 		forwardDirection = new Vector3(0, 0, -1);
 		position = new Vector3(0, 0, 0);
+		goal = new Vector3(0, 0, 0);
 		
 		sphere = new Sphere(gl);
 		
-		robotTexture = genTexture(gl);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, robotTexture);
+		
+		robotFace = genTexture(gl);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, robotFace);
         TextureReader.Texture texture = null;
 		gl.glEnable(GL.GL_TEXTURE_2D);
 
         //TextureReader.Texture waterTexture = null;
         try {
-        	texture = TextureReader.readTexture("media/robot/robotTexture.png");
+        	texture = TextureReader.readTexture("media/robot/robotFace.png");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        makeRGBTexture(gl, glu, texture, GL.GL_TEXTURE_2D, false);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
+
+        
+		
+		robotTexture = genTexture(gl);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, robotTexture);
+        texture = null;
+		gl.glEnable(GL.GL_TEXTURE_2D);
+
+        //TextureReader.Texture waterTexture = null;
+        try {
+        	texture = TextureReader.readTexture("media/robot/robotBody.png");
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -116,9 +139,145 @@ public class Robot {
         return tmp[0];
     }
 
-	public void renderRobot(GL gl, float time)
+    
+    public void renderRobot(GL gl, float time)
+    {
+    	//need to figure out if the robot is walking right now, and in what direction
+    	if( (position.x != goal.x) && (position.z != goal.z) )
+    	{
+    		gl.glPushMatrix();
+    			//point our robot in the right direction
+    			renderRobotWalking(gl, time);
+    		gl.glPopMatrix();
+    	}
+    	else //our robot is at its goal, play idle animation
+    	{
+    		gl.glPushMatrix();
+				//point our robot in the right direction
+				renderRobotWalking(gl, time);
+			gl.glPopMatrix();
+    	}
+    	
+    	
+    }
+    
+	private void renderRobotWalking(GL gl, float time)
 	{
-        gl.glBindTexture(GL.GL_TEXTURE_2D, robotTexture);
+        gl.glBindTexture(GL.GL_TEXTURE_2D, robotFace);
+		float scale = 0.5f;
+//		gl.glTranslatef(0, -6, 0);
+		gl.glScalef(scale, scale, scale);
+		gl.glPushMatrix();
+			float height = (float)(Math.cos(time)*Math.cos(time + 3.14f));
+			gl.glTranslatef(0, 7 + height*0.45f, 0);
+			sphere.renderSphere(0,0,0, 0.5f, 15);
+
+		    gl.glBindTexture(GL.GL_TEXTURE_2D, robotTexture);
+		       
+			gl.glTranslatef(0, -1.3f - height*0.05f, 0);
+			sphere.renderSphere(0,0,0, 0.8f, 15);
+			
+			//left arm
+			gl.glPushMatrix();
+				float leftArm = (float)Math.cos(time);
+				gl.glTranslatef(1.1f, 0.4f, 0);
+				sphere.renderSphere(0,0,0, 0.4f, 15);
+				
+				gl.glTranslatef(0.2f, -0.6f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(0.1f, -0.5f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(0.1f, -0.4f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.22f, 15);
+				
+				gl.glTranslatef(0.1f, -0.4f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.215f, 15);
+			gl.glPopMatrix();
+			
+			//right arm
+			gl.glPushMatrix();
+				float rightArm = (float)Math.cos(time + 3.14f);
+				gl.glTranslatef(-1.1f, 0.4f, 0);
+				sphere.renderSphere(0,0,0, 0.4f, 15);
+				
+				gl.glTranslatef(-0.2f, -0.6f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.5f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.4f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.22f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.4f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.215f, 15);
+			gl.glPopMatrix();
+		
+		
+			gl.glTranslatef(0, -1.0f, 0);
+			sphere.renderSphere(0,0,0, 0.5f, 15);
+
+			gl.glTranslatef(0, -0.9f - height*0.05f, 0);
+			sphere.renderSphere(0,0,0, 0.3f, 15);
+			
+			//left leg
+			gl.glPushMatrix();
+				float leftLeg = (float)Math.cos(time + 1.57f);
+				gl.glTranslatef(0.6f, -0.2f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(0.1f, -0.6f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(0.05f, -0.6f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(0.025f, -0.55f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(0.0125f, -0.45f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.27f, 15);
+				
+				gl.glTranslatef(0.0f, -0.45f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.31f, 15);
+			gl.glPopMatrix();
+			
+			//right leg
+			gl.glPushMatrix();
+				float rightLeg = (float)Math.cos(time + 1.57f + 3.14f);
+				gl.glTranslatef(-0.6f, -0.2f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(-0.1f, -0.6f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.3f, 15);
+				
+				gl.glTranslatef(-0.05f, -0.6f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.25f, 15);
+				
+				gl.glTranslatef(-0.025f, -0.55f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.225f, 15);
+				
+				gl.glTranslatef(-0.0125f, -0.45f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.27f, 15);
+				
+				gl.glTranslatef(-0.0f, -0.45f - height*0.05f, 0);
+				sphere.renderSphere(0,0,0, 0.31f, 15);
+			gl.glPopMatrix();
+			
+			
+		
+		gl.glPopMatrix();
+		
+		
+	}
+	
+	
+	
+	private void renderRobotIdle(GL gl, float time)
+	{
+        gl.glBindTexture(GL.GL_TEXTURE_2D, robotFace);
 		float scale = 0.5f;
 //		gl.glTranslatef(0, -6, 0);
 		gl.glScalef(scale, scale, scale);
@@ -127,6 +286,8 @@ public class Robot {
 			gl.glTranslatef(0, 7 + height, 0);
 			sphere.renderSphere(0,0,0, 0.5f, 15);
 
+		    gl.glBindTexture(GL.GL_TEXTURE_2D, robotTexture);
+		       
 			gl.glTranslatef(0, -1.3f, 0);
 			sphere.renderSphere(0,0,0, 0.8f, 15);
 			
@@ -191,10 +352,10 @@ public class Robot {
 				sphere.renderSphere(0,0,0, 0.225f, 15);
 				
 				gl.glTranslatef(0.0125f, -0.45f - leftLeg*0.1f, rightArm*0.6f);
-				sphere.renderSphere(0,0,0, 0.215f, 15);
+				sphere.renderSphere(0,0,0, 0.27f, 15);
 				
 				gl.glTranslatef(0.0f, -0.45f - leftLeg*0.1f, rightArm*0.7f);
-				sphere.renderSphere(0,0,0, 0.25f, 15);
+				sphere.renderSphere(0,0,0, 0.31f, 15);
 			gl.glPopMatrix();
 			
 			//right leg
@@ -213,24 +374,16 @@ public class Robot {
 				sphere.renderSphere(0,0,0, 0.225f, 15);
 				
 				gl.glTranslatef(-0.0125f, -0.45f - rightLeg*0.1f, leftArm*0.6f);
-				sphere.renderSphere(0,0,0, 0.215f, 15);
+				sphere.renderSphere(0,0,0, 0.27f, 15);
 				
 				gl.glTranslatef(-0.0f, -0.45f - rightLeg*0.1f, leftArm*0.7f);
-				sphere.renderSphere(0,0,0, 0.25f, 15);
+				sphere.renderSphere(0,0,0, 0.31f, 15);
 			gl.glPopMatrix();
 			
 			
 		
 		gl.glPopMatrix();
 
-			
-	//	robot_head.render(gl);
-		//robot_mouth.render(gl);
-	//	robot_lefteye.render(gl);
-	//	robot_leftear.render(gl);
-	//	robot_leftear_ball.render(gl);
-	//	robot_torso.render(gl);
-	//	robot_shoulders.render(gl);
 		
 		
 	}
@@ -263,6 +416,8 @@ public class Robot {
 		
 		float tempx = 10*(float)Math.cos((double)t/10000000.0);
 		float tempy = 10*(float)Math.sin((double)t/10000000.0);
+		
+		goal = new Vector3();
 		
 		forwardDirection = new Vector3(tempx, position.y + 5, tempy);
 		
@@ -302,6 +457,11 @@ public class Robot {
 	public double distance (Vector3 origin, Vector3 goal)
 	{
 		return Math.sqrt(Math.pow(origin.x - goal.x, 2)+Math.pow(origin.y - goal.y, 2)+Math.pow(origin.z - goal.z, 2));
+	}
+	
+	public float direction (Vector3 origin, Vector3 goal)
+	{
+		return (float)Math.atan2((double)(origin.z - goal.z), (double)(origin.y - goal.y));
 	}
 	
 	public LinkedList<Enemy> get_enemies ()
