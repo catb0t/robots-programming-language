@@ -40,6 +40,8 @@ LEX_FILES      := Yylex
 
 PARSE_SETTINGS := -dump_states -dump_grammar -expect 11
 
+HELPER_FILES   := RobotVar RobotType
+
 ######################
 # GENERATED SETTINGS #
 ######################
@@ -55,11 +57,14 @@ LEX_SRC            := $(addsuffix .java, $(LEX_FILES))
 PARSER_LEX_FILES   := $(PARSER_FILES) $(LEX_FILES)
 PARSER_LEX_CLASSES := $(addprefix $(PACKAGE_DIR), $(addsuffix .class, $(PARSER_LEX_FILES)))
 
+HELPER_SRC         := $(addsuffix .java, $(HELPER_FILES))
+HELPER_CLASSES     := $(addprefix $(PACKAGE_DIR), $(addsuffix .class, $(HELPER_FILES)))
+
 ###################################
 # TARGETS FOR BUILDING THE PARSER #
 ###################################
 
-$(PARSER_LEX_CLASSES): $(PARSER_SRC) $(LEX_SRC)
+$(PARSER_LEX_CLASSES): $(PARSER_SRC) $(LEX_SRC) $(HELPER_CLASSES)
 	$(COMPILE) $(COMPILE_FLAGS) $(PARSER_SRC) $(LEX_SRC)
 
 $(LEX_SRC): $(LEXER) 
@@ -67,6 +72,9 @@ $(LEX_SRC): $(LEXER)
 
 $(PARSER_SRC): $(GRAMMAR)
 	$(RUN) $(RUN_FLAGS) java_cup.Main $(PARSE_SETTINGS) $(GRAMMAR) > grammar.txt 2>&1
+
+$(HELPER_CLASSES): $(HELPER_SRC)
+	$(COMPILE) $(COMPILE_FLAGS) $(HELPER_SRC)
 
 #############################
 # TARGETS FOR TEST PROGRAMS #
@@ -87,6 +95,7 @@ clean:
 	rm $(addprefix ./, $(addsuffix .java, $(TEST_PROGRAMS))) \
            $(addprefix ./, $(addsuffix .parse, $(TEST_PROGRAMS))) \
            $(PARSER_LEX_CLASSES) \
+           $(HELPER_CLASSES) \
            $(PARSER_SRC) \
            $(LEX_SRC) \
            grammar.txt
