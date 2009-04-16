@@ -38,7 +38,7 @@ PACKAGE_NAME   := Robot
 PARSER_FILES   := parser sym
 LEX_FILES      := Yylex
 
-PARSE_SETTINGS := -dump_states -dump_grammar -expect 11
+PARSE_SETTINGS := -dump_states -dump_grammar -expect 13
 
 HELPER_FILES   := RobotVar RobotType
 

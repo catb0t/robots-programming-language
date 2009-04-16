@@ -117,6 +117,9 @@ terminal String  NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME;
 terminal String  ENEMY_NAME, RESOURCE_NAME, LIST_NAME, FUNCTION_NAME;
 terminal String  NUMBER_LIST, BOOLEAN_LIST, PERCENTAGE_LIST, LOCATION_LIST;
 terminal String  ENEMY_LIST, RESOURCE_LIST;
+terminal         IS_LOWER_THAN, IS_STRICTLY_LOWER_THAN, IS_DIFFERENT_FROM;
+terminal         IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_EQUAL_TO;
+terminal String  NUMBER_NAME_IDX;
 
 /* Non-terminals */
 non terminal         expr_list, expr_part;
@@ -130,16 +133,26 @@ non terminal String  value, call, field_access, local_declaration;
 non terminal String  field_name;
 non terminal String  conditional, else_statement;
 non terminal String  argument, arguments, arguments_act, function_call;
+non terminal String  comparison_operator, boolean_exp_comp, index;
+non terminal String  assignment;
 
-/* Precedences */
+/* Precedences: Follow Java conventions */
 precedence right OF;
+
+precedence left  OR;
+precedence left  AND;
+
+precedence left IS_DIFFERENT_FROM, IS_EQUAL_TO;
+
+/* Do not split this line */
+precedence nonassoc IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_LOWER_THAN, IS_STRICTLY_LOWER_THAN;
 
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE;
 
-precedence left  OR;
-precedence left  AND;
 precedence right NOT;
+
+precedence left LPAREN, RPAREN;
 
 
 /* The Grammar */
@@ -190,9 +203,9 @@ field_access    ::= field_name:fn OF value:fa
                        RESULT = fa + "." + fn;
                     :}
                 |   
-                    INT_IDX:idx OF value:fa
+                    index:idx OF value:fa
                     {:
-                       RESULT = fa + "[" + idx.substring(0, idx.length() - 2) + "]";
+                       RESULT = fa + "[" + idx + "]";
                     :}
                 /*|   
                     variable_name:vn
@@ -204,6 +217,13 @@ field_access    ::= field_name:fn OF value:fa
                     {:
                        RESULT = "this";
                     :}*/
+;
+
+index           ::=  NUMBER_NAME_IDX:nnidx
+                     {: nnidx.substring(0, nnidx.length() - 3); :}
+                |
+                     INT_IDX:nidx
+                     {: nidx.substring(0, nidx.length() - 2);   :}
 ;
 
 field_name      ::=  NUMBER_NAME:nn
@@ -345,7 +365,6 @@ functions       ::=   function:fn optnl
 
 function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
                       WITH arguments:arg MEANS NEWLINE optnl
-                      /*local_declaration:ldcl optnl*/
                       statement:stat optnl
                       GIVES return_value:rv NEWLINE
                       {:
@@ -355,7 +374,7 @@ function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
                          	arg = arg.substring(0, arg.length() - 1);
                          }
                          RESULT = "\n\tpublic static " + rv + " " + fn + "(" + arg + ")";
-                         RESULT += " {\n" /*+ ldcl*/ + "\n" + stat + "\n\t}";
+                         RESULT += " {\n" + "\n" + stat + "\n\t}";
                          parser.endScope();
                       :}
 ;
@@ -500,15 +519,7 @@ variable_name_local  ::=
                     :}
 ;
 
-value           ::=   field_name:fn          {:   RESULT = fn;     :}
-                |
-                      base_value:bv          {:   RESULT = bv;     :}
-                |
-                      constant_value:cv      {:   RESULT = cv;     :}
-                |
-                      function_call:fc       {:   RESULT = fc;     :}
-                |
-                      field_access:fa        {:   RESULT = fa;     :}
+value           ::=   boolean_expression:be  {:   RESULT = be;     :}
                 |
                       SELF                   {:   RESULT = "this"; :}
 ;
@@ -545,11 +556,51 @@ arithmetic_operator     ::=   PLUS     {: RESULT = " + "; :}
                         |     DIVIDE   {: RESULT = " / "; :}
 ;
 
-boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2   {:   RESULT = be1 + " || " + be2; :}
-                        |     boolean_expression:be1 AND boolean_expression:be2  {:   RESULT = be1 + " && " + be2; :}
-                        |     NOT boolean_expression:be                          {:   RESULT = "!" + be;           :}
-                        |     LPAREN boolean_expression:be RPAREN                {:   RESULT = "( " + be + " )";   :}
-                        |     boolean_final:bf                                   {:   RESULT = bf;                 :}
+boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
+                              {:   RESULT = be1 + " || " + be2; :}
+                        |     
+                              boolean_expression:be1 AND boolean_expression:be2
+                              {:   RESULT = be1 + " && " + be2; :}
+                        |     
+                              NOT boolean_expression:be
+                              {:   RESULT = "!" + be;           :}
+                        |     
+                              LPAREN boolean_expression:be RPAREN
+                              {:   RESULT = "( " + be + " )";   :}
+                        |     
+                              boolean_final:bf
+                              {:   RESULT = bf;                 :}
+                        |     
+                              boolean_exp_comp:bec
+                              {:  RESULT = bec;  :}
+                        |     
+                              boolean_exp_comp:bec1 comparison_operator:co
+                              boolean_exp_comp:bec2
+                              {:  RESULT = bec1 + co + bec2;  :}
+;
+                      
+boolean_exp_comp        ::=   field_name:fn   
+                              {:   RESULT = fn; :}
+                        |
+                              arithmetic_expression:ae 
+                              {:   RESULT = ae; :}
+                        |
+                              constant_value:cv
+                              {: RESULT = cv;   :}
+                        |
+                              function_call:fc
+                              {:   RESULT = fc; :}
+                        |
+                              field_access:fa
+                              {:   RESULT = fa; :}
+;
+
+comparison_operator     ::=   IS_EQUAL_TO
+                        |     IS_LOWER_THAN
+                        |     IS_STRICTLY_LOWER_THAN
+                        |     IS_STRICTLY_GREATER_THAN
+                        |     IS_GREATER_THAN
+                        |     IS_DIFFERENT_FROM
 ;
 
 boolean_final           ::=   TRUE  {:   RESULT = "true";   :}
@@ -561,12 +612,10 @@ assign_op               ::=   EQUALS
 ;
 
 entry                   ::=   THINK {: parser.changeScope("think"); :} NEWLINE
-                              /*optnl local_declaration:ldcl*/
                               optnl statement:s
                               optnl END
                               {:
                                  RESULT = "\n\tpublic static void think() {\n";
-                                 //RESULT += ldcl;
                                  RESULT += s;
                                  RESULT += "\t}\n";
                                  parser.endScope();
@@ -593,16 +642,42 @@ statement               ::=   call:cl optnl statement:stmt
                               conditional:cond optnl statement:stmt
                               {: RESULT = cond + stmt; :}
                         |
+                              assignment:ass optnl statement:stmt
+                              {: RESULT = ass + stmt;  :}
+                        |
                               /* empty */
                               {: RESULT = ""; :}
 ;
 
-conditional             ::=   IF boolean_expression THEN NEWLINE
-                              statement else_statement DONE NEWLINE
+assignment              ::=   variable_name_local:vnl assign_op value:val NEWLINE
+                              {:
+                                 RESULT = "\t\t" + vnl + " = " + val + ";\n"; 
+                              :}
+                        |
+                              field_access:fa assign_op value:val NEWLINE
+                              {: 
+                                 RESULT = "\t\t" + fa + " = " + val + ";\n"; 
+                              :}
 ;
 
-else_statement          ::=   ELSE NEWLINE statement
-                        |     /* empty */
+conditional             ::=   IF boolean_expression:be THEN NEWLINE
+                              statement:stmt NEWLINE optnl 
+                              else_statement:es optnl DONE NEWLINE
+                              {:
+                                 RESULT =  "\t\tif(" + be + "){\n";
+                                 RESULT += stmt;
+                                 RESULT += es;
+                                 RESULT += "\n\t\t}\n"; 
+                              :}
+;
+
+else_statement          ::=   ELSE NEWLINE statement:stmt NEWLINE
+                              {: 
+                                 RESULT =  "\t\telse {\n" + stmt;
+                              :}
+                        |     
+                              /* empty */
+                              {: RESULT = ""; :}
 ;
 
 function_call           ::=   function_name:fn
@@ -634,16 +709,16 @@ local_declaration       ::=   variable_name_local:vnl NEWLINE
                               {:
                                  RESULT = "\t\t" + vnl + ";\n"/* + dcl*/;
                               :}
-                        |
+                        /*|
                               variable_name_local:vnl assign_op value:val NEWLINE
                               {:
-                                 RESULT = "\t\t" + vnl + " = " + val + ";\n" /*+ dcl*/;
+                                 RESULT = "\t\t" + vnl + " = " + val + ";\n";
                               :}
                         |
                               field_access:fa assign_op value:val NEWLINE
                               {:
-                                 RESULT = "\t\t" + fa + " = " + val + ";\n" /*+ dcl*/;
-                              :}
+                                 RESULT = "\t\t" + fa + " = " + val + ";\n";
+                              :}*/
 ;
 
 call                    ::=   SAY ANYTHING:a NEWLINE
@@ -664,7 +739,7 @@ expr_list               ::=   expr_list expr_part
 expr_part               ::=   expr:e
                               {:
                                  System.out.println(" = "+e+";");
-                              :} 
+                              :}
                               SEMI
 ;
 

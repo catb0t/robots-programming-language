@@ -132,7 +132,54 @@ min_hash=min\#
                      System.out.println("matched is: " + yytext());
                   }
                   return new Symbol(sym.IS); }
-                  
+   "=="|is_equal_to
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched ==: " + yytext());
+                  }
+                  return new Symbol(sym.IS_EQUAL_TO);
+         }
+
+   ">="|is_greater_than
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched >=: " + yytext());
+                  }
+                  return new Symbol(sym.IS_GREATER_THAN);
+         }
+
+   "<="|is_lower_than
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched <=: " + yytext());
+                  }
+                  return new Symbol(sym.IS_LOWER_THAN);
+         }
+
+   "!="|is_different_from
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched !=: " + yytext());
+                  }
+                  return new Symbol(sym.IS_DIFFERENT_FROM);
+         }
+
+   ">"|is_strictly_greater_than
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched >: " + yytext());
+                  }
+                  return new Symbol(sym.IS_STRICTLY_GREATER_THAN);
+         }
+
+   "<"|is_strictly_lower_than
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched <: " + yytext());
+                  }
+                  return new Symbol(sym.IS_STRICTLY_LOWER_THAN);
+         }
+
     of
 	  {
 	          if (parser.bDebugFlag) {
@@ -323,6 +370,14 @@ min_hash=min\#
                      System.out.println("matched integer_index: " + yytext());
                   }
                   return new Symbol(sym.INT_IDX, new String(yytext()));
+         }
+
+   {identifier}\#(st|th|nd)
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched integer_index: " + yytext());
+                  }
+                  return new Symbol(sym.NUMBER_NAME_IDX, new String(yytext()));
          }
 
    {number}
