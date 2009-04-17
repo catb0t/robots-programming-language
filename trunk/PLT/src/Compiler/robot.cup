@@ -134,7 +134,7 @@ non terminal String  call, field_access, local_declaration;
 non terminal String  field_name;
 non terminal String  conditional, else_statement;
 non terminal String  argument, arguments, arguments_act, function_call;
-non terminal String  comparison_operator, boolean_exp_comp, index;
+non terminal String  comparison_operator, index;
 non terminal String  assignment;
 
 /* Precedences: Follow Java conventions */
