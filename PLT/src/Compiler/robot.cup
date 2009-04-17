@@ -87,7 +87,7 @@ parser code {:
               variableMap = new HashMap<String, String>();
               currentScope = new Stack<String>();
 
-              new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).parse();
+              new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).debug_parse();
 
               // dump generated java code to file
               FileWriter fwTranslatedCode = new FileWriter(args[1], false);
@@ -127,9 +127,10 @@ non terminal Integer expr;
 non terminal String  statement, entry, variable_name, program, return_value;
 non terminal         optnl, assign_op;
 non terminal String  function_name, function, functions, variable_name_local;
-non terminal String  boolean_final, base_value, declaration, boolean_expression;
+non terminal String  boolean_final, base_value, declaration, boolean_expression, boolean_component;
+non terminal String  any_expr;
 non terminal String  arithmetic_expression, arithmetic_operator, constant_value;
-non terminal String  value, call, field_access, local_declaration;
+non terminal String  call, field_access, local_declaration;
 non terminal String  field_name;
 non terminal String  conditional, else_statement;
 non terminal String  argument, arguments, arguments_act, function_call;
@@ -180,16 +181,16 @@ declaration     ::= variable_name:vn NEWLINE
                        RESULT = vn + " = " + val + ";\n" + dcl;
                     :}*/
                  |
-                    variable_name:vn assign_op value:val NEWLINE
+                    variable_name:vn assign_op any_expr:ex NEWLINE
                     optnl declaration:dcl
                     {:
-                       RESULT = vn + " = " + val + ";\n" + dcl;
+                       RESULT = vn + " = " + ex + ";\n" + dcl;
                     :}
                  |
-                    field_access:fa assign_op value:val NEWLINE
+                    field_access:fa assign_op any_expr:ex NEWLINE
                     optnl declaration:dcl
                     {:
-                       RESULT = fa + " = " + val + ";\n" + dcl;
+                       RESULT = fa + " = " + ex + ";\n" + dcl;
                     :}
                  |
                     /* empty */
@@ -198,12 +199,12 @@ declaration     ::= variable_name:vn NEWLINE
                     :}
 ;
 
-field_access    ::= field_name:fn OF value:fa
+field_access    ::= field_name:fn OF base_value:fa
                     {:
                        RESULT = fa + "." + fn;
                     :}
                 |   
-                    index:idx OF value:fa
+                    index:idx OF base_value:fa
                     {:
                        RESULT = fa + "[" + idx + "]";
                     :}
@@ -382,7 +383,7 @@ function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
 function_name   ::=   FUNCTION_NAME:fn       {: RESULT = fn;   :}
 ;
 
-return_value    ::=   value:val              {: RESULT = val;    :}
+return_value    ::=   any_expr:ex            {: RESULT = ex;    :}
                 |
                       NOTHING                {: RESULT = "void"; :}
 ;
@@ -519,12 +520,18 @@ variable_name_local  ::=
                     :}
 ;
 
-value           ::=   boolean_expression:be  {:   RESULT = be;     :}
+base_value      ::=   field_name:fn            {:   RESULT = fn;     :}
                 |
-                      SELF                   {:   RESULT = "this"; :}
+                      constant_value:cv        {:   RESULT = cv;     :}
+                |
+                      function_call:fc         {:   RESULT = fc;     :}
+                |
+                      field_access:fa          {:   RESULT = fa;     :}
+                |
+                      SELF                     {:   RESULT = "this"; :}
 ;
 
-base_value      ::=   boolean_expression:be    {:   RESULT = be; :}
+any_expr        ::=   boolean_expression:be    {:   RESULT = be; :}
                 |
                       arithmetic_expression:ae {:   RESULT = ae; :}
 ;
@@ -571,30 +578,17 @@ boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
                               boolean_final:bf
                               {:   RESULT = bf;                 :}
                         |     
-                              boolean_exp_comp:bec
+                              boolean_component:bec
                               {:  RESULT = bec;  :}
                         |     
-                              boolean_exp_comp:bec1 comparison_operator:co
-                              boolean_exp_comp:bec2
+                              boolean_component:bec1 comparison_operator:co
+                              boolean_component:bec2
                               {:  RESULT = bec1 + co + bec2;  :}
 ;
-                      
-boolean_exp_comp        ::=   field_name:fn   
-                              {:   RESULT = fn; :}
-                        |
-                              arithmetic_expression:ae 
-                              {:   RESULT = ae; :}
-                        |
-                              constant_value:cv
-                              {: RESULT = cv;   :}
-                        |
-                              function_call:fc
-                              {:   RESULT = fc; :}
-                        |
-                              field_access:fa
-                              {:   RESULT = fa; :}
-;
 
+boolean_component       ::=   base_value
+;
+                      
 comparison_operator     ::=   IS_EQUAL_TO
                         |     IS_LOWER_THAN
                         |     IS_STRICTLY_LOWER_THAN
@@ -649,14 +643,14 @@ statement               ::=   call:cl optnl statement:stmt
                               {: RESULT = ""; :}
 ;
 
-assignment              ::=   variable_name_local:vnl assign_op value:val NEWLINE
+assignment              ::=   variable_name_local:vnl assign_op any_expr:ex NEWLINE
                               {:
-                                 RESULT = "\t\t" + vnl + " = " + val + ";\n"; 
+                                 RESULT = "\t\t" + vnl + " = " + ex + ";\n"; 
                               :}
                         |
-                              field_access:fa assign_op value:val NEWLINE
+                              field_access:fa assign_op any_expr:ex NEWLINE
                               {: 
-                                 RESULT = "\t\t" + fa + " = " + val + ";\n"; 
+                                 RESULT = "\t\t" + fa + " = " + ex + ";\n"; 
                               :}
 ;
 
@@ -693,7 +687,7 @@ function_call           ::=   function_name:fn
                               :}
 ;
 
-arguments_act           ::=   value:arg arguments_act:args
+arguments_act           ::=   any_expr:arg arguments_act:args
                               {:
                                  RESULT = arg + ", " + args;
                               :}
