@@ -421,6 +421,8 @@ public class Robot {
 		
 		forwardDirection = new Vector3(tempx, position.y + 5, tempy);
 		
+		move_to(position.add(forwardDirection), 0.0000001f);
+		
 		
 	}
 	

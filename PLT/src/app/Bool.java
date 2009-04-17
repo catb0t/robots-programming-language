@@ -23,4 +23,26 @@ public class Bool {
 	{
 		return value;
 	}
+	
+	public void setValue (boolean b)
+	{
+		value = b;
+	}
+	
+	public void setValue (Bool b)
+	{
+		value = b.getValue();
+	}
+	
+	public float rollover (Boolean n)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		
+		return 0f;
+	}
 }
