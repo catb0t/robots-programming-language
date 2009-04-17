@@ -570,6 +570,7 @@ public class Robot {
 		{
 			return a-a/b;
 		}
+		
 	}
 
 }

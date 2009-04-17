@@ -2,7 +2,7 @@ package app;
 
 public class Percentage {
 
-	float percent;
+	public float percent;
 	
 	public Percentage ()
 	{
