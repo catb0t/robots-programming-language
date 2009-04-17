@@ -1092,4 +1092,22 @@ public class Func {
 	{
 		return a&&b;
 	}
+	
+	
+	/////////// ROLLOVER FUNCTION //////////////////
+	
+	public float rollover (float a, float b)
+	{
+		if (b == 0)
+		{
+			return a;
+		}
+		else
+		{
+			return a-a/b;
+		}
+		
+	}
+	
+	//others are errors.
 }
