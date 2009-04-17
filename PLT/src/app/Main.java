@@ -6,6 +6,7 @@ import java.awt.FileDialog;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
+import java.util.*;
 
 import javax.media.opengl.GLCanvas;
 import javax.swing.BoxLayout;
@@ -353,6 +354,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	}
 	
 	public static void main (String[] args) {
+		
+		LinkedList<Float> list = new LinkedList<Float>();
+		Func.add(list,2f);
 		
 		Main display = new Main();
 		display.init();
