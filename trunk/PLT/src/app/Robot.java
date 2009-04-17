@@ -15,7 +15,11 @@ public class Robot {
 	
 	private int energy;
 	
-	float max_speed=1;
+	float max_speed=100000;
+	float speed = 0;
+	float maxIncline = 2;
+	
+	float verticalVelocity = 0;
 	
 	private GLU glu = new GLU();
 	
@@ -37,6 +41,7 @@ public class Robot {
     private int robotTexture;
     private int laserTexture;
 	
+    float oldTime = 0;
 	
 	public Robot(Terrain t)
 	{
@@ -59,7 +64,7 @@ public class Robot {
 		
 		forwardDirection = new Vector3(0, 0, -1);
 		position = new Vector3(0, 0, 0);
-		goal = new Vector3(0, 0, 0);
+		goal = new Vector3(1000, 0, 0);
 		
 		sphere = new Sphere(gl);
 		
@@ -139,11 +144,43 @@ public class Robot {
         return tmp[0];
     }
 
+    public void update()
+    {
+    	
+    }
     
     public void renderRobot(GL gl, float time)
     {
+    	//update the robots position
+    	float timeInterval = time - oldTime;
+    	oldTime = time;
+    	float distance = timeInterval*speed;
+    	//figure out what direction we're moving to
+    	float directionRadians = this.direction(position, goal);
+    	Vector3 newPosition = new Vector3(position.x + distance*forwardDirection.x, position.z + distance*forwardDirection.z, 0);
+    	//now that I have a new position, need to find out my distance from the ground
+    	float newY = terrain.terrainIntersection(newPosition);
+    	//if we've hit an incline higher than we can traverse then keep old position
+    	//...
+    	//else
+    	if( (float)(newY - position.y)/distance < maxIncline)
+    	{
+    		//update the position along the terrain
+    		position.x = newPosition.x;
+    		position.z = newPosition.y;
+    		//now figure out what's going on with falling and physics
+    // 		if(newY < position.y)//we're falling
+    //		{
+    //			verticalVelocity += 
+    //		}
+    		position.y = newY; //screw it, for now just glue the robot to the terrain
+    		
+    		
+    	}
+    	position.x += 0.1f;
+    	
     	//need to figure out if the robot is walking right now, and in what direction
-    	if( (position.x != goal.x) && (position.z != goal.z) )
+    	if( (position.x != goal.x) || (position.z != goal.z) )
     	{
     		gl.glPushMatrix();
     			//point our robot in the right direction
@@ -154,14 +191,14 @@ public class Robot {
     	{
     		gl.glPushMatrix();
 				//point our robot in the right direction
-				renderRobotWalking(gl, time);
+				renderRobotIdle(gl, time);
 			gl.glPopMatrix();
     	}
     	
     	
     }
     
-	private void renderRobotWalking(GL gl, float time)
+	private void renderRobotIdle(GL gl, float time)
 	{
         gl.glBindTexture(GL.GL_TEXTURE_2D, robotFace);
 		float scale = 0.5f;
@@ -275,7 +312,7 @@ public class Robot {
 	
 	
 	
-	private void renderRobotIdle(GL gl, float time)
+	private void renderRobotWalking(GL gl, float time)
 	{
         gl.glBindTexture(GL.GL_TEXTURE_2D, robotFace);
 		float scale = 0.5f;
@@ -463,6 +500,9 @@ public class Robot {
 	
 	public float direction (Vector3 origin, Vector3 goal)
 	{
+		
+		forwardDirection = new Vector3(goal.x - origin.x, 0, goal.z - origin.z);
+		forwardDirection.normalize();
 		return (float)Math.atan2((double)(origin.z - goal.z), (double)(origin.y - goal.y));
 	}
 	

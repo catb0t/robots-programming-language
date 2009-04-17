@@ -49,12 +49,17 @@ public class Scene implements GLEventListener {
     private int fogMode[] = {GL.GL_EXP, GL.GL_EXP2, GL.GL_LINEAR};	// Storage For Three Types Of Fog ( new )
     private int fogfilter = 2;								// Which Fog Mode To Use      ( new )
     private float fogColor[] = {0.5f, 0.5f, 0.5f, 1.0f};		// Fog Color               ( new )
+        
+
     
-    float time = 0;
 
 	public void display(GLAutoDrawable drawable) {
 		final GL gl = drawable.getGL();
 
+		
+		int time = (int)System.currentTimeMillis();
+		
+		
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		
 		//set the camera
@@ -80,15 +85,14 @@ public class Scene implements GLEventListener {
 		//render robot
 		physics();
 		gl.glPushMatrix();
-			float[] lightAmbient = {1.5f, 1.5f, 1.5f, 1.0f};
+			float[] lightAmbient = {1.0f, 1.0f, 1.0f, 1.0f};
 			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient, 0);
 		
 			gl.glTranslatef(player.position.x, player.position.y, player.position.z);
 			//gl.glCallList(robotDL);
 		//		model.render(gl);
 
-			time += 0.04f;
-			playerAvatar.renderRobot(gl, time);
+			playerAvatar.renderRobot(gl, (float)(time/1000.0f) );
 			
 			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
 		gl.glPopMatrix();

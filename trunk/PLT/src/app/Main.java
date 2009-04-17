@@ -170,11 +170,18 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		this.setVisible(true);
 		
 		
+		long time = System.currentTimeMillis();
+		//main loop!
 		while(true)
 	    {
-	    	//update the players decision
-	    	player.think();
-	    	scene.player = player;
+	    	//update the players decision... we should only do this every time interval
+			//its messy but pause the simulation until all players finish thinking
+			if( System.currentTimeMillis() - time > 1000) //updates every second
+			{
+				player.think();
+			}
+			player.update();
+			scene.player = player;
 	    }
 	    
 		
