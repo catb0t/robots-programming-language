@@ -3,18 +3,22 @@ package app;
 public class Resource {
 
 	private String name;
-	private float value = 0;
+	private Location location;
+	private float energy = 0;
+	private float ammostash;
 	
 	public Resource ()
 	{
 		name = "";
-		value=0;
+		energy=0;
+		ammostash = 0;
 	}
 	
 	
-	public void setValue (float f)
+	public void setValue (float f, float a)
 	{
-		value = f;
+		energy = f;
+		ammostash = a;
 	}
 	
 	public void setName (String n)
@@ -22,9 +26,19 @@ public class Resource {
 		name = n;
 	}
 	
-	public float getValue()
+	public Location getLocation()
 	{
-		return value;
+		return location;
+	}
+	
+	public float getEnergy()
+	{
+		return energy;
+	}
+	
+	public float getAmmostash()
+	{
+		return ammostash;
 	}
 	
 	public String getName()
@@ -34,7 +48,7 @@ public class Resource {
 	
 	public String toString()
 	{
-		String sol = "name: "+name+", resource="+Float.toString(value);
+		String sol = "resource name: "+name+", energy="+Float.toString(energy)+", ammostash="+Float.toString(ammostash);
 		return sol;
 	}
 }
