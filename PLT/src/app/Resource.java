@@ -2,10 +2,10 @@ package app;
 
 public class Resource {
 
-	private String name;
-	private Location location;
-	private float energy = 0;
-	private float ammostash;
+	public String name;
+	public Location location;
+	public float energy = 0;
+	public float ammostash;
 	
 	public Resource ()
 	{

@@ -2,9 +2,9 @@ package app;
 
 public class Enemy {
 
-	private String name;
+	public String name;
 	public Location location;
-	private float energy;
+	public float energy;
 	
 	public Enemy(){
 		name ="";
