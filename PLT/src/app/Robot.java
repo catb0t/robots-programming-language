@@ -517,5 +517,17 @@ public class Robot {
 	{
 		return (Math.random()>s);
 	}
+	
+	public float rollover (float a, float b)
+	{
+		if (b == 0)
+		{
+			return a;
+		}
+		else
+		{
+			return a-a/b;
+		}
+	}
 
 }

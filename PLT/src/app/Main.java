@@ -33,7 +33,8 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	Scene scene;
 
 	TextArea editArea;
-	JButton start; 
+	JButton start;
+	JButton parse;
 	JMenuBar menu;
 	
 	String filename;
@@ -120,8 +121,13 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		start.setActionCommand("Run");		//032009 by joseph
 		start.addActionListener(this);		//032009 by joseph
 		
+		parse = new JButton("Parse");
+		parse.setActionCommand("Parse");	//032009 by joseph
+		parse.addActionListener(this);		//032009 by joseph
+		
 		editor.add(editArea);
 		editor.add(start);
+		editor.add(parse);
 		
 		
 		JSplitPane tools_write = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tools, editor);
@@ -176,7 +182,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	
 	public void actionPerformed (ActionEvent event) {
 		
-		if ("Run".equals(event.getActionCommand())) {
+		if ("Parse".equals(event.getActionCommand())) {
 			System.out.println("Start Compliler");
 			
 			try {
@@ -201,6 +207,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		else if ("Run".equals(event.getActionCommand())) {
+			player.think();
 		}
 		else if ("new".equals(event.getActionCommand())) {
 			System.out.println("new File");
@@ -354,9 +363,6 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	}
 	
 	public static void main (String[] args) {
-		
-		LinkedList<Float> list = new LinkedList<Float>();
-		Func.add(list,2f);
 		
 		Main display = new Main();
 		display.init();
