@@ -2,9 +2,9 @@ package Robot;
 
 public enum RobotType {
 
-   NUMBER     ("#"  , "double" ),
-   PERCENTAGE ("%"  , "Percent"),
-   BOOLEAN    ("?"  , "bool"   ),
+   NUMBER     ("#"  , "Double"  ),
+   PERCENTAGE ("%"  , "Percent" ),
+   BOOLEAN    ("?"  , "Boolean" ),
    LOCATION   ("@"  , "Location"),
    ENEMY      ("!"  , "Enemy"   ),
    RESOURCE   ("$"  , "Resource"),
