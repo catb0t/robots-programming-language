@@ -78,6 +78,16 @@ parser code {:
            // should be thrown out
         }
 
+        public static String getIndent() {
+           String indent = "";
+
+           for(int i=0; i <= currentScope.size(); i++) {
+              indent += "\t";
+           }
+           System.out.println("INDENT: " + currentScope.size() + " " + indent);
+           return indent;
+        }
+
 
         public static void main(String args[]) throws Exception {
            bDebugFlag = true;
@@ -122,7 +132,7 @@ terminal RobotVar VARIABLE;
 /* Non-terminals */
 non terminal         expr_list, expr_part;
 non terminal Integer expr;
-non terminal String  statement, entry, variable_name, program, return_value;
+non terminal String  statement, entry, variable_name, program, return_value, block;
 non terminal         optnl, assign_op;
 non terminal String  function_name, function, functions, variable_name_local;
 non terminal String  boolean_final, base_value, declaration, boolean_expression, boolean_component;
@@ -162,7 +172,7 @@ program         ::= optnl declaration:dcls
                     {:
                        RESULT =  "\npublic class Robot {\n";
                        RESULT += dcls + ent + funcs;
-                       RESULT += "\n}";
+                       RESULT += "\n}\n";
                        parser.robotProgram += RESULT;
                     :}
 ;
@@ -256,7 +266,7 @@ functions       ::=   function:fn optnl
 
 function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
                       WITH arguments:arg MEANS NEWLINE optnl
-                      statement:stat optnl
+                      block:b optnl
                       GIVES return_value:rv NEWLINE
                       {:
                          // remove the final ,<space> : (arg1, arg2, ,<space>)
@@ -265,7 +275,7 @@ function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
                          	arg = arg.substring(0, arg.length() - 1);
                          }
                          RESULT = "\n\tpublic static " + rv + " " + fn + "(" + arg + ")";
-                         RESULT += " {\n" + "\n" + stat + "\n\t}";
+                         RESULT += " {\n" + "\n" + b + "\n\t}";
                          parser.endScope();
                       :}
 ;
@@ -273,7 +283,7 @@ function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
 function_name   ::=   FUNCTION_NAME:fn       {: RESULT = fn;   :}
 ;
 
-return_value    ::=   any_expr:ex            {: RESULT = ex;    :}
+return_value    ::=   VARIABLE:v             {: RESULT = v.type().javaType(); :}
                 |
                       NOTHING                {: RESULT = "void"; :}
 ;
@@ -388,12 +398,16 @@ assign_op               ::=   EQUALS
 ;
 
 entry                   ::=   THINK {: parser.changeScope("think"); :} NEWLINE
-                              optnl statement:s
+                              optnl block:b
                               optnl END
                               {:
-                                 RESULT = "\n\tpublic static void think() {\n";
-                                 RESULT += s;
+                                 RESULT =  "\n";
+                                 RESULT += "\tpublic static void think() {\n";
+                                 RESULT += "\n";
+                                 RESULT += b;
+                                 RESULT += "\n";
                                  RESULT += "\t}\n";
+                                 RESULT += "\n";
                                  parser.endScope();
                               :}
 ;
@@ -409,47 +423,46 @@ optnl                   ::=   optnl NEWLINE
                               /* empty */
 ;
 
-statement               ::=   call:cl optnl statement:stmt
-                              {: RESULT = cl + stmt;  :}
-                        |
-                              local_declaration:ldcl optnl statement:stmt
-                              {: RESULT = ldcl + stmt; :}
-                        |
-                              conditional:cond optnl statement:stmt
-                              {: RESULT = cond + stmt; :}
-                        |
-                              assignment:ass optnl statement:stmt
-                              {: RESULT = ass + stmt;  :}
+statement               ::=   call:cl                {: RESULT = cl;   :}
+                        |     local_declaration:ldcl {: RESULT = ldcl; :}
+                        |     conditional:cond       {: RESULT = cond; :}
+                        |     assignment:ass         {: RESULT = ass;  :}
+;
+
+block                   ::=   statement:s {: RESULT = parser.getIndent() + s + ";\n"; :}
+                              optnl
+                              block:b     {: RESULT += b; :}
                         |
                               /* empty */
                               {: RESULT = ""; :}
 ;
 
+
 assignment              ::=   variable_name_local:vnl assign_op any_expr:ex NEWLINE
                               {:
-                                 RESULT = "\t\t" + vnl + " = " + ex + ";\n"; 
+                                 RESULT = vnl + " = " + ex; 
                               :}
                         |
                               field_access:fa assign_op any_expr:ex NEWLINE
                               {: 
-                                 RESULT = "\t\t" + fa + " = " + ex + ";\n"; 
+                                 RESULT = fa + " = " + ex; 
                               :}
 ;
 
 conditional             ::=   IF boolean_expression:be THEN NEWLINE
-                              statement:stmt NEWLINE optnl 
+                              block:b NEWLINE optnl 
                               else_statement:es optnl DONE NEWLINE
                               {:
                                  RESULT =  "\t\tif(" + be + "){\n";
-                                 RESULT += stmt;
+                                 RESULT += b;
                                  RESULT += es;
                                  RESULT += "\n\t\t}\n"; 
                               :}
 ;
 
-else_statement          ::=   ELSE NEWLINE statement:stmt NEWLINE
+else_statement          ::=   ELSE NEWLINE block:b NEWLINE
                               {: 
-                                 RESULT =  "\t\telse {\n" + stmt;
+                                 RESULT =  "\t\telse {\n" + b;
                               :}
                         |     
                               /* empty */
@@ -465,7 +478,7 @@ function_call           ::=   function_name:fn
                                  if (args.endsWith(",")) {
                          	    args = args.substring(0, args.length() - 1);
                                  }
-                                 RESULT = "\t\t" + fn + "(" + args + ");\n";
+                                 RESULT = fn + "(" + args + ")";
                               :}
 ;
 
@@ -483,7 +496,7 @@ arguments_act           ::=   any_expr:arg arguments_act:args
 
 local_declaration       ::=   variable_name_local:vnl NEWLINE 
                               {:
-                                 RESULT = "\t\t" + vnl + ";\n"/* + dcl*/;
+                                 RESULT = vnl /* + dcl*/;
                               :}
                         /*|
                               variable_name_local:vnl assign_op value:val NEWLINE
@@ -499,7 +512,7 @@ local_declaration       ::=   variable_name_local:vnl NEWLINE
 
 call                    ::=   SAY ANYTHING:a NEWLINE
                               {:
-                                 RESULT = "\t\tSystem.out.println(\"" + a + "\");\n";
+                                 RESULT = "System.out.println(\"" + a + "\")";
                               :}
                         |
                               function_call:fc
