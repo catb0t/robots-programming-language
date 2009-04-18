@@ -249,7 +249,7 @@ field_name      ::=  VARIABLE:v
 variable_name   ::= VARIABLE:v
                     {:
                        if (parser.declareVariable(v.name(), v.type().postFix())) {
-                          RESULT = "\tpublic " + v.type().javaType() + " "; 
+                          RESULT = "\tpublic " + v.javaType() + " "; 
                        } else {
                           RESULT = ""; 
                        }
@@ -283,7 +283,7 @@ function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
 function_name   ::=   FUNCTION_NAME:fn       {: RESULT = fn;   :}
 ;
 
-return_value    ::=   VARIABLE:v             {: RESULT = v.type().javaType(); :}
+return_value    ::=   VARIABLE:v             {: RESULT = v.javaType(); :}
                 |
                       NOTHING                {: RESULT = "void"; :}
 ;
@@ -303,7 +303,7 @@ arguments        ::=   variable_name_local:arg arguments:args
 variable_name_local  ::=  VARIABLE:v
                           {:
                              if (parser.declareVariable(v.name(), v.type().postFix(), parser.currentScope.peek())) {
-                                RESULT = v.type().javaType() + " ";
+                                RESULT = v.javaType() + " ";
                              } else {
                                 RESULT = "";
                              }

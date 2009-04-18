@@ -50,4 +50,14 @@ public class RobotVar {
    public RobotType type()    { return type;    }
    public boolean   isList()  { return isList;  }
 
+   public String javaType() {
+      String javaType = type.javaType();
+      
+      if (isList) {
+         javaType = RobotType.LIST.javaType() + "<" + javaType + ">";
+      }
+
+      return javaType;
+   }
+
 }
