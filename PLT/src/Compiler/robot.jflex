@@ -113,6 +113,30 @@ min_hash=min\#
                   return new Symbol(sym.NOTHING); 
          }
 
+   repeat
+        {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.REPEAT); 
+        }
+
+   each
+        {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.EACH); 
+        }
+   
+   in
+        {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched " + yytext());
+                  }
+                  return new Symbol(sym.IN); 
+        }
+
    \n   
          {
                   if (parser.bDebugFlag) {

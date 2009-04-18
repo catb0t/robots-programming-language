@@ -5,6 +5,7 @@ public class RobotVar {
    private String name;
    private RobotType type;
    private boolean isList;
+   private String token;
 
    public RobotVar(String token) {
       String name;
@@ -33,22 +34,16 @@ public class RobotVar {
 
       name = token.substring(0, name_len);
 
-      init(name, type, isList);   
-   }
-
-   public RobotVar(String name, RobotType type, boolean isList) {
-         init(name, type, isList);
-   }
-
-   private void init(String name, RobotType type, boolean isList) {
       this.type = type;
       this.name = name;
       this.isList = isList;
+      this.token = token;
    }
 
-   public String    name()    { return name;    }
-   public RobotType type()    { return type;    }
-   public boolean   isList()  { return isList;  }
+   public String    name()     { return name;    }
+   public RobotType type()     { return type;    }
+   public boolean   isList()   { return isList;  }
+   public String    toString() { return token;   }
 
    public String javaType() {
       String javaType = type.javaType();
@@ -59,5 +54,23 @@ public class RobotVar {
 
       return javaType;
    }
+   
+   public int hashCode() {
+      return (name != null ? name.hashCode() : 0);
+   }
 
+   public boolean equals(Object o) {
+      
+      if (this == o) return true;
+     
+      if (o == null || getClass() != o.getClass()) return false;
+
+      RobotVar equalTest = (RobotVar) o;
+
+      if (name != null ? !name.equals(equalTest.name()) : equalTest.name() != null) return false;
+
+      return true;
+   }
+
+   
 }

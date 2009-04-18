@@ -18,84 +18,16 @@ parser code {:
 	public static boolean bDebugFlag;
 
 	/* stores a basic symbol table */
-	public static HashMap<String, String> variableMap;
-        public static Stack<String> currentScope;
+	public static RobotScopeManager sm;
 	
 	public static String temp;
-	
-	/* code related to symbol table: we have a very basic one coz java
-	 is supposed to take care of the rest */
-        /*
-        public static boolean isNameDeclared(String name) {
-	  return variableMap.containsKey(name);
-	}
-
-	public static boolean isNameDeclared(String name, String function) {
-	  return isNameDeclared(function.concat(name));
-	}
-	*/
-        public static boolean isDeclared(String name, String type) {
-           String str = (String) variableMap.get(name);
-
-           if (str != null && str.equals(type)) {
-              System.out.println(name + " is ALREADY defined!"); 
-              return true;
-           } else {
-              System.out.println(name + " is NOT defined!"); 
-              return false;
-           }
-        }
-
-        /*
-        public static boolean isDeclared(String name, String type, String scope) {
-           return isDeclared(scope.concat(name), type);
-        }
-        */
-        public static boolean declareVariable(String name, String type) {
-           if (!isDeclared(name, type)) {
-              System.out.println("Declaring " + name); 
-              variableMap.put(name, type);
-              return true;
-           } else {
-              return false;
-           }
-        }
-
-        public static boolean declareVariable(String name, String type, String scope) {
-           return declareVariable(scope.concat(name), type);
-        }
-
-        public static void changeScope(String scope) {
-           currentScope.push(scope);
-           System.out.println("Changing scope: " + scope);
-        }
-
-        public static void endScope() {
-           String scope = currentScope.pop();
-           System.out.println("Ending scope: " + scope);
-           // TODO: We should remove references of all variables that belong to the scope we're exiting 
-           // In other words, once we're done in a block, variables that belong to that block
-           // should be thrown out
-        }
-
-        public static String getIndent() {
-           String indent = "";
-
-           for(int i=0; i <= currentScope.size(); i++) {
-              indent += "\t";
-           }
-           System.out.println("INDENT: " + currentScope.size() + " " + indent);
-           return indent;
-        }
-
 
         public static void main(String args[]) throws Exception {
            bDebugFlag = true;
            try {
               robotProgram = "package Think;\n";
               globalDeclarations = "";
-              variableMap = new HashMap<String, String>();
-              currentScope = new Stack<String>();
+              sm = new RobotScopeManager();
 
               new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).debug_parse();
 
@@ -119,6 +51,7 @@ terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
 terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT, OF, SELF;
 terminal         IF, THEN, ELSE, DONE;
+terminal         REPEAT, IN, EACH;
 terminal Integer NUMBER;
 terminal Double  NUMBER_EXPRESSION;
 terminal String  NUMBER_PERCENTAGE;
@@ -144,6 +77,7 @@ non terminal String  conditional, else_statement;
 non terminal String  argument, arguments, arguments_act, function_call;
 non terminal String  comparison_operator, index;
 non terminal String  assignment;
+non terminal String  loop;
 
 /* Precedences: Follow Java conventions */
 precedence right OF;
@@ -207,6 +141,7 @@ declaration     ::= variable_name:vn NEWLINE
                     :}
 ;
 
+//TODO: What happens if base_value is not already declared?  Should we create a new instance?
 field_access    ::= field_name:fn OF base_value:fa
                     {:
                        RESULT = fa + "." + fn;
@@ -248,13 +183,7 @@ field_name      ::=  VARIABLE:v
 // cleaner than typing those things every time, I think
 variable_name   ::= VARIABLE:v
                     {:
-                       if (parser.declareVariable(v.name(), v.type().postFix())) {
-                          RESULT = "\tpublic " + v.javaType() + " "; 
-                       } else {
-                          RESULT = ""; 
-                       }
-
-                       RESULT += v.name();
+                       RESULT = parser.sm.declareIfNecessary(v) + v.name(); 
                     :}
 ;
 
@@ -264,7 +193,7 @@ functions       ::=   function:fn optnl
                       /* empty */            {: RESULT = ""; :}
 ;
 
-function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
+function        ::=   INSTRUCTION function_name:fn {: parser.sm.increaseLevel(); :}
                       WITH arguments:arg MEANS NEWLINE optnl
                       block:b optnl
                       GIVES return_value:rv NEWLINE
@@ -276,7 +205,7 @@ function        ::=   INSTRUCTION function_name:fn {: parser.changeScope(fn); :}
                          }
                          RESULT = "\n\tpublic static " + rv + " " + fn + "(" + arg + ")";
                          RESULT += " {\n" + "\n" + b + "\n\t}";
-                         parser.endScope();
+                         parser.sm.decreaseLevel();
                       :}
 ;
 
@@ -288,6 +217,8 @@ return_value    ::=   VARIABLE:v             {: RESULT = v.javaType(); :}
                       NOTHING                {: RESULT = "void"; :}
 ;
 
+//TODO: Arguments probably should use their own production rather than variable_name_local
+//      variable_name_local gets declareIfNecessary, but arguments should ALWAYS have a declaration in front of them
 arguments        ::=   variable_name_local:arg arguments:args 
                        {:
                           RESULT = arg + ", " + args;
@@ -302,13 +233,7 @@ arguments        ::=   variable_name_local:arg arguments:args
 
 variable_name_local  ::=  VARIABLE:v
                           {:
-                             if (parser.declareVariable(v.name(), v.type().postFix(), parser.currentScope.peek())) {
-                                RESULT = v.javaType() + " ";
-                             } else {
-                                RESULT = "";
-                             }
-                             
-                             RESULT += v.name();
+                             RESULT = parser.sm.declareIfNecessary(v) + v.name(); 
                           :}
 ;
 
@@ -397,9 +322,11 @@ assign_op               ::=   EQUALS
                         |     IS
 ;
 
-entry                   ::=   THINK {: parser.changeScope("think"); :} NEWLINE
-                              optnl block:b
-                              optnl END
+entry                   ::=   THINK {: parser.sm.increaseLevel(); :} NEWLINE
+                              optnl
+                              block:b
+                              optnl
+                              END
                               {:
                                  RESULT =  "\n";
                                  RESULT += "\tpublic static void think() {\n";
@@ -408,7 +335,7 @@ entry                   ::=   THINK {: parser.changeScope("think"); :} NEWLINE
                                  RESULT += "\n";
                                  RESULT += "\t}\n";
                                  RESULT += "\n";
-                                 parser.endScope();
+                                 parser.sm.decreaseLevel();
                               :}
 ;
 
@@ -427,9 +354,10 @@ statement               ::=   call:cl                {: RESULT = cl;   :}
                         |     local_declaration:ldcl {: RESULT = ldcl; :}
                         |     conditional:cond       {: RESULT = cond; :}
                         |     assignment:ass         {: RESULT = ass;  :}
+                        |     loop:l                 {: RESULT = l;    :}
 ;
 
-block                   ::=   statement:s {: RESULT = parser.getIndent() + s + ";\n"; :}
+block                   ::=   statement:s {: RESULT = parser.sm.indent() + s + ";\n"; :}
                               optnl
                               block:b     {: RESULT += b; :}
                         |
@@ -467,6 +395,22 @@ else_statement          ::=   ELSE NEWLINE block:b NEWLINE
                         |     
                               /* empty */
                               {: RESULT = ""; :}
+;
+
+loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list 
+                              {:
+                                 RESULT = "\n" + parser.sm.indent() + "for (" + item.javaType() + " " + item.name() + " : " + list.name() + ") {\n\n";
+                                 parser.sm.increaseLevel();
+                              :} NEWLINE
+                              optnl
+                              block:b
+                              optnl
+                              DONE NEWLINE
+                              {:
+                                 parser.sm.decreaseLevel();
+                                 RESULT += b;
+                                 RESULT += "\n" + parser.sm.indent() + "}\n\n";
+                              :} 
 ;
 
 function_call           ::=   function_name:fn
