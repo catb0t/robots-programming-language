@@ -113,13 +113,11 @@ terminal Integer NUMBER;
 terminal Double  NUMBER_EXPRESSION;
 terminal String  NUMBER_PERCENTAGE;
 terminal String  ANYTHING, INT_IDX;
-terminal String  NUMBER_NAME, BOOLEAN_NAME, PERCENTAGE_NAME, LOCATION_NAME;
-terminal String  ENEMY_NAME, RESOURCE_NAME, LIST_NAME, FUNCTION_NAME;
-terminal String  NUMBER_LIST, BOOLEAN_LIST, PERCENTAGE_LIST, LOCATION_LIST;
-terminal String  ENEMY_LIST, RESOURCE_LIST;
 terminal         IS_LOWER_THAN, IS_STRICTLY_LOWER_THAN, IS_DIFFERENT_FROM;
 terminal         IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_EQUAL_TO;
 terminal String  NUMBER_NAME_IDX;
+terminal String  FUNCTION_NAME;
+terminal RobotVar VARIABLE;
 
 /* Non-terminals */
 non terminal         expr_list, expr_part;
@@ -227,51 +225,10 @@ index           ::=  NUMBER_NAME_IDX:nnidx
                      {: nidx.substring(0, nidx.length() - 2);   :}
 ;
 
-field_name      ::=  NUMBER_NAME:nn
+field_name      ::=  VARIABLE:v
                      {:
-                       RESULT = nn.substring(0, nn.length() - 1);
+                       RESULT = v.name();
                      :}
-                 |
-                     NUMBER_LIST:nl
-                     {:
-                       RESULT = nl.substring(0, nl.length() - 4);
-                     :}
-                 |
-                    LIST_NAME:ln
-                    {:
-                       RESULT = ln.substring(0, ln.length() - 3);
-                    :}
-                |
-                    BOOLEAN_NAME:bn
-                    {:
-                       RESULT = bn.substring(0, bn.length() - 1);
-                    :}
-                |
-                    PERCENTAGE_NAME:pn
-                    {:
-                       RESULT = pn.substring(0, pn.length() - 1);
-                    :}
-
-                |
-                    LOCATION_NAME:ln
-                    {:
-                       RESULT = ln.substring(0, ln.length() - 1);
-                    :}
-                |
-                    LOCATION_LIST:ll
-                    {:
-                       RESULT = ll.substring(0, ll.length() - 4);
-                    :}
-                |
-                    ENEMY_NAME:en
-                    {:
-                       RESULT = en.substring(0, en.length() - 1);
-                    :}
-                |
-                    RESOURCE_NAME:rn
-                    {:
-                       RESULT = rn.substring(0, rn.length() - 1);
-                    :}
 ;
 
 // TODO: We don't need to call isDeclared, it's already being called in declare variable
@@ -279,82 +236,15 @@ field_name      ::=  NUMBER_NAME:nn
 // Also, I was thinking that we can add a Java Enum to enumerate our types and enter
 // associated information like the corresponding Java type, postfix, etc.  Would be much
 // cleaner than typing those things every time, I think
-variable_name   ::= NUMBER_NAME:nn
+variable_name   ::= VARIABLE:v
                     {:
-                       parser.temp = nn.substring(0, nn.length() - 1);
-                       if (!parser.isDeclared(parser.temp, "#")) {
-                          RESULT = "\tpublic double " + parser.temp;
-                          parser.declareVariable(parser.temp, "#");
+                       if (parser.declareVariable(v.name(), v.type().postFix())) {
+                          RESULT = "\tpublic " + v.type().javaType() + " "; 
                        } else {
-                          RESULT = parser.temp;
+                          RESULT = ""; 
                        }
-                    :}
-                 |
-                    LIST_NAME:ln
-                    {:
-                       parser.temp = ln.substring(0, ln.length() - 3);
-                       if (!parser.isDeclared(parser.temp, "...")) {
-                          RESULT = "\tpublic List " + parser.temp;
-                          parser.declareVariable(parser.temp, "...");
-                       } else {
-                          RESULT = parser.temp;
-                       }
-                    :}
-                |
-                    BOOLEAN_NAME:bn
-                    {:
-                       parser.temp = bn.substring(0, bn.length() - 1);
-                       if (!parser.isDeclared(parser.temp, "?")) {
-                          RESULT = "\tpublic boolean " + parser.temp;
-                          parser.declareVariable(parser.temp, "?");
-                       } else {
-                          RESULT = parser.temp;
-                       }
-                    :}
-                |
-                    PERCENTAGE_NAME:pn
-                    {:
-                       parser.temp = pn.substring(0, pn.length() - 1);
-                       if (!parser.isDeclared(parser.temp, "%")) {
-                          RESULT = "\tpublic Percentage " + parser.temp;
-                          parser.declareVariable(parser.temp, "%");
-                       } else {
-                          RESULT = parser.temp;
-                       }
-                    :}
 
-                |
-                    LOCATION_NAME:ln
-                    {:
-                       parser.temp = ln.substring(0, ln.length() - 1);
-                       if (!parser.isDeclared(parser.temp, "@")) {
-                          RESULT = "\tpublic Location " + parser.temp;
-                          parser.declareVariable(parser.temp, "@");
-                       } else {
-                          RESULT = parser.temp;
-                       }
-                    :}
-                |
-                    ENEMY_NAME:en
-                    {:
-                       parser.temp = en.substring(0, en.length() - 1);
-                       if (!parser.isDeclared(parser.temp, "!")) {
-                          RESULT = "\tpublic Enemy " + parser.temp;
-                          parser.declareVariable(parser.temp, "!");
-                       } else {
-                          RESULT = parser.temp;
-                       }
-                    :}
-                |
-                    RESOURCE_NAME:rn
-                    {:
-                       parser.temp = rn.substring(0, rn.length() - 1);
-                       if (!parser.isDeclared(parser.temp, "$")) {
-                          RESULT = "\tpublic Resource " + parser.temp;
-                          parser.declareVariable(parser.temp, "$");
-                       } else {
-                          RESULT = parser.temp;
-                       }
+                       RESULT += v.name();
                     :}
 ;
 
@@ -400,124 +290,16 @@ arguments        ::=   variable_name_local:arg arguments:args
                       
 ;
 
-variable_name_local  ::=  
-                    NUMBER_NAME:nn
-                    {:
-                       parser.temp = nn.substring(0, nn.length() - 1);
-                       
-                       if (parser.declareVariable(parser.temp, "#", parser.currentScope.peek())) {
-                          RESULT = "double ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-                 |
-                    NUMBER_LIST:nl
-                    {:
-                       parser.temp = nl.substring(0, nl.length() - 4);
-                       
-                       if (parser.declareVariable(parser.temp, "#...", parser.currentScope.peek())) {
-                          RESULT = "double[] ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-                 |
-                    LIST_NAME:ln
-                    {:
-                       parser.temp = ln.substring(0, ln.length() - 3);
-                       
-                       if (parser.declareVariable(parser.temp, "...", parser.currentScope.peek())) {
-                          RESULT = "List ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-                |
-                    BOOLEAN_NAME:bn
-                    {:
-                       parser.temp = bn.substring(0, bn.length() - 1);
-                       
-                       if (parser.declareVariable(parser.temp, "?", parser.currentScope.peek())) {
-                          RESULT = "boolean ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-                |
-                    PERCENTAGE_NAME:pn
-                    {:
-                       parser.temp = pn.substring(0, pn.length() - 1);
-                       
-                       if (parser.declareVariable(parser.temp, "%", parser.currentScope.peek())) {
-                          RESULT = "Percentage ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-
-                |
-                    LOCATION_NAME:ln
-                    {:
-                       parser.temp = ln.substring(0, ln.length() - 1);
-                       
-                       if (parser.declareVariable(parser.temp, "@", parser.currentScope.peek())) {
-                          RESULT = "Location ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-                |
-                    LOCATION_LIST:ll
-                    {:
-                       parser.temp = ll.substring(0, ll.length() - 1);
-                       
-                       if (parser.declareVariable(parser.temp, "@...", parser.currentScope.peek())) {
-                          RESULT = "Location[] ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-                |
-                    ENEMY_NAME:en
-                    {:
-                       parser.temp = en.substring(0, en.length() - 1);
-                       
-                       if (parser.declareVariable(parser.temp, "!", parser.currentScope.peek())) {
-                          RESULT = "Enemy ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
-                |
-                    RESOURCE_NAME:rn
-                    {:
-                       parser.temp = rn.substring(0, rn.length() - 1);
-                       
-                       if (parser.declareVariable(parser.temp, "$", parser.currentScope.peek())) {
-                          RESULT = "Resource ";
-                       } else {
-                          RESULT = "";
-                       }
-                       
-                       RESULT += parser.temp;
-                    :}
+variable_name_local  ::=  VARIABLE:v
+                          {:
+                             if (parser.declareVariable(v.name(), v.type().postFix(), parser.currentScope.peek())) {
+                                RESULT = v.type().javaType() + " ";
+                             } else {
+                                RESULT = "";
+                             }
+                             
+                             RESULT += v.name();
+                          :}
 ;
 
 base_value      ::=   field_name:fn            {:   RESULT = fn;     :}
@@ -586,7 +368,7 @@ boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
                               {:  RESULT = bec1 + co + bec2;  :}
 ;
 
-boolean_component       ::=   base_value
+boolean_component       ::=   base_value:bv {: RESULT = bv; :}
 ;
                       
 comparison_operator     ::=   IS_EQUAL_TO
@@ -616,7 +398,7 @@ entry                   ::=   THINK {: parser.changeScope("think"); :} NEWLINE
                               :}
 ;
 
-constant_value          ::=   MAX_HASH      {: RESULT = "Double.MAX_VALUE";    :}
+constant_value          ::=   MAX_HASH          {: RESULT = "Double.MAX_VALUE";    :}
                         |     MIN_HASH		{: RESULT = "Double.MIN_VALUE";    :}
                         |     NOTHING_NOT	{: /* to do */ RESULT = "NOTHING"; :}
                         |     NOWHERE_AT	{: /* to do */ RESULT = "NOWHERE"; :}

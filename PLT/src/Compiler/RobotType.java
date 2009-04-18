@@ -8,7 +8,8 @@ public enum RobotType {
    LOCATION   ("@"  , "Location"),
    ENEMY      ("!"  , "Enemy"   ),
    RESOURCE   ("$"  , "Resource"),
-   LIST       ("...", "List"    );
+   LIST       ("...", "List"    ),
+   UNKNOWN    ("~unknown~","void");
 
    private final String postFix; 
    private final String javaType;

@@ -3,7 +3,7 @@
 # DEPENDENCIES #
 ################
 
-JARS   := cup-0.10k.jar JFlex-1.4.1.jar 
+JARS   := cup-0.10k.jar JFlex-1.4.1.jar junit-4.6.jar
 LIBDIR := ../../lib/
 
 #############
@@ -22,7 +22,7 @@ CLASSPATH := $(subst $(SPACE),:,$(CLASSPATH))
 #################
 
 COMPILE       := javac
-COMPILE_FLAGS := -classpath "$(CLASSPATH)" -Xlint:unchecked -d .
+COMPILE_FLAGS := -classpath ".:$(CLASSPATH)" -Xlint:unchecked -d .
 
 RUN           := java
 RUN_FLAGS     := -classpath ".:$(CLASSPATH)" 
@@ -81,11 +81,18 @@ $(HELPER_CLASSES): $(HELPER_SRC)
 #############################
 
 TEST_PROGRAMS := hello hello2 tutorial2 FindShoot
+UNIT_TESTS := RobotVarTest
 
 $(TEST_PROGRAMS): $(PARSER)
 	$(PARSE) $@.robot $@.java &> $@.parse && cat $@.java
 
 test: $(TEST_PROGRAMS)
+
+$(UNIT_TESTS): $(addsuffix .java, $(UNIT_TESTS))
+	$(COMPILE) $(COMPILE_FLAGS) $<
+
+unit: $(UNIT_TESTS)
+	$(RUN) $(RUN_FLAGS) org.junit.runner.JUnitCore $(PACKAGE_NAME).$<
 
 #############
 # UTILITIES #
