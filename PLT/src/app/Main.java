@@ -56,7 +56,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	{
 		r.think();
 		player = (Robot) r;
-		player.terrain = terrain;
+		player.init(terrain, scene);
 		player.think();
 	}
 
@@ -163,10 +163,10 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	    //create level object
 	    Level level = new Level("level1.lvl");
 	    
-	    Scene scene = new Scene();
+	    scene = new Scene();
 	    terrain = new Terrain();
 	    //create the player object
-	    Robot player = new Robot(terrain);
+	    player = new Robot(terrain, scene);
 	    
 	    view3D.addGLEventListener(scene);
 	   
@@ -189,7 +189,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		this.setVisible(true);
 		
+		player.think();
 		
+		/*
 		int t = 0;
 		long time = System.currentTimeMillis();
 		long timeUpdater = System.currentTimeMillis();
@@ -219,40 +221,28 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				//System.out.println("avatar.position.x " + scene.player.position.x);
 				scene.player.goal = player.goal;
 			}
+			
 	    }
-	    
+	    */
 	    
 		
 	}
 	
 	
 	public void animate () {
-		int t = 0;
-		long time = System.currentTimeMillis();
-		long timeUpdater = System.currentTimeMillis();
-		
-		while (animation) {
-			//	System.out.println(System.currentTimeMillis());
-			//update the players decision... we should only do this every time interval
-			//its messy but pause the simulation until all players finish thinking
-			if( System.currentTimeMillis() - time > 500) //updates every second
-			{
-				player.think();
-				time = System.currentTimeMillis();
-			}
-			if(System.currentTimeMillis() > timeUpdater)
-			{
-				t++;
-				timeUpdater = System.currentTimeMillis();
-			}
 
-			player.update( (float)t/100.0f );
-			scene.player = player;
-			//System.out.println("position.x " + player.position.x);
-			scene.player.setPosition(player.position.x, player.position.y, player.position.z);
-			//System.out.println("avatar.position.x " + scene.player.position.x);
-			scene.player.goal = player.goal;
+		if (player.animator==null) {
+			player.animator = new Thread(player);
 		}
+		
+		player.animator.start();
+		
+	}
+	
+	public void stopAnimate () {
+
+		player.animator= null;
+		
 	}
 	
 	public void actionPerformed (ActionEvent event) {
@@ -281,15 +271,17 @@ public class Main extends JFrame implements ActionListener, TextListener{
 			}
 		}
 		else if ("Run".equals(event.getActionCommand())) {
+			
 			animation = !animation;
 			
 			if (animation) {
 				start.setText("Stop");
 				start.validate();
-				//animate();
+				animate();
 			} else {
 				start.setText("Run");
 				start.validate();
+				stopAnimate();
 			}
 		}
 		else if ("new".equals(event.getActionCommand())) {

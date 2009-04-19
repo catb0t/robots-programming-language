@@ -9,7 +9,7 @@ import javax.media.opengl.glu.GLU;
 import app.TextureReader;
 import app.Robot;
 
-public class Robot implements RobotInterface {
+public class Robot implements RobotInterface, Runnable {
 	
 	GL gl;
 	
@@ -42,14 +42,22 @@ public class Robot implements RobotInterface {
     private int laserTexture;
 	
     float oldTime = 0;
+    
+    
+    public Thread animator;					//Thread from this runnable class
+    
+    Scene scene;
 	
-	public Robot(Terrain t)
+	public Robot(Terrain t, Scene s)
 	{
 		forwardDirection = new Vector3(0, 0, -1);
 		cameraDirection = new Vector3(0, 10, -10);
 		position = new Vector3(0, 0, 0);
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
+		scene = s;
+		
+		animator=null;
 	}
 	
 	public Robot(GL g, Terrain t)
@@ -124,6 +132,18 @@ public class Robot implements RobotInterface {
 	//This is for only UnitTest.
 	public Robot() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	
+	public void init(Terrain t, Scene s) {
+		forwardDirection = new Vector3(0, 0, -1);
+		cameraDirection = new Vector3(0, 10, -10);
+		position = new Vector3(0, 0, 0);
+		goal = new Vector3(0, 0, 0);
+		terrain = t;
+		scene = s;
+		
+		animator=null;
 	}
 	
   private void makeRGBTexture(GL gl, GLU glu, TextureReader.Texture img, 
@@ -603,6 +623,32 @@ public class Robot implements RobotInterface {
 		position = new Vector3(x, y, z);
 	}
 	
-	
+	public void run() {
+		int t = 0;
+		long time = System.currentTimeMillis();
+		long timeUpdater = System.currentTimeMillis();
+		
+		while (Thread.currentThread() == animator)
+		{
+			if( System.currentTimeMillis() - time > 500) //updates every second
+			{
+				this.think();
+				time = System.currentTimeMillis();
+			}
+			if(System.currentTimeMillis() > timeUpdater)
+			{
+				t++;
+				timeUpdater = System.currentTimeMillis();
+			}
+
+			this.update( (float)t/100.0f );
+			scene.player = this;
+			//System.out.println("position.x " + player.position.x);
+			scene.player.setPosition(this.position.x, this.position.y, this.position.z);
+			//System.out.println("avatar.position.x " + scene.player.position.x);
+			scene.player.goal = this.goal;
+		}
+		
+	}
 
 }
