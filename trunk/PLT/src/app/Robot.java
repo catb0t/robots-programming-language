@@ -9,13 +9,13 @@ import javax.media.opengl.glu.GLU;
 import app.TextureReader;
 import app.Robot;
 
-public class Robot {
+public class Robot implements RobotInterface {
 	
 	GL gl;
 	
 	private int energy;
 	
-	float max_speed=1;
+	float max_speed=1f;
 	float speed = 0.2f;
 	float maxIncline = 2;
 	
@@ -145,7 +145,7 @@ public class Robot {
     }
 
     public void update(float time)
-    {
+    {	
   //  	System.out.println(time);
     	//update the robots position
     	float timeInterval = time - oldTime;
@@ -477,10 +477,12 @@ public class Robot {
 	{
 
 		
-		goal = new Vector3(0, 0, 0);
+		//goal = new Vector3(0, 0, 0);
 		
 		
 		//move_to(position.add(forwardDirection), 0.0000001f);
+		
+		System.out.println("basic think is running");
 		
 		
 	}
@@ -493,12 +495,12 @@ public class Robot {
 	}
 	
 	
-	public void move_to (Vector3 location, float speed)
+	public void move_to (Location location, Percentage my_speed)
 	{
-		Vector3 direction = new Vector3(location.x - position.x, location.y - position.y, location.z - position.z);
-		float step = speed*max_speed;
 		
-		position = new Vector3(position.x+ step*direction.x, position.y+ step*direction.y, position.z+ step*direction.z);
+		goal = location.getVector3();
+		
+		speed = my_speed.percent;
 	}
 	
 	public void move_to (Vector2 location, float speed){

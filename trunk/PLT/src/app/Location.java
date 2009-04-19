@@ -2,22 +2,22 @@ package app;
 
 public class Location {
 	
-	private float x;
-	private float y;
-	private float height;
+	public float x;
+	public float y;
+	public float z;
 	
 	public Location ()
 	{
 		x=0;
 		y=0;
-		height=0;
+		z=0;
 	}
 	
 	public Location (float a, float b, float c)
 	{
 		x=a;
 		y=b;
-		height=c;
+		z=c;
 	}
 	
 	public float getX ()
@@ -30,8 +30,13 @@ public class Location {
 		return y;
 	}
 	
-	public float getHeight ()
+	public float getZ ()
 	{
-		return height;
+		return z;
+	}
+	
+	public Vector3 getVector3()
+	{
+		return new Vector3(x,y,z);
 	}
 }
