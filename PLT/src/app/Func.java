@@ -531,7 +531,7 @@ public class Func {
 	
 	static Location add (Location a, Location b)
 	{
-		return new Location (a.getX()+b.getX(), a.getY()+b.getY(), a.getHeight()+b.getHeight());
+		return new Location (a.getX()+b.getX(), a.getY()+b.getY(), a.getZ()+b.getZ());
 	}
 	
 	static float add (Location a, boolean b)
@@ -610,12 +610,12 @@ public class Func {
 	
 	static Location times (float a, Location b)
 	{
-		return new Location(b.getX()*a, b.getY()*a, b.getHeight()*a);
+		return new Location(b.getX()*a, b.getY()*a, b.getZ()*a);
 	}
 	
 	static Location times (Location b, float a)
 	{
-		return new Location(b.getX()*a, b.getY()*a, b.getHeight()*a);
+		return new Location(b.getX()*a, b.getY()*a, b.getZ()*a);
 	}
 	
 	static float times (float a, Enemy b)
@@ -770,12 +770,12 @@ public class Func {
 	
 	static Location times (Percentage a, Location b)
 	{
-		return new Location(b.getX()*a.percent, b.getY()*a.percent, b.getHeight()*a.percent);
+		return new Location(b.getX()*a.percent, b.getY()*a.percent, b.getZ()*a.percent);
 	}
 
 	static Location times (Location b, Percentage a)
 	{
-		return new Location(b.getX()*a.percent, b.getY()*a.percent, b.getHeight()*a.percent);
+		return new Location(b.getX()*a.percent, b.getY()*a.percent, b.getZ()*a.percent);
 	}
 	
 	static float times (Percentage a, boolean b)
@@ -1110,4 +1110,578 @@ public class Func {
 	}
 	
 	//others are errors.
+	
+	static float rollover (float a, LinkedList b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (LinkedList a, float b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (float a, Percentage b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Percentage a, float b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (float a, Location b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Location b, float a)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (float a, Enemy b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Enemy a, float b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (float a, Resource b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Resource a, float b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (float a, boolean b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (boolean a, float b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	//percentage => 1+2*5
+
+	static float rollover (Percentage a, Percentage b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Percentage a, LinkedList b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (LinkedList a, Percentage b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Percentage a, Enemy b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Enemy a, Percentage b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Percentage a, Resource b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Resource a, Percentage b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Percentage a, Location b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Location b, Percentage a)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Percentage a, boolean b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (boolean a, Percentage b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	//list => 1+ 2*4
+
+	static float rollover (LinkedList a, LinkedList b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (LinkedList a, Enemy b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Enemy a, LinkedList b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (LinkedList a, Resource b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Resource a, LinkedList b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (LinkedList a, Location b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Location a, LinkedList b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (LinkedList a, boolean b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (boolean a, LinkedList b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	//Enemy => 1+2*3
+
+	static float rollover (Enemy a, Enemy b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Enemy a, Resource b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Resource a, Enemy b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Enemy a, Location b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Location a, Enemy b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Enemy a, boolean b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (boolean a, Enemy b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	//Resource => 1+2*2
+
+	static float rollover (Resource a, Location b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Location a, Resource b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Resource a, boolean b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (boolean a, Resource b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	//Location => 1+2*1
+
+	static float rollover (Location a, Location b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (Location a, boolean b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	static float rollover (boolean a, Location b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
+
+	// boolean => 1
+
+	static float rollover (boolean a, boolean b)
+	{
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return 0f;
+	}
 }

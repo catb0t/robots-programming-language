@@ -44,9 +44,20 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	
 	Compiler compiler;
 	
+	boolean animation = false;
+	
 	
 	public Main () {
 		super();
+	}
+	
+	
+	public void setPlayer (RobotInterface r)
+	{
+		r.think();
+		player = (Robot) r;
+		player.terrain = terrain;
+		player.think();
 	}
 
 	
@@ -119,6 +130,11 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		editArea = new TextArea("Add your text here",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		editArea.addTextListener(this);
 		
+		editor.add(editArea);
+		
+		JPanel runparse = new JPanel();
+		runparse.setLayout(new BoxLayout(runparse, BoxLayout.X_AXIS));
+		
 		start = new JButton("Run");
 		start.setActionCommand("Run");		//032009 by joseph
 		start.addActionListener(this);		//032009 by joseph
@@ -127,10 +143,10 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		parse.setActionCommand("Parse");	//032009 by joseph
 		parse.addActionListener(this);		//032009 by joseph
 		
-		editor.add(editArea);
-		editor.add(start);
-		editor.add(parse);
+		runparse.add(start);
+		runparse.add(parse);
 		
+		editor.add(runparse);
 		
 		JSplitPane tools_write = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tools, editor);
 		tools_write.setDividerLocation(150);
@@ -139,7 +155,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		
 		//set the compiler
-		compiler = new Compiler();
+		compiler = new Compiler(this);
 		
 		//set the 3d viewer
 		GLCanvas view3D = new GLCanvas();
@@ -156,6 +172,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	   
 	    final Animator animator = new Animator(view3D);
 	   
+	    
 	    animator.start();
 	   
 		JPanel control_view = new JPanel();
@@ -172,14 +189,51 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		this.setVisible(true);
 		
+		
 		int t = 0;
 		long time = System.currentTimeMillis();
 		long timeUpdater = System.currentTimeMillis();
 		//main loop!
+		
 		while(true)
 	    {
-		//	System.out.println(System.currentTimeMillis());
-	    	//update the players decision... we should only do this every time interval
+			if (animation) {
+				//	System.out.println(System.currentTimeMillis());
+				//update the players decision... we should only do this every time interval
+				//its messy but pause the simulation until all players finish thinking
+				if( System.currentTimeMillis() - time > 500) //updates every second
+				{
+					player.think();
+					time = System.currentTimeMillis();
+				}
+				if(System.currentTimeMillis() > timeUpdater)
+				{
+					t++;
+					timeUpdater = System.currentTimeMillis();
+				}
+
+				player.update( (float)t/100.0f );
+				scene.player = player;
+				//System.out.println("position.x " + player.position.x);
+				scene.player.setPosition(player.position.x, player.position.y, player.position.z);
+				//System.out.println("avatar.position.x " + scene.player.position.x);
+				scene.player.goal = player.goal;
+			}
+	    }
+	    
+	    
+		
+	}
+	
+	
+	public void animate () {
+		int t = 0;
+		long time = System.currentTimeMillis();
+		long timeUpdater = System.currentTimeMillis();
+		
+		while (animation) {
+			//	System.out.println(System.currentTimeMillis());
+			//update the players decision... we should only do this every time interval
 			//its messy but pause the simulation until all players finish thinking
 			if( System.currentTimeMillis() - time > 500) //updates every second
 			{
@@ -191,15 +245,14 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				t++;
 				timeUpdater = System.currentTimeMillis();
 			}
+
 			player.update( (float)t/100.0f );
 			scene.player = player;
 			//System.out.println("position.x " + player.position.x);
 			scene.player.setPosition(player.position.x, player.position.y, player.position.z);
 			//System.out.println("avatar.position.x " + scene.player.position.x);
 			scene.player.goal = player.goal;
-	    }
-	    
-		
+		}
 	}
 	
 	public void actionPerformed (ActionEvent event) {
@@ -219,19 +272,25 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				
 				file.delete();
 				
-				//autoload file
+				//load class
 				
 				
-				//run simulation
-				///////create the robot
-				///////run think
 				
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		else if ("Run".equals(event.getActionCommand())) {
-			player.think();
+			animation = !animation;
+			
+			if (animation) {
+				start.setText("Stop");
+				start.validate();
+				//animate();
+			} else {
+				start.setText("Run");
+				start.validate();
+			}
 		}
 		else if ("new".equals(event.getActionCommand())) {
 			System.out.println("new File");

@@ -37,7 +37,7 @@ public class Number {
 	}
 	
 	public Number rollover (Number n)
-	{
+	{	
 		float a = this.getValue();
 		float b = n.getValue();
 		
