@@ -31,7 +31,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	Robot player;
 	Level level;
 	Scene scene;
-
+	
+	public Terrain terrain = null;
+	
 	TextArea editArea;
 	JButton start;
 	JButton parse;
@@ -146,8 +148,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	    Level level = new Level("level1.lvl");
 	    
 	    Scene scene = new Scene();
+	    terrain = new Terrain();
 	    //create the player object
-	    Robot player = new Robot(scene.terrain);
+	    Robot player = new Robot(terrain);
 	    
 	    view3D.addGLEventListener(scene);
 	   
@@ -169,19 +172,31 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		this.setVisible(true);
 		
-		
+		int t = 0;
 		long time = System.currentTimeMillis();
+		long timeUpdater = System.currentTimeMillis();
 		//main loop!
 		while(true)
 	    {
+		//	System.out.println(System.currentTimeMillis());
 	    	//update the players decision... we should only do this every time interval
 			//its messy but pause the simulation until all players finish thinking
-			if( System.currentTimeMillis() - time > 1000) //updates every second
+			if( System.currentTimeMillis() - time > 500) //updates every second
 			{
 				player.think();
+				time = System.currentTimeMillis();
 			}
-			player.update();
+			if(System.currentTimeMillis() > timeUpdater)
+			{
+				t++;
+				timeUpdater = System.currentTimeMillis();
+			}
+			player.update( (float)t/100.0f );
 			scene.player = player;
+			//System.out.println("position.x " + player.position.x);
+			scene.player.setPosition(player.position.x, player.position.y, player.position.z);
+			//System.out.println("avatar.position.x " + scene.player.position.x);
+			scene.player.goal = player.goal;
 	    }
 	    
 		
