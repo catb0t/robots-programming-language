@@ -208,7 +208,7 @@ public class Scene implements GLEventListener {
 
         
         playerAvatar = new Robot(gl, terrain);
-        player = new Robot(terrain);
+        player = new Robot(terrain, this);
         
 
 
