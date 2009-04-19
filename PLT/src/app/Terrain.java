@@ -23,6 +23,17 @@ public class Terrain {
     
     private int terrainDL;
     GL gl;
+    
+    public Terrain()
+    {
+    	try {
+            loadRawFile("media/terrain3.raw", heightMap);  // (NEW)
+        } catch (IOException e) {
+        	System.out.println("terrain map did not load...");
+            throw new RuntimeException(e);
+        }
+        
+    }
 	
 	public Terrain(GL inGL)
 	{
@@ -247,9 +258,10 @@ public class Terrain {
         gl.glEndList();
     }
     
-    public float terrainIntersection(Vector3 position)
+    public float terrainIntersection(Vector3 pos)
     {
     	Vector3 down = new Vector3(0, -1, 0);
+    	Vector3 position = new Vector3(pos.x, pos.y, pos.z);
     	//find the triangle which the position is currently over, need to translate and scale the position so it corresponds to the height map
     	position.x /= scaleXZ;
     	position.y /= scaleY;

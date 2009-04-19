@@ -34,7 +34,6 @@ public class Scene implements GLEventListener {
 	
     private int waterTexture;
 	
-	float t = 0;
 	
 	private int waterDL;
 	private int skyDL;
@@ -51,19 +50,23 @@ public class Scene implements GLEventListener {
     private float fogColor[] = {0.5f, 0.5f, 0.5f, 1.0f};		// Fog Color               ( new )
         
 
+    int t = 0;
+    long oldTime = 0;
     
 
 	public void display(GLAutoDrawable drawable) {
 		final GL gl = drawable.getGL();
 
-		
-		int time = (int)System.currentTimeMillis();
-		
+		if(System.currentTimeMillis() > oldTime)
+		{
+			t++;
+			oldTime = System.currentTimeMillis();
+		}
 		
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		
 		//set the camera
-		cam.updatePosition(player.forwardDirection.x, player.forwardDirection.y, player.forwardDirection.z);
+		cam.updatePosition(player.cameraDirection.x, player.cameraDirection.y, player.cameraDirection.z);
 		cam.lookAt(player.position.x, player.position.y, player.position.z);
 		cam.updateCamera(gl, t++);
 		lightPosition[0] = 0.5f;//lightDirection.x;
@@ -79,11 +82,20 @@ public class Scene implements GLEventListener {
 		//draw the terrain
 		terrain.renderHeightMap(gl);
 		drawWater(gl);
-		Sphere sphere = new Sphere(gl);
 
 		
 		//render robot
-		physics();
+		
+		//need to figure out if the robot is walking right now, and in what direction
+    	boolean walking = false;
+		if( Math.abs(player.position.x - player.goal.x) > 0.1 || Math.abs(player.position.z - player.goal.z) > 0.1 )
+		{
+			//figure out walking direction
+			player.robotDirection = player.direction(player.position, player.goal);
+			player.robotDirection = player.robotDirection*(180.0f/3.14f);
+			walking = true;
+		}
+		
 		gl.glPushMatrix();
 			float[] lightAmbient = {1.0f, 1.0f, 1.0f, 1.0f};
 			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient, 0);
@@ -92,7 +104,7 @@ public class Scene implements GLEventListener {
 			//gl.glCallList(robotDL);
 		//		model.render(gl);
 
-			playerAvatar.renderRobot(gl, (float)(time/1000.0f) );
+			playerAvatar.renderRobot(gl, (float)t/100.0f, walking, player.robotDirection );
 			
 			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
 		gl.glPopMatrix();
@@ -135,82 +147,6 @@ public class Scene implements GLEventListener {
 		gl.glEndList();
 	}
 	
-	protected void physics()
-	{
-		player.setY((int)terrain.terrainIntersection(player.getPosition()) );
-		
-	}
-	
-	protected void createRobot(GL gl){
-		
-		robotDL = gl.glGenLists(1);
-        gl.glNewList(robotDL, GL.GL_COMPILE);
-     
-			gl.glBegin(GL.GL_TRIANGLES);					
-			gl.glColor3f(1.0f,0.0f,0.0f);			
-			gl.glVertex3f( 0.0f, 1.0f, 0.0f);			
-			gl.glColor3f(0.0f,1.0f,0.0f);			
-			gl.glVertex3f(-1.0f,-1.0f, 1.0f);			
-			gl.glColor3f(0.0f,0.0f,1.0f);			
-			gl.glVertex3f( 1.0f,-1.0f, 1.0f);			
-			gl.glColor3f(1.0f,0.0f,0.0f);			
-			gl.glVertex3f( 0.0f, 1.0f, 0.0f);			
-			gl.glColor3f(0.0f,0.0f,1.0f);			
-			gl.glVertex3f( 1.0f,-1.0f, 1.0f);			
-			gl.glColor3f(0.0f,1.0f,0.0f);			
-			gl.glVertex3f( 1.0f,-1.0f, -1.0f);			
-			gl.glColor3f(1.0f,0.0f,0.0f);			
-			gl.glVertex3f( 0.0f, 1.0f, 0.0f);			
-			gl.glColor3f(0.0f,1.0f,0.0f);			
-			gl.glVertex3f( 1.0f,-1.0f, -1.0f);			
-			gl.glColor3f(0.0f,0.0f,1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f, -1.0f);			
-			gl.glColor3f(1.0f,0.0f,0.0f);			
-			gl.glVertex3f( 0.0f, 1.0f, 0.0f);			
-			gl.glColor3f(0.0f,0.0f,1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f,-1.0f);			
-			gl.glColor3f(0.0f,1.0f,0.0f);			
-			gl.glVertex3f(-1.0f,-1.0f, 1.0f);			
-		    gl.glEnd();
-
-	    gl.glEndList();
-
-	}
-	
-	protected void drawCube(GL gl){
-		gl.glBegin(GL.GL_QUADS);					
-			gl.glColor3f(0.0f,1.0f,0.0f);			
-			gl.glVertex3f( 1.0f, 1.0f,-1.0f);			
-			gl.glVertex3f(-1.0f, 1.0f,-1.0f);			
-			gl.glVertex3f(-1.0f, 1.0f, 1.0f);			
-			gl.glVertex3f( 1.0f, 1.0f, 1.0f);			
-			gl.glColor3f(1.0f,0.5f,0.0f);			
-			gl.glVertex3f( 1.0f,-1.0f, 1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f, 1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f,-1.0f);			
-			gl.glVertex3f( 1.0f,-1.0f,-1.0f);			
-			gl.glColor3f(1.0f,0.0f,0.0f);			
-			gl.glVertex3f( 1.0f, 1.0f, 1.0f);			
-			gl.glVertex3f(-1.0f, 1.0f, 1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f, 1.0f);			
-			gl.glVertex3f( 1.0f,-1.0f, 1.0f);			
-			gl.glColor3f(1.0f,1.0f,0.0f);			
-			gl.glVertex3f( 1.0f,-1.0f,-1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f,-1.0f);			
-			gl.glVertex3f(-1.0f, 1.0f,-1.0f);			
-			gl.glVertex3f( 1.0f, 1.0f,-1.0f);			
-			gl.glColor3f(0.0f,0.0f,1.0f);			
-			gl.glVertex3f(-1.0f, 1.0f, 1.0f);			
-			gl.glVertex3f(-1.0f, 1.0f,-1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f,-1.0f);			
-			gl.glVertex3f(-1.0f,-1.0f, 1.0f);			
-			gl.glColor3f(1.0f,0.0f,1.0f);			
-			gl.glVertex3f( 1.0f, 1.0f,-1.0f);			
-			gl.glVertex3f( 1.0f, 1.0f, 1.0f);			
-			gl.glVertex3f( 1.0f,-1.0f, 1.0f);			
-			gl.glVertex3f( 1.0f,-1.0f,-1.0f);			
-		gl.glEnd();	
-	}
 
 	
 
@@ -268,10 +204,8 @@ public class Scene implements GLEventListener {
         //create the terrain, water and skySphere display list
         terrain = new Terrain(gl);
         createWater(gl);
-        //create the robot display list
-        createRobot(gl);
 
-        model = new OBJ_Model(gl, "sphere.obj");
+
         
         playerAvatar = new Robot(gl, terrain);
         player = new Robot(terrain);

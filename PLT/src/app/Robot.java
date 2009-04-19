@@ -15,15 +15,17 @@ public class Robot {
 	
 	private int energy;
 	
-	float max_speed=100000;
-	float speed = 0;
+	float max_speed=1;
+	float speed = 0.2f;
 	float maxIncline = 2;
 	
 	float verticalVelocity = 0;
+	float robotDirection = 0;
 	
 	private GLU glu = new GLU();
 	
 	public Vector3 forwardDirection = null;
+	public Vector3 cameraDirection = null;
 	public Vector3 position = null;
 	public Vector3 goal = null;
 	
@@ -32,8 +34,6 @@ public class Robot {
 	
 	Vector3 direction = null;
 	Terrain terrain;
-	OBJ_Model robot_head;
-	OBJ_Model robot_torso;
 
 	Sphere sphere = null;
 	
@@ -46,25 +46,25 @@ public class Robot {
 	public Robot(Terrain t)
 	{
 		forwardDirection = new Vector3(0, 0, -1);
+		cameraDirection = new Vector3(0, 10, -10);
 		position = new Vector3(0, 0, 0);
+		goal = new Vector3(0, 0, 0);
 		terrain = t;
 	}
 	
 	public Robot(GL g, Terrain t)
 	{
 		gl = g;
-		forwardDirection = new Vector3(0, 0, -1);
+		forwardDirection = new Vector3(0, 0, -10);
 
 		terrain = t;
-		
-		robot_head = new OBJ_Model(gl, "robot/robotHead.obj");	
-		robot_torso = new OBJ_Model(gl, "robot/robotTorso.obj");
 
 		
 		
 		forwardDirection = new Vector3(0, 0, -1);
+		cameraDirection = new Vector3(0, 10, -1);
 		position = new Vector3(0, 0, 0);
-		goal = new Vector3(1000, 0, 0);
+		goal = new Vector3(0, 0, 0);
 		
 		sphere = new Sphere(gl);
 		
@@ -144,43 +144,70 @@ public class Robot {
         return tmp[0];
     }
 
-    public void update()
+    public void update(float time)
     {
-    	
-    }
-    
-    public void renderRobot(GL gl, float time)
-    {
+  //  	System.out.println(time);
     	//update the robots position
     	float timeInterval = time - oldTime;
     	oldTime = time;
     	float distance = timeInterval*speed;
+    	float realDistance = (float)this.distance(position, goal);
+    	if(realDistance < distance)
+    		distance = realDistance;
     	//figure out what direction we're moving to
     	float directionRadians = this.direction(position, goal);
-    	Vector3 newPosition = new Vector3(position.x + distance*forwardDirection.x, position.z + distance*forwardDirection.z, 0);
+    	Vector3 newPosition = new Vector3((float)(position.x + distance*forwardDirection.x), (float)(position.z + distance*forwardDirection.z), (float)0);
     	//now that I have a new position, need to find out my distance from the ground
     	float newY = terrain.terrainIntersection(newPosition);
+ //   	System.out.println(newY);
     	//if we've hit an incline higher than we can traverse then keep old position
     	//...
     	//else
-    	if( (float)(newY - position.y)/distance < maxIncline)
+    	if(goal.x != position.x || goal.z != position.z) //if we haven't moved then don't do anything
     	{
-    		//update the position along the terrain
-    		position.x = newPosition.x;
-    		position.z = newPosition.y;
-    		//now figure out what's going on with falling and physics
-    // 		if(newY < position.y)//we're falling
-    //		{
-    //			verticalVelocity += 
-    //		}
-    		position.y = newY; //screw it, for now just glue the robot to the terrain
-    		
-    		
+    		/*System.out.println(goal.x);
+    		System.out.println(goal.y);
+    		System.out.println(goal.z);
+    		System.out.println(position.x);
+    		System.out.println(position.y);
+    		System.out.println(position.z);*/
+    		float incline = (float)(newY - position.y)/distance;
+    //		System.out.println(incline);
+	  //  	if( incline < maxIncline)
+	    	{
+	    		//update the position along the terrain
+	    		position.x = newPosition.x;
+	    		position.z = newPosition.y;
+	    		//now figure out what's going on with falling and physics
+	    // 		if(newY < position.y)//we're falling
+	    //		{
+	    //			verticalVelocity += 
+	    //		}
+	    		
+	    		
+	    	}
     	}
-    	position.x += 0.1f;
+    	position.y = newY;
+
+    	
+    	//update the camera
+    	float tempx = position.x + 10*(float)Math.cos((double)time/10.0);
+		float tempy = position.z + 10*(float)Math.sin((double)time/10.0);
+		
+		//goal = new Vector3(10, 0, 10);
+		
+		cameraDirection = new Vector3(tempx, position.y + 5, tempy);
+    }
+    
+    public void renderRobot(GL gl, float time, boolean walking, float direction)
+    {
+		
+		//move_to(position.add(forwardDirection), 0.0000001f);
+    	
+    	gl.glRotatef(direction, 0.0f, 1.0f, 0.0f);
     	
     	//need to figure out if the robot is walking right now, and in what direction
-    	if( (position.x != goal.x) || (position.z != goal.z) )
+    	if(walking)
     	{
     		gl.glPushMatrix();
     			//point our robot in the right direction
@@ -425,9 +452,7 @@ public class Robot {
 		
 	}
 	
-	
-	private int t  = 0;
-	
+
 	/* the physics function handles all the physics dealing with the robot, for example, when 
 	 * 
 	 */
@@ -445,23 +470,21 @@ public class Robot {
 		return new Vector2(position.x,position.y);
 	}
 	
+	//******************************************************************************************************
+	// THINK!!!!
+	//******************************************************************************************************
 	public void think()
 	{
-		t++;
+
 		
-		//physics();
+		goal = new Vector3(0, 0, 0);
 		
-		float tempx = 10*(float)Math.cos((double)t/10000000.0);
-		float tempy = 10*(float)Math.sin((double)t/10000000.0);
 		
-		goal = new Vector3();
-		
-		forwardDirection = new Vector3(tempx, position.y + 5, tempy);
-		
-		move_to(position.add(forwardDirection), 0.0000001f);
+		//move_to(position.add(forwardDirection), 0.0000001f);
 		
 		
 	}
+	//******************************************************************************************************
 	
 	
 	public void say (String s)
@@ -572,5 +595,12 @@ public class Robot {
 		}
 		
 	}
+	
+	public void setPosition(float x, float y, float z)
+	{
+		position = new Vector3(x, y, z);
+	}
+	
+	
 
 }
