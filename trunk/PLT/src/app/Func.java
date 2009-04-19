@@ -1096,7 +1096,7 @@ public class Func {
 	
 	/////////// ROLLOVER FUNCTION //////////////////
 	
-	public float rollover (float a, float b)
+	static float rollover (float a, float b)
 	{
 		if (b == 0)
 		{
