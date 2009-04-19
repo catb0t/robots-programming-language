@@ -1,11 +1,14 @@
-//Expected result from helloworld.r
-//think
-//	say hello, world
-//end
+package app;
 
-public class Helloworld{
-	public helloworld(){
-		Robot robot = new Robot();
-		robot.say("hello, world");
+import java.util.*;
+
+public class RobotCompiled extends Robot {
+
+	public static void think() {
+
+		System.out.println("hello, world");
+
 	}
+
+
 }

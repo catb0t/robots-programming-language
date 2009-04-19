@@ -1,14 +1,16 @@
-//Expected result from MoveRobot.r
+package app;
 
-//think
-//	x# of targetLocation@=10
-//	y# of targetLocation@=10
-//	move_to targetLocation@ 100%      
-//end
+import java.util.*;
 
-public class MoveRobot {
-	public MoveRobot{
-		Robot robot=new Robot();
-		robot.move_to(new Vector2(10,10),100);	//Need new member fuction of Robot class
+public class RobotCompiled extends Robot {
+
+	public static void think() {
+
+		targetLocation.x = 10f;
+		targetLocation.y = 10f;
+		move_to(targetLocation, new Percentage(100));
+
 	}
+
+
 }
