@@ -1,4 +1,4 @@
-package Robot;
+package app;
 
 public class RobotVar {
    

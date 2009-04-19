@@ -1,4 +1,4 @@
-package Robot;
+package app;
 
 import org.junit.* ;
 import static org.junit.Assert.* ;

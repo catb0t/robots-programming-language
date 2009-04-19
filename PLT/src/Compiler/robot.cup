@@ -1,4 +1,4 @@
-package Robot;
+package app;
 
 import java_cup.runtime.*;
 import java.io.*;
@@ -25,7 +25,7 @@ parser code {:
         public static void main(String args[]) throws Exception {
            bDebugFlag = true;
            try {
-              robotProgram = "package Think;\n";
+              robotProgram = "package app;\n\nimport java.util.*;\n";
               globalDeclarations = "";
               sm = new RobotScopeManager();
 
@@ -52,8 +52,9 @@ terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT, OF, SELF;
 terminal         IF, THEN, ELSE, DONE;
 terminal         REPEAT, IN, EACH;
+terminal         ROLLOVER;
 terminal Integer NUMBER;
-terminal Double  NUMBER_EXPRESSION;
+terminal String  NUMBER_EXPRESSION;
 terminal String  NUMBER_PERCENTAGE;
 terminal String  ANYTHING, INT_IDX;
 terminal         IS_LOWER_THAN, IS_STRICTLY_LOWER_THAN, IS_DIFFERENT_FROM;
@@ -90,7 +91,7 @@ precedence left IS_DIFFERENT_FROM, IS_EQUAL_TO;
 /* Do not split this line */
 precedence nonassoc IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_LOWER_THAN, IS_STRICTLY_LOWER_THAN;
 
-precedence left PLUS, MINUS;
+precedence left PLUS, MINUS, ROLLOVER;
 precedence left TIMES, DIVIDE;
 
 precedence right NOT;
@@ -104,7 +105,7 @@ program         ::= optnl declaration:dcls
                     optnl functions:funcs
                     optnl
                     {:
-                       RESULT =  "\npublic class Robot {\n";
+                       RESULT =  "\npublic class RobotCompiled extends Robot {\n";
                        RESULT += dcls + ent + funcs;
                        RESULT += "\n}\n";
                        parser.robotProgram += RESULT;
@@ -149,7 +150,7 @@ field_access    ::= field_name:fn OF base_value:fa
                 |   
                     index:idx OF base_value:fa
                     {:
-                       RESULT = fa + "[" + idx + "]";
+                       RESULT = fa + ".get(" + idx + ")";
                     :}
                 /*|   
                     variable_name:vn
@@ -164,10 +165,10 @@ field_access    ::= field_name:fn OF base_value:fa
 ;
 
 index           ::=  NUMBER_NAME_IDX:nnidx
-                     {: nnidx.substring(0, nnidx.length() - 3); :}
+                     {: RESULT = nnidx.substring(0, nnidx.length()-3);:}
                 |
                      INT_IDX:nidx
-                     {: nidx.substring(0, nidx.length() - 2);   :}
+                     {: RESULT = nidx.substring(0, nidx.length()-2);  :}
 ;
 
 field_name      ::=  VARIABLE:v
@@ -255,7 +256,16 @@ any_expr        ::=   boolean_expression:be    {:   RESULT = be; :}
 
 arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2
                               {:
-                                 RESULT = ae1 + ao + ae2;
+                                 // Call the appropriate Java function
+                                 if(ao == "%") { //ROLLOVER
+                                     RESULT = "Func.rollover(" + ae1 + ", " + ae2 + ")";
+                                 } else if(ao == "+") {
+                                     RESULT = "Func.add(" + ae1 + ", " + ae2 + ")";
+                                 } else if(ao == "*") {
+                                     RESULT = "Func.times(" + ae1 + ", " + ae2 + ")";
+                                 } else {
+                                     RESULT = ae1 + ao + ae2;
+                                 }
                               :}
                         |
                               LPAREN arithmetic_expression:ae RPAREN
@@ -274,10 +284,11 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               :}
 ;
 
-arithmetic_operator     ::=   PLUS     {: RESULT = " + "; :}
+arithmetic_operator     ::=   PLUS     {: RESULT = "+";   :}
                         |     MINUS    {: RESULT = " - "; :}
-                        |     TIMES    {: RESULT = " * "; :}
+                        |     TIMES    {: RESULT = "*";   :}
                         |     DIVIDE   {: RESULT = " / "; :}
+                        |     ROLLOVER {: RESULT = "%";   :}
 ;
 
 boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
@@ -306,12 +317,23 @@ boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
 boolean_component       ::=   base_value:bv {: RESULT = bv; :}
 ;
                       
-comparison_operator     ::=   IS_EQUAL_TO
-                        |     IS_LOWER_THAN
-                        |     IS_STRICTLY_LOWER_THAN
-                        |     IS_STRICTLY_GREATER_THAN
-                        |     IS_GREATER_THAN
-                        |     IS_DIFFERENT_FROM
+comparison_operator     ::=   IS_EQUAL_TO 
+                              {: RESULT = "=="; :}
+                        |     
+                              IS_LOWER_THAN
+                              {: RESULT = "<="; :}
+                        |     
+                              IS_STRICTLY_LOWER_THAN
+                              {: RESULT = "<"; :}
+                        |     
+                              IS_STRICTLY_GREATER_THAN
+                              {: RESULT = ">"; :}
+                        |
+                              IS_GREATER_THAN
+                              {: RESULT = ">="; :}
+                        |
+                              IS_DIFFERENT_FROM
+                              {: RESULT = "!="; :}
 ;
 
 boolean_final           ::=   TRUE  {:   RESULT = "true";   :}
@@ -339,8 +361,8 @@ entry                   ::=   THINK {: parser.sm.increaseLevel(); :} NEWLINE
                               :}
 ;
 
-constant_value          ::=   MAX_HASH          {: RESULT = "Double.MAX_VALUE";    :}
-                        |     MIN_HASH		{: RESULT = "Double.MIN_VALUE";    :}
+constant_value          ::=   MAX_HASH          {: RESULT = "Float.MAX_VALUE";    :}
+                        |     MIN_HASH		{: RESULT = "Float.MIN_VALUE";    :}
                         |     NOTHING_NOT	{: /* to do */ RESULT = "NOTHING"; :}
                         |     NOWHERE_AT	{: /* to do */ RESULT = "NOWHERE"; :}
 ;
@@ -377,22 +399,22 @@ assignment              ::=   variable_name_local:vnl assign_op any_expr:ex NEWL
                               :}
 ;
 
-conditional             ::=   IF boolean_expression:be THEN NEWLINE
-                              block:b NEWLINE optnl 
-                              else_statement:es optnl DONE NEWLINE
+conditional             ::=   IF boolean_expression:be THEN NEWLINE optnl
+                              block:b optnl else_statement:es optnl 
+                              DONE NEWLINE
                               {:
-                                 RESULT =  "\t\tif(" + be + "){\n";
+                                 RESULT =  "if(" + be + "){\n";
                                  RESULT += b;
                                  RESULT += es;
-                                 RESULT += "\n\t\t}\n"; 
+                                 RESULT += "\n" + parser.sm.indent() + "}\n"; 
                               :}
 ;
 
-else_statement          ::=   ELSE NEWLINE block:b NEWLINE
-                              {: 
+else_statement          ::=   ELSE NEWLINE optnl block:b
+                              {:
                                  RESULT =  "\t\telse {\n" + b;
                               :}
-                        |     
+                        |
                               /* empty */
                               {: RESULT = ""; :}
 ;
