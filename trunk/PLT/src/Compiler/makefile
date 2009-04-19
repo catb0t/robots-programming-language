@@ -33,7 +33,7 @@ RUN_FLAGS     := -classpath ".:$(CLASSPATH)"
 
 LEXER          := robot.jflex
 GRAMMAR        := robot.cup 
-PACKAGE_NAME   := Robot
+PACKAGE_NAME   := app
 
 PARSER_FILES   := parser sym
 LEX_FILES      := Yylex

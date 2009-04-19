@@ -1,4 +1,4 @@
-package Robot;
+package app;
 
 import java_cup.runtime.Symbol;
 
@@ -136,6 +136,15 @@ min_hash=min\#
                   }
                   return new Symbol(sym.IN); 
         }
+
+   rollover
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched rollover" + yytext());
+                  }
+                  return new Symbol(sym.ROLLOVER); 
+         }
+
 
    \n   
          {
@@ -340,7 +349,7 @@ min_hash=min\#
                   if (parser.bDebugFlag) {
                      System.out.println("matched number: " + yytext());
                   }
-                  return new Symbol(sym.NUMBER_EXPRESSION, new Double(yytext()));
+                  return new Symbol(sym.NUMBER_EXPRESSION, new String(yytext()+"f"));
          }
 
    ";"   { return new Symbol(sym.SEMI);   }
