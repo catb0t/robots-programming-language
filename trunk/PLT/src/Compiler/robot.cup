@@ -53,6 +53,7 @@ terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT, OF, SELF;
 terminal         IF, THEN, ELSE, DONE;
 terminal         REPEAT, IN, EACH;
 terminal         ROLLOVER;
+terminal         NOTHING_RES;
 terminal Integer NUMBER;
 terminal String  NUMBER_EXPRESSION;
 terminal String  NUMBER_PERCENTAGE;
@@ -238,7 +239,7 @@ variable_name_local  ::=  VARIABLE:v
                           :}
 ;
 
-base_value      ::=   field_name:fn            {:   RESULT = fn;     :}
+base_value      ::=   /*field_name:fn            {:   RESULT = fn;     :}
                 |
                       constant_value:cv        {:   RESULT = cv;     :}
                 |
@@ -247,11 +248,13 @@ base_value      ::=   field_name:fn            {:   RESULT = fn;     :}
                       field_access:fa          {:   RESULT = fa;     :}
                 |
                       SELF                     {:   RESULT = "this"; :}
+                |*/
+                      arithmetic_expression:ae {:   RESULT = ae;     :}
 ;
 
 any_expr        ::=   boolean_expression:be    {:   RESULT = be; :}
-                |
-                      arithmetic_expression:ae {:   RESULT = ae; :}
+                /*|
+                      arithmetic_expression:ae {:   RESULT = ae; :}*/
 ;
 
 arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2
@@ -282,6 +285,16 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               {:
                                  RESULT = "new Percentage(" + pe.substring(0, pe.length() - 1) + ")";
                               :}
+                        |     
+                              field_name:fn            {:   RESULT = fn;     :}
+                        |
+                              constant_value:cv        {:   RESULT = cv;     :}
+                        |
+                              function_call:fc         {:   RESULT = fc;     :}
+                        |
+                              field_access:fa          {:   RESULT = fa;     :}
+                        |
+                              SELF                     {:   RESULT = "this"; :}
 ;
 
 arithmetic_operator     ::=   PLUS     {: RESULT = "+";   :}
@@ -305,10 +318,10 @@ boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
                         |     
                               boolean_final:bf
                               {:   RESULT = bf;                 :}
-                        |     
+                        |
                               boolean_component:bec
                               {:  RESULT = bec;  :}
-                        |     
+                        |
                               boolean_component:bec1 comparison_operator:co
                               boolean_component:bec2
                               {:  RESULT = bec1 + co + bec2;  :}
@@ -361,10 +374,11 @@ entry                   ::=   THINK {: parser.sm.increaseLevel(); :} NEWLINE
                               :}
 ;
 
-constant_value          ::=   MAX_HASH          {: RESULT = "Float.MAX_VALUE";    :}
-                        |     MIN_HASH		{: RESULT = "Float.MIN_VALUE";    :}
-                        |     NOTHING_NOT	{: /* to do */ RESULT = "NOTHING"; :}
-                        |     NOWHERE_AT	{: /* to do */ RESULT = "NOWHERE"; :}
+constant_value          ::=   MAX_HASH      {: RESULT = "Float.MAX_VALUE";  :}
+                        |     MIN_HASH		{: RESULT = "Float.MIN_VALUE";  :}
+                        |     NOTHING_NOT	{: RESULT = "new Enemy()";      :}
+                        |     NOWHERE_AT	{: RESULT = "new Location()";   :}
+                        |     NOTHING_RES   {: RESULT = "new Resource()";   :}
 ;
 
 optnl                   ::=   optnl NEWLINE

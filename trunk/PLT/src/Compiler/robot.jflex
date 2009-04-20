@@ -294,6 +294,17 @@ min_hash=min\#
                   }
                   return new Symbol(sym.MIN_HASH);
          }
+         
+   nothing[\!\$]
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched nothing[!$]: " + yytext());
+                  }
+                  if(yytext().endsWith("!")) {
+                  	 return new Symbol(sym.NOTHING_NOT);
+                  }
+                  return new Symbol(sym.NOTHING_RES);
+         }
 
    {identifier}
          {
