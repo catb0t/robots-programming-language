@@ -9,7 +9,7 @@ import javax.media.opengl.glu.GLU;
 import app.TextureReader;
 import app.Robot;
 
-public class Robot implements RobotInterface, Runnable {
+public class Robot implements RobotInterface {
 	
 	GL gl;
 	
@@ -46,7 +46,7 @@ public class Robot implements RobotInterface, Runnable {
     
     public Thread animator;					//Thread from this runnable class
     
-    Scene scene;
+    //Scene scene;
 	
 	public Robot(Terrain t, Scene s)
 	{
@@ -55,7 +55,7 @@ public class Robot implements RobotInterface, Runnable {
 		position = new Vector3(0, 0, 0);
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
-		scene = s;
+		//scene = s;
 		
 		animator=null;
 	}
@@ -141,7 +141,7 @@ public class Robot implements RobotInterface, Runnable {
 		position = new Vector3(0, 0, 0);
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
-		scene = s;
+		//scene = s;
 		
 		animator=null;
 	}
@@ -620,6 +620,7 @@ public class Robot implements RobotInterface, Runnable {
 		position = new Vector3(x, y, z);
 	}
 	
+	/*
 	public void run() {
 		int t = 0;
 		long time = System.currentTimeMillis();
@@ -645,9 +646,10 @@ public class Robot implements RobotInterface, Runnable {
 			//System.out.println("avatar.position.x " + scene.player.position.x);
 			scene.player.goal = this.goal;
 			
-			*/
+			
 		}
 		
 	}
+	*/
 
 }

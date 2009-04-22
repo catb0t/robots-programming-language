@@ -20,6 +20,8 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	Level level;
 	Scene scene;
 	
+	Animation anime;
+	
 	public Terrain terrain = null;
 	
 	TextArea editArea;
@@ -174,7 +176,6 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	   
 	    final Animator animator = new Animator(view3D);
 	   
-	    
 	    animator.start();
 	   
 		JPanel control_view = new JPanel();
@@ -191,13 +192,16 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.setVisible(true);
+
+		anime = new Animation(player, scene);
 		
-		player.think();
 		
 		
+		/*
 		int t = 0;
 		long time = System.currentTimeMillis();
 		long timeUpdater = System.currentTimeMillis();
+		
 		//main loop!
 		
 		while(true)
@@ -212,7 +216,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 			}
 			
 	    }
-	  
+	  */
 	    
 		
 	}
@@ -220,17 +224,17 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	
 	public void animate () {
 
-		if (player.animator==null) {
-			player.animator = new Thread(player);
+		if (anime.animator==null) {
+			anime.animator = new Thread(anime);
 		}
 		
-		player.animator.start();
+		anime.animator.start();
 		
 	}
 	
 	public void stopAnimate () {
 
-		player.animator= null;
+		anime.animator= null;
 		
 	}
 	
