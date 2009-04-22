@@ -171,7 +171,7 @@ public class Robot implements RobotInterface, Runnable {
     	float timeInterval = time - oldTime;
     	oldTime = time;
     	float distance = timeInterval*speed;
-    	float realDistance = (float)this.distance(position, goal);
+    	float realDistance = (float)Math.sqrt(Math.pow(position.x - goal.x, 2)+ Math.pow(position.z - goal.z, 2));
     	if(realDistance < distance)
     		distance = realDistance;
     	//figure out what direction we're moving to
@@ -186,9 +186,10 @@ public class Robot implements RobotInterface, Runnable {
     	if(goal.x != position.x || goal.z != position.z) //if we haven't moved then don't do anything
     	{
 
+    		
     		float incline = (float)(newY - position.y)/distance;
     		System.out.println(incline);
-	   // 	if( incline < maxIncline)
+	    	if( incline < maxIncline)
 	    	{
 	    		//update the position along the terrain
 	    		position.x = newPosition.x;
@@ -536,7 +537,7 @@ public class Robot implements RobotInterface, Runnable {
 	
 	public double distance (Vector3 origin, Vector3 goal)
 	{
-		return Math.sqrt(Math.pow(origin.x - goal.x, 2)+Math.pow(origin.y - goal.y, 2)+Math.pow(origin.z - goal.z, 2));
+		return Math.sqrt(Math.pow(origin.x - goal.x, 2)+ Math.pow(origin.y - goal.y, 2)+ Math.pow(origin.z - goal.z, 2));
 	}
 	
 	public float direction (Vector3 origin, Vector3 goal)
