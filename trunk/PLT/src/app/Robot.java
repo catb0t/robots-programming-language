@@ -17,7 +17,7 @@ public class Robot implements RobotInterface {
 	
 	float max_speed=1f;
 	float speed = 0.2f;
-	float maxIncline = 2;
+	float maxIncline = 0.1f;
 	
 	float verticalVelocity = 0;
 	float robotDirection = 0;
@@ -179,6 +179,8 @@ public class Robot implements RobotInterface {
     	Vector3 newPosition = new Vector3((float)(position.x + distance*forwardDirection.x), (float)(position.z + distance*forwardDirection.z), (float)0);
     	//now that I have a new position, need to find out my distance from the ground
     	float newY = terrain.terrainIntersection(newPosition);
+    	float nextY = terrain.terrainIntersection(new Vector3(newPosition.x + forwardDirection.x*0.001f, newPosition.z + forwardDirection.z*0.001f, 0));
+    	float incline = (nextY - newY)/0.001f;
  //   	System.out.println(newY);
     	//if we've hit an incline higher than we can traverse then keep old position
     	//...
@@ -186,8 +188,6 @@ public class Robot implements RobotInterface {
     	if(goal.x != position.x || goal.z != position.z) //if we haven't moved then don't do anything
     	{
 
-    		
-    		float incline = (float)(newY - position.y)/distance;
     		System.out.println(incline);
 	    	if( incline < maxIncline)
 	    	{

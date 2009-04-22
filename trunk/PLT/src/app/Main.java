@@ -212,7 +212,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				timeUpdater = System.currentTimeMillis();
 				player.update( (float)t/100.0f );
 				scene.player = player;
-				scene.player.setPosition(player.position.x, player.position.y, player.position.z);
+				//scene.player.setPosition(player.position.x, player.position.y, player.position.z);
 			}
 			
 	    }
