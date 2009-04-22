@@ -92,7 +92,7 @@ public class Scene implements GLEventListener {
 		{
 			//figure out walking direction
 			player.robotDirection = player.direction(player.position, player.goal);
-			player.robotDirection = player.robotDirection*(180.0f/3.14f);
+			player.robotDirection = player.robotDirection*(180.0f/3.14f) + 90;
 			walking = true;
 		}
 		

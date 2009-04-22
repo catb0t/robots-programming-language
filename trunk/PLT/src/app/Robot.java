@@ -197,8 +197,8 @@ public class Robot implements RobotInterface {
 	    	}
     	}
     	position.y = newY;
-    //	goal.x = position.x + 10;
-
+ //   	goal.x = position.x + 10;
+ //   	goal.z = position.z + 10;
     	
     	//update the camera
     	float tempx = position.x + 10*(float)Math.cos((double)time/10.0);
