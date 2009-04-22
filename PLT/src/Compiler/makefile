@@ -34,6 +34,7 @@ RUN_FLAGS     := -classpath ".:$(CLASSPATH)"
 LEXER          := robot.jflex
 GRAMMAR        := robot.cup 
 PACKAGE_NAME   := app
+JAR_NAME       := robot_parser.jar
 
 PARSER_FILES   := parser sym
 LEX_FILES      := Yylex
@@ -93,6 +94,15 @@ $(UNIT_TESTS): $(addsuffix .java, $(UNIT_TESTS))
 
 unit: $(UNIT_TESTS)
 	$(RUN) $(RUN_FLAGS) org.junit.runner.JUnitCore $(PACKAGE_NAME).$<
+
+package: $(PARSER)
+	jar cvfm $(JAR_NAME) MANIFEST.MF $(PACKAGE_NAME) java_cup
+
+# java -jar robot_parser.jar tutorial2.robot tutorial2.java
+TEST_JAR := $(addprefix jar_, $(TEST_PROGRAMS))
+
+$(TEST_JAR): $(TEST_PROGRAMS)
+	java -jar $(JAR_NAME) $<.robot $<.java
 
 #############
 # UTILITIES #
