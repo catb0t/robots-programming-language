@@ -201,11 +201,11 @@ public class Robot implements RobotInterface {
  //   	goal.z = position.z + 10;
     	
     	//update the camera
-    	float tempx = position.x + 10*(float)Math.cos((double)time/10.0);
-		float tempy = position.z + 10*(float)Math.sin((double)time/10.0);
+    	float tempx = position.x + 10*(float)Math.cos((double)time/100.0);
+		float tempy = position.z + 10*(float)Math.sin((double)time/100.0);
 		
-		//goal = new Vector3(10, 0, 10);
 		
+		//figure out the camera direction... camera should probably look at the robot but be pointed in the direction of the closest object of interest
 		cameraDirection = new Vector3(tempx, position.y + 5, tempy);
     }
     
