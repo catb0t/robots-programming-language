@@ -47,7 +47,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	{
 		r.think();
 		player = (Robot) r;
-		player.init(terrain, scene);
+		player.init(terrain);
 		player.think();
 	}
 
@@ -170,7 +170,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	    scene = new Scene();
 	    terrain = new Terrain();
 	    //create the player object
-	    player = new Robot(terrain, scene);
+	    player = new Robot(terrain);
 	    
 	    view3D.addGLEventListener(scene);
 	   
@@ -193,36 +193,10 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		this.setVisible(true);
 
-		//player.update(100);
 		
 		anime = new Animation(player, scene);
 		start.doClick();
-/*		while(true)
-		{
-			anime.run();
-		}
-*/
-		
-		/*
-		int t = 0;
-		long time = System.currentTimeMillis();
-		long timeUpdater = System.currentTimeMillis();
-		
-		//main loop!
-		
-		while(true)
-	    {
-			if(System.currentTimeMillis() > timeUpdater)
-			{
-				t++;
-				timeUpdater = System.currentTimeMillis();
-				player.update( (float)t/100.0f );
-				scene.player = player;
-				//scene.player.setPosition(player.position.x, player.position.y, player.position.z);
-			}
-			
-	    }
-	  */
+	  
 	    
 		
 	}
@@ -243,6 +217,8 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		anime.animator= null;
 		
 	}
+	
+		
 	
 	public void actionPerformed (ActionEvent event) {
 		

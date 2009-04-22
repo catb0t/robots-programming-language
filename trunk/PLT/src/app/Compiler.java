@@ -33,29 +33,28 @@ public class Compiler {
 	
 	public void run () {
 		try {
-			//String[] command = {"parser", inputFile, "MyRobot.java"};
-			//String[] command = {"java", "-jar", "JointEM.jar"};
-			//String[] command = {"/Applications/Preview.app/Contents/MacOS/Preview", "/Users/aurelien/Pictures/chou.jpg"};
-			//Runtime.getRuntime().exec(command);
-			
-			//String[] command = {"java", "-jar", "JointEM.jar"};
-			//String[] command javac -cp "/Users/aurelien/workspace/PLT/src/:/Users/aurelien/workspace/PLT/lib/jogl.jar:/Users/aurelien/workspace/PLT/lib/gluegen-rt.jar" /Users/aurelien/workspace/PLT/RobotCompiled.java
 			
 			System.out.println(System.getProperty("user.dir"));
 			String dir = System.getProperty("user.dir");
 			
-			//String[] command = {"java", "-jar", dir+"/robot_parser.jar", dir+"/"+inputFile, dir+"/RobotCompiled.java"};
-			String command = "java -jar "+dir+"/robot_parser.jar "+dir+"/"+inputFile+" "+dir+"/RobotCompiled.java";
-			System.out.println(command);
-			Process p = Runtime.getRuntime().exec(command);
+			/*
+			String[] command = {"java", "-jar", dir+"/robot_parser.jar", dir+"/"+inputFile, dir+"/RobotCompiled.java"};
+			Process p1 = Runtime.getRuntime().exec(command);
 			
-			//p.getOutputStream();
-			
-			
-			int exitCode = p.waitFor();
+			//p1.getOutputStream();
 			
 			
-			//reloadClass("/Users/aurelien/workspace/PLT");
+			int exitCode1 = p1.waitFor();
+			*/
+			
+			String[] command2 = {"javac", "-cp", dir+"/src/:"+dir+"/lib/jogl.jar:"+dir+"/lib/gluegen-rt.jar", dir+"/RobotCompiled.java"};
+			
+			Process p2 = Runtime.getRuntime().exec(command2);
+			int exitCode2 = p2.waitFor();
+			
+			
+			
+			reloadClass(dir);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
