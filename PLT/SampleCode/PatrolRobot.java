@@ -1,34 +1,30 @@
-import app.Robot;
+package app;
 
-//Expected result from PatrolRobot.r
-//count# = 0
-//think
-//   my_loc@ = location@ of self
-//   x# of 1th of targetLocation@...=10
-//   y# of 1th of targetLocation@...=y# of my_loc@
-//   x# of 2th of targetLocation@...=10
-//   y# of 2th of targetLocation@...=10
-//   x# of 3th of targetLocation@...=x# of my_loc@
-//   y# of 3th of targetLocation@...=10
-//   x# of 4th of targetLocation@...=x# of my_loc@
-//   y# of 4th of targetLocation@...=y# of my_loc@
-//
-//   if my_loc@ != count#th of targetLocation@...
-//       move_to count#th of targetLocation@... 10%
-//   else
-//      count# = (count# + 1) rollover 4
-//   end
-//end
+import java.util.*;
 
-public class PatrolRobot {
-	public int count=0;
-	public PatrolRobot(){
-		Robot robot = new Robot();
-		public Vector2 my_loc=robot.getPositionVector2();	//Need new member functions of Robot class
-		public Vector2 targetLocation[]={{10,0},{10,10},{0,10},{0,0}};
-		while(count <= targetLocation.lenth()){
-			robot.move_to(targetLocation[count], 100);
-			count++;
+public class RobotCompiled extends Robot {
+float count = 0f;
+
+	public static void think() {
+
+		Location my_loc = this.location;
+		targetLocation.get(1).x = 10f;
+		targetLocation.get(1).y = my_loc.y;
+		targetLocation.get(2).x = 10f;
+		targetLocation.get(2).y = 10f;
+		targetLocation.get(3).x = my_loc.x;
+		targetLocation.get(3).y = 10f;
+		targetLocation.get(4).x = my_loc.x;
+		targetLocation.get(4).y = my_loc.y;
+		if(my_loc!=targetLocation.get(count)){
+		move_to(targetLocation.get(count), new Percentage(10));
+		else {
+		count = Func.rollover(( Func.add(count, 1f) ), 4f);
+
 		}
+
+
 	}
+
+
 }
