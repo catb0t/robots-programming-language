@@ -1,3 +1,5 @@
+//This code baseline for compiler test
+//Expected Result : FindShoot.java
 think
 
    closest_enemy! = NOTHING!
@@ -21,10 +23,10 @@ instruction find_closest_enemy with enemies!... means
 
    repeat with each enemy! in enemies!...
 
-      enemy_loc@ = location of enemy!
+      enemy_loc@ = location@ of enemy!
       distance# = distance enemy_loc@ my_loc@
    
-      if distance# is_less_than closest_distance# then
+      if distance# is_lower_than closest_distance# then
       
          closest_distance# = distance#
          closest_enemy! = enemy!

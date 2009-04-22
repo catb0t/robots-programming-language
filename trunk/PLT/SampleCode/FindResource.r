@@ -1,3 +1,5 @@
+//This code baseline for compiler test
+//Expected Result : FindResource.java
 think
 
    closest_resource$ = NOTHING$
@@ -21,10 +23,10 @@ instruction find_closest_resource with resources$... means
 
    repeat with each resource$ in resources$...
 
-      resource_loc@ = location of resource$
+      resource_loc@ = location@ of resource$
       distance# = distance resource_loc@ my_loc@
 
-      if distance# is_less_than closest_distance# then
+      if distance# is_lower_than closest_distance# then
       
          closest_distance# = distance#
          closest_resource$ = resource$
