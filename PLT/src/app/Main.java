@@ -193,9 +193,15 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		this.setVisible(true);
 
+		//player.update(100);
+		
 		anime = new Animation(player, scene);
-		
-		
+		start.doClick();
+/*		while(true)
+		{
+			anime.run();
+		}
+*/
 		
 		/*
 		int t = 0;
