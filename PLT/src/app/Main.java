@@ -1,24 +1,12 @@
 package app;
 
-import java.awt.BorderLayout;
-import java.awt.TextArea;
-import java.awt.FileDialog;
 import java.awt.event.*;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
 
 import javax.media.opengl.GLCanvas;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import com.sun.opengl.util.Animator;
 
@@ -35,6 +23,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	public Terrain terrain = null;
 	
 	TextArea editArea;
+	TextArea javaArea;
 	JButton start;
 	JButton parse;
 	JMenuBar menu;
@@ -127,10 +116,22 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		editor.setLayout(new BoxLayout(editor, BoxLayout.Y_AXIS));
 		editor.setMinimumSize(new Dimension(300,100));
 		
+		JTabbedPane tabbedPane = new JTabbedPane();
+		
 		editArea = new TextArea("Add your text here",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		editArea.addTextListener(this);
 		
-		editor.add(editArea);
+		tabbedPane.addTab("robot source", editArea);
+		
+		
+		javaArea = new TextArea("",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		javaArea.setEditable(false);
+		
+		tabbedPane.addTab("java source", javaArea);
+		
+		
+		//editor.add(editArea);
+		editor.add(tabbedPane);
 		
 		JPanel runparse = new JPanel();
 		runparse.setLayout(new BoxLayout(runparse, BoxLayout.X_AXIS));
@@ -148,11 +149,12 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		editor.add(runparse);
 		
+		/*
 		JSplitPane tools_write = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, tools, editor);
 		tools_write.setDividerLocation(150);
 		tools_write.setBorder(null);
 		tools_write.setOneTouchExpandable(true);
-		
+		*/
 		
 		//set the compiler
 		compiler = new Compiler(this);
@@ -177,7 +179,8 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	   
 		JPanel control_view = new JPanel();
 		control_view.setLayout(new GridLayout(1,2));
-		control_view.add(tools_write);
+		//control_view.add(tools_write);
+		control_view.add(editor);
 		control_view.add(view3D);
 		
 		this.add(control_view, BorderLayout.CENTER);
@@ -237,7 +240,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 			
 			stopAnimate();
 			
-			System.out.println("Start Compliler");
+			System.out.println("Start Compiler");
 			
 			try {
 				
@@ -250,6 +253,8 @@ public class Main extends JFrame implements ActionListener, TextListener{
 				compiler.run();
 				
 				file.delete();
+				
+				displayJava();
 				
 				//load class
 				
@@ -429,5 +434,22 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		Main display = new Main();
 		display.init();
 		
+	}
+	
+	public void displayJava () {
+		try {
+			BufferedReader in = new BufferedReader(new FileReader("RobotCompiled.java"));
+			String str;
+			String sol = "";
+			while ((str = in.readLine()) != null) {
+				sol+=str+"\n";
+			}
+			in.close();
+
+			javaArea.setText(sol);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

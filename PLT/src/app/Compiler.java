@@ -38,12 +38,24 @@ public class Compiler {
 			//String[] command = {"/Applications/Preview.app/Contents/MacOS/Preview", "/Users/aurelien/Pictures/chou.jpg"};
 			//Runtime.getRuntime().exec(command);
 			
-			//String[] command = {"javac", "-jar", "JointEM.jar"};
+			//String[] command = {"java", "-jar", "JointEM.jar"};
 			//String[] command javac -cp "/Users/aurelien/workspace/PLT/src/:/Users/aurelien/workspace/PLT/lib/jogl.jar:/Users/aurelien/workspace/PLT/lib/gluegen-rt.jar" /Users/aurelien/workspace/PLT/RobotCompiled.java
 			
+			System.out.println(System.getProperty("user.dir"));
+			String dir = System.getProperty("user.dir");
+			
+			//String[] command = {"java", "-jar", dir+"/robot_parser.jar", dir+"/"+inputFile, dir+"/RobotCompiled.java"};
+			String command = "java -jar "+dir+"/robot_parser.jar "+dir+"/"+inputFile+" "+dir+"/RobotCompiled.java";
+			System.out.println(command);
+			Process p = Runtime.getRuntime().exec(command);
+			
+			//p.getOutputStream();
 			
 			
-			reloadClass("/Users/aurelien/workspace/PLT");
+			int exitCode = p.waitFor();
+			
+			
+			//reloadClass("/Users/aurelien/workspace/PLT");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
