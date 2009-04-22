@@ -56,7 +56,7 @@ public class Compiler {
             // Convert the file object to a URL
             //File dir = new File(/*System.getProperty("user.dir")*/str + File.separator + "test" + File.separator);
             File dir = new File(/*System.getProperty("user.dir")*/str + File.separator);
-            URL url = dir.toURL();
+            URL url = dir.toURI().toURL();
             urls = new URL[]{url};
         } catch (Exception e) {
         	System.out.println(e.getMessage());
