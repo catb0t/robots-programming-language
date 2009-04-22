@@ -185,15 +185,10 @@ public class Robot implements RobotInterface, Runnable {
     	//else
     	if(goal.x != position.x || goal.z != position.z) //if we haven't moved then don't do anything
     	{
-    		/*System.out.println(goal.x);
-    		System.out.println(goal.y);
-    		System.out.println(goal.z);
-    		System.out.println(position.x);
-    		System.out.println(position.y);
-    		System.out.println(position.z);*/
+
     		float incline = (float)(newY - position.y)/distance;
-    //		System.out.println(incline);
-	  //  	if( incline < maxIncline)
+    		System.out.println(incline);
+	   // 	if( incline < maxIncline)
 	    	{
 	    		//update the position along the terrain
 	    		position.x = newPosition.x;
@@ -208,6 +203,7 @@ public class Robot implements RobotInterface, Runnable {
 	    	}
     	}
     	position.y = newY;
+    	goal.x = position.x + 10;
 
     	
     	//update the camera
@@ -635,7 +631,7 @@ public class Robot implements RobotInterface, Runnable {
 				this.think();
 				time = System.currentTimeMillis();
 			}
-			if(System.currentTimeMillis() > timeUpdater)
+	/*		if(System.currentTimeMillis() > timeUpdater)
 			{
 				t++;
 				timeUpdater = System.currentTimeMillis();
@@ -647,6 +643,8 @@ public class Robot implements RobotInterface, Runnable {
 			scene.player.setPosition(this.position.x, this.position.y, this.position.z);
 			//System.out.println("avatar.position.x " + scene.player.position.x);
 			scene.player.goal = this.goal;
+			
+			*/
 		}
 		
 	}
