@@ -306,6 +306,14 @@ min_hash=min\#
                   return new Symbol(sym.NOTHING_RES);
          }
 
+   nowhere\@
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched nowhere@: " + yytext());
+                  }
+                  return new Symbol(sym.NOWHERE_AT);
+         }
+
    {identifier}
          {
                   if (parser.bDebugFlag) {
