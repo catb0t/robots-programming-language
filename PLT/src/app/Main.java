@@ -191,7 +191,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		player.think();
 		
-		/*
+		
 		int t = 0;
 		long time = System.currentTimeMillis();
 		long timeUpdater = System.currentTimeMillis();
@@ -199,31 +199,16 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		while(true)
 	    {
-			if (animation) {
-				//	System.out.println(System.currentTimeMillis());
-				//update the players decision... we should only do this every time interval
-				//its messy but pause the simulation until all players finish thinking
-				if( System.currentTimeMillis() - time > 500) //updates every second
-				{
-					player.think();
-					time = System.currentTimeMillis();
-				}
-				if(System.currentTimeMillis() > timeUpdater)
-				{
-					t++;
-					timeUpdater = System.currentTimeMillis();
-				}
-
-				player.update( (float)t/100.0f );
-				scene.player = player;
-				//System.out.println("position.x " + player.position.x);
-				scene.player.setPosition(player.position.x, player.position.y, player.position.z);
-				//System.out.println("avatar.position.x " + scene.player.position.x);
-				scene.player.goal = player.goal;
+			if(System.currentTimeMillis() > timeUpdater)
+			{
+				t++;
+				timeUpdater = System.currentTimeMillis();
 			}
-			
+			player.update( (float)t/100.0f );
+			scene.player = player;
+			scene.player.setPosition(player.position.x, player.position.y, player.position.z);
 	    }
-	    */
+	  
 	    
 		
 	}
