@@ -159,6 +159,8 @@ public class Robot implements RobotInterface {
     {	
   //  	System.out.println(time);
     	//update the robots position
+    	forwardDirection = new Vector3(goal.x - position.x, 0, goal.z - position.z);
+    	forwardDirection.normalize();
     	float timeInterval = time - oldTime;
     	oldTime = time;
     	float distance = timeInterval*speed;
@@ -195,7 +197,7 @@ public class Robot implements RobotInterface {
 	    	}
     	}
     	position.y = newY;
-    	goal.x = position.x + 10;
+    //	goal.x = position.x + 10;
 
     	
     	//update the camera
