@@ -95,8 +95,8 @@ $(UNIT_TESTS): $(addsuffix .java, $(UNIT_TESTS))
 unit: $(UNIT_TESTS)
 	$(RUN) $(RUN_FLAGS) org.junit.runner.JUnitCore $(PACKAGE_NAME).$<
 
-package: $(PARSER)
-	jar cvfm $(JAR_NAME) MANIFEST.MF $(PACKAGE_NAME) java_cup
+jar: $(PARSER)
+	jar cvfm $(JAR_NAME) MANIFEST.MF $(PACKAGE_NAME) java_cup/runtime/*.class
 
 # java -jar robot_parser.jar tutorial2.robot tutorial2.java
 TEST_JAR := $(addprefix jar_, $(TEST_PROGRAMS))
