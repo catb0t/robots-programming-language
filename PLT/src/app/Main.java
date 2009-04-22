@@ -248,6 +248,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	public void actionPerformed (ActionEvent event) {
 		
 		if ("Parse".equals(event.getActionCommand())) {
+			
+			stopAnimate();
+			
 			System.out.println("Start Compliler");
 			
 			try {

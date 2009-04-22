@@ -39,7 +39,9 @@ public class Compiler {
 			//Runtime.getRuntime().exec(command);
 			
 			//String[] command = {"javac", "-jar", "JointEM.jar"};
-			//javac -cp "/Users/aurelien/workspace/PLT/src/:/Users/aurelien/workspace/PLT/lib/jogl.jar:/Users/aurelien/workspace/PLT/lib/gluegen-rt.jar" /Users/aurelien/workspace/PLT/RobotCompiled.java
+			//String[] command javac -cp "/Users/aurelien/workspace/PLT/src/:/Users/aurelien/workspace/PLT/lib/jogl.jar:/Users/aurelien/workspace/PLT/lib/gluegen-rt.jar" /Users/aurelien/workspace/PLT/RobotCompiled.java
+			
+			
 			
 			reloadClass("/Users/aurelien/workspace/PLT");
 			
