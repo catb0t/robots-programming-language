@@ -14,7 +14,7 @@ import java.util.*;
 
 parser code {:
 	public static String  robotProgram;
-	public static String  globalDeclarations;
+	public static String  globalAssignments;
 	public static boolean bDebugFlag;
 
 	/* stores a basic symbol table */
@@ -26,7 +26,7 @@ parser code {:
            bDebugFlag = true;
            try {
               robotProgram = "import app.*;\nimport java.util.*;\n";
-              globalDeclarations = "";
+              globalAssignments = "";
               sm = new RobotScopeManager();
 
               new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).debug_parse();
@@ -106,17 +106,32 @@ program         ::= optnl declaration:dcls
                     optnl functions:funcs
                     optnl
                     {:
-                       RESULT =  "\npublic class RobotCompiled extends Robot {\n";
+                       RESULT =  "\npublic class RobotCompiled extends Robot {\n\n";
                        RESULT += dcls + ent + funcs;
+
+                       if(parser.globalAssignments.compareTo("") != 0) {
+                          //Constructor, if you please
+                       	  RESULT += "\n\n\tpublic RobotCompiled() {\n\t";
+                       	  RESULT += parser.globalAssignments + "\t}\n";
+                       }
                        RESULT += "\n}\n";
+
                        parser.robotProgram += RESULT;
                     :}
 ;
 
-declaration     ::= variable_name:vn NEWLINE 
+declaration     ::= /*variable_name:vn*/ VARIABLE:v NEWLINE 
                     optnl declaration:dcl
                     {:
-                       RESULT = vn + ";\n" + dcl;
+                       //RESULT = vn + ";\n" + dcl;
+                       parser.temp = parser.sm.declareIfNecessary(v);
+                       if(parser.temp.compareTo("") != 0) {
+                         RESULT = parser.temp + v.name();
+                       } else {
+                         // It is an error to declare the same name twice in global scope
+                         System.err.println("Duplicate declaration: " + v.name() + "\n");
+                         System.exit(0);
+                       }
                     :}
                  /*|
                     variable_name:vn assign_op value:val NEWLINE 
@@ -125,10 +140,18 @@ declaration     ::= variable_name:vn NEWLINE
                        RESULT = vn + " = " + val + ";\n" + dcl;
                     :}*/
                  |
-                    variable_name:vn assign_op any_expr:ex NEWLINE
+                    /*variable_name:vn*/ VARIABLE:v assign_op any_expr:ex NEWLINE
                     optnl declaration:dcl
                     {:
-                       RESULT = vn + " = " + ex + ";\n" + dcl;
+                       //RESULT = parser.sm.declareIfNecessary(v) + v.name();
+                       parser.temp = parser.sm.declareIfNecessary(v);
+                       String t = parser.temp + v.name() + " = new " + v.javaType() + "(" + ex + ");\n";
+                       if(parser.temp.compareTo("") != 0) {
+                          RESULT = t + dcl;
+                       } else {
+                          RESULT = dcl;
+                          parser.globalAssignments += "\t\tthis." + t;
+                       }
                     :}
                  |
                     field_access:fa assign_op any_expr:ex NEWLINE
@@ -228,8 +251,7 @@ arguments        ::=   variable_name_local:arg arguments:args
                        /* empty */
                        {:
                           RESULT = "";
-                       :}
-                      
+                       :}                      
 ;
 
 variable_name_local  ::=  VARIABLE:v
