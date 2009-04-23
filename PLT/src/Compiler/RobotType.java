@@ -2,14 +2,14 @@ package app;
 
 public enum RobotType {
 
-   NUMBER     ("#"  , "Float"   ),
-   PERCENTAGE ("%"  , "Percent" ),
-   BOOLEAN    ("?"  , "Boolean" ),
-   LOCATION   ("@"  , "Location"),
-   ENEMY      ("!"  , "Enemy"   ),
-   RESOURCE   ("$"  , "Resource"),
-   LIST       ("...", "LinkList"),
-   NOTHING    ("NULL", "void"   );
+   NUMBER     ("#"  , "Float"     ),
+   PERCENTAGE ("%"  , "Percent"   ),
+   BOOLEAN    ("?"  , "Boolean"   ),
+   LOCATION   ("@"  , "Location"  ),
+   ENEMY      ("!"  , "Enemy"     ),
+   RESOURCE   ("$"  , "Resource"  ),
+   LIST       ("...", "LinkedList"),
+   NOTHING    ("NULL", "void"     );
 
    private final String postFix; 
    private final String javaType;

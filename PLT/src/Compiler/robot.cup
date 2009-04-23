@@ -25,7 +25,7 @@ parser code {:
         public static void main(String args[]) throws Exception {
            bDebugFlag = true;
            try {
-              robotProgram = "import app.*;\n\nimport java.util.*;\n";
+              robotProgram = "import app.*;\nimport java.util.*;\n";
               globalDeclarations = "";
               sm = new RobotScopeManager();
 
@@ -206,7 +206,7 @@ function        ::=   INSTRUCTION function_name:fn {: parser.sm.increaseLevel();
                          	arg = arg.substring(0, arg.length() - 1);
                          }
                          RESULT = "\n\tpublic " + v.javaType() + " " + fn + "(" + arg + ") {\n";
-                         RESULT += "\n" + b + "\n";
+                         RESULT += "\n" + b;
                          if (v.type() != RobotType.NOTHING) {
                             RESULT += parser.sm.indent() + "return " + v.name() + ";\n";
                          }
@@ -385,14 +385,14 @@ optnl                   ::=   optnl NEWLINE
                               /* empty */
 ;
 
-statement               ::=   call:cl                {: RESULT = cl;   :}
-                        |     local_declaration:ldcl {: RESULT = ldcl; :}
-                        |     conditional:cond       {: RESULT = cond; :}
-                        |     assignment:ass         {: RESULT = ass;  :}
-                        |     loop:l                 {: RESULT = l;    :}
+statement               ::=   call:cl                {: RESULT = cl   + ";"; :}
+                        |     local_declaration:ldcl {: RESULT = ldcl + ";"; :}
+                        |     conditional:cond       {: RESULT = cond;       :}
+                        |     assignment:ass         {: RESULT = ass  + ";"; :}
+                        |     loop:l                 {: RESULT = l;          :}
 ;
 
-block                   ::=   statement:s {: RESULT = parser.sm.indent() + s + ";\n"; :}
+block                   ::=   statement:s {: RESULT = parser.sm.indent() + s + "\n"; :}
                               optnl
                               block:b     {: RESULT += b; :}
                         |
@@ -412,20 +412,36 @@ assignment              ::=   variable_name_local:vnl assign_op any_expr:ex NEWL
                               :}
 ;
 
-conditional             ::=   IF boolean_expression:be THEN NEWLINE optnl
-                              block:b optnl else_statement:es optnl 
+conditional             ::=   IF boolean_expression:be THEN 
+                              {:
+                                 RESULT = "\n" + parser.sm.indent() + "if (" + be + ") {\n";
+                                 parser.sm.increaseLevel();
+                              :} NEWLINE
+                              optnl
+                              block:b
+                              optnl
+                              else_statement:es
+                              optnl 
                               DONE NEWLINE
                               {:
-                                 RESULT =  "if(" + be + "){\n";
+                                 parser.sm.decreaseLevel();
                                  RESULT += b;
                                  RESULT += es;
-                                 RESULT += "\n" + parser.sm.indent() + "}\n"; 
+                                 RESULT += parser.sm.indent() + "}\n"; 
                               :}
 ;
 
-else_statement          ::=   ELSE NEWLINE optnl block:b
+else_statement          ::=   ELSE
                               {:
-                                 RESULT =  "\t\telse {\n" + b;
+                                 parser.sm.decreaseLevel();
+                                 RESULT =  parser.sm.indent() + "} else {\n";
+                                 parser.sm.increaseLevel();
+                              :}
+                              NEWLINE
+                              optnl
+                              block:b
+                              {:
+                                 RESULT += b;
                               :}
                         |
                               /* empty */
@@ -444,7 +460,7 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                               {:
                                  parser.sm.decreaseLevel();
                                  RESULT += b;
-                                 RESULT += "\n" + parser.sm.indent() + "}\n\n";
+                                 RESULT += "\n" + parser.sm.indent() + "}\n";
                               :} 
 ;
 
