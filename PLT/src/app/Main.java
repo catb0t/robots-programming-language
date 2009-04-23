@@ -27,7 +27,6 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	TextArea editArea;
 	TextArea javaArea;
 	JButton start;
-	JButton parse;
 	JMenuBar menu;
 	
 	String filename;
@@ -45,10 +44,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 	
 	public void setPlayer (RobotInterface r)
 	{
-		r.think();
 		player = (Robot) r;
 		player.init(terrain);
-		player.think();
+		anime.player = player;
 	}
 
 	
@@ -106,10 +104,10 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		JList toolbox = new JList(data);
 		toolbox.setMinimumSize(new Dimension(100,100));
 		
-		JSplitPane tools = new JSplitPane(JSplitPane.VERTICAL_SPLIT, project_view, toolbox);
-		tools.setDividerLocation(150);
-		tools.setBorder(null);
-		tools.setOneTouchExpandable(true);
+		//JSplitPane tools = new JSplitPane(JSplitPane.VERTICAL_SPLIT, project_view, toolbox);
+		//tools.setDividerLocation(150);
+		//tools.setBorder(null);
+		//tools.setOneTouchExpandable(true);
 		
 		
 		
@@ -120,17 +118,15 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		
-		editArea = new TextArea("Add your text here",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		editArea = new TextArea("think\n|\n+---done",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		editArea.addTextListener(this);
 		
 		tabbedPane.addTab("robot source", editArea);
 		
-		
-		javaArea = new TextArea("",1,1, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		javaArea = new TextArea("",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		javaArea.setEditable(false);
 		
 		tabbedPane.addTab("java source", javaArea);
-		
 		
 		//editor.add(editArea);
 		editor.add(tabbedPane);
@@ -142,12 +138,19 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		start.setActionCommand("Run");		//032009 by joseph
 		start.addActionListener(this);		//032009 by joseph
 		
-		parse = new JButton("Parse");
+		JButton parse = new JButton("Parse");
 		parse.setActionCommand("Parse");	//032009 by joseph
 		parse.addActionListener(this);		//032009 by joseph
 		
+		
+		JButton indent = new JButton("Indent");
+		indent.setActionCommand("indent");
+		indent.addActionListener(this);
+		
+		
 		runparse.add(start);
 		runparse.add(parse);
+		runparse.add(indent);
 		
 		editor.add(runparse);
 		
@@ -195,7 +198,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 
 		
 		anime = new Animation(player, scene);
-		start.doClick();
+		//start.doClick();
 	  
 	    
 		
@@ -408,6 +411,9 @@ public class Main extends JFrame implements ActionListener, TextListener{
 			}
 			System.exit(0);
 		}
+		else if ("indent".equals(event.getActionCommand())) {
+			indent();
+		}
 	}
 	
 	public void textValueChanged (TextEvent event) {
@@ -437,5 +443,91 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void indent() {
+		System.out.println("proceed indentation");
+		
+		String[] program = editArea.getText().split("\n");
+		
+		String indentedProgram = "";
+		
+		LinkedList<String> firstL = new LinkedList<String>();
+		String first = "";
+		
+		for (int i=0; i<program.length; i++) {
+			
+			System.out.println(program[i]);
+			
+			String[] elements = program[i].split(" ");
+			
+			int start = 0;
+			
+			while ((start<elements.length) && isWhiteSpace(elements[start])) {
+				start++;
+			}
+			
+			String line = "";
+			
+			if (start<elements.length) {
+				
+				for (int j=start; j<elements.length-1; j++) {
+					if (!elements[j].equals("")) {
+						line = line.concat(elements[j].concat(" "));
+					}
+				}
+				line = line.concat(elements[elements.length-1]);
+				
+				
+				if (elements[start].equals("means")||elements[start].equals("done")) {
+					firstL.removeLast();
+					first = createFirst(firstL);
+					
+					line = first.concat("+---").concat(line);
+				}
+				else if (elements[start].equals("+---means")||elements[start].equals("+---done")) {
+					firstL.removeLast();
+					first = createFirst(firstL);
+					
+					line = first.concat(line);
+				}
+				else if (elements[start].equals("think")||elements[start].equals("instruction")) {
+					line = first.concat(line);
+					firstL.addLast("| ");
+					first = createFirst(firstL);
+				}
+				else if (elements[start].equals("while")||elements[start].equals("for")||elements[start].equals("foreach")) {
+					line = first.concat(line);
+					firstL.addLast("| ");
+					first = createFirst(firstL);
+				}
+				else {
+					line = first.concat(line);
+				}
+			}
+			else {
+				line = first.concat(line);
+			}
+			
+			line = line.concat("\n");
+			
+			indentedProgram = indentedProgram.concat(line);
+		}
+		
+		editArea.setText(indentedProgram);
+	}
+	
+	public boolean isWhiteSpace (String s) {
+		return s.equals("")||s.equals("|")||s.equals("+---")||s.equals(" ");
+	}
+	
+	public String createFirst (LinkedList<String> l) {
+		String sol = "";
+		
+		for (String u:l) {
+			sol = sol.concat(u);
+		}
+		
+		return sol;
 	}
 }
