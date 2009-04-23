@@ -10,7 +10,7 @@ import javax.swing.*;
 
 import com.sun.opengl.util.Animator;
 
-public class Main extends JFrame implements ActionListener, TextListener{
+public class Main extends JFrame implements ActionListener, TextListener, KeyListener {
 	
 	private static final long serialVersionUID = 7633042051769682994L;
 	
@@ -120,6 +120,7 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		
 		editArea = new TextArea("think\n|\n+---done",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		editArea.addTextListener(this);
+		editArea.addKeyListener(this);
 		
 		tabbedPane.addTab("robot source", editArea);
 		
@@ -529,5 +530,58 @@ public class Main extends JFrame implements ActionListener, TextListener{
 		}
 		
 		return sol;
+	}
+	
+	public void keyPressed (KeyEvent e) {
+		
+	}
+	
+	public void keyReleased (KeyEvent e) {
+		
+	}
+
+	public void keyTyped (KeyEvent e) {
+		
+		if (e.getKeyChar()==KeyEvent.VK_ENTER) {
+			int line = getCaretPosition();
+			//int pos = editArea.getCaretPosition();
+			indent();
+			//editArea.setCaretPosition(pos+2);
+			setCaretPosition(line);
+		}
+		
+	}
+	
+	public int getCaretPosition() {
+		int pos = editArea.getCaretPosition();
+		
+		String[] program = editArea.getText().split("\n");
+		
+		int line = 0;
+		int count = 0;
+		for (int i=0; i<program.length; i++) {
+			count = count + program[i].length();
+			
+			if (pos > count) {
+				line++;
+				count++;
+			}
+			else {
+				System.out.println(line);
+				break;
+			}
+		}
+		return line;
+	}
+	
+	public void setCaretPosition (int line) {
+		String[] program = editArea.getText().split("\n");
+		
+		int count = program[line].length();
+		for (int i=0; i<line; i++) {
+			count = count + program[i].length() + 1 ;
+		}
+		
+		editArea.setCaretPosition(count);
 	}
 }
