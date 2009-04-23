@@ -9,7 +9,7 @@ public class RobotVar {
 
    public RobotVar(String token) {
       String name;
-      RobotType type = RobotType.UNKNOWN;
+      RobotType type = RobotType.NOTHING;
       boolean isList;
       int name_len;
 
@@ -28,7 +28,7 @@ public class RobotVar {
          }
       }
 
-      if (type.equals(RobotType.UNKNOWN)) {
+      if (type.equals(RobotType.NOTHING)) {
          System.err.println("Couldn't determine type of var token" + token);
       }
 
