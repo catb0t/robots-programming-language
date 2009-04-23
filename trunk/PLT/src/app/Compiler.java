@@ -41,6 +41,8 @@ public class Compiler {
 			String[] command = {"java", "-jar", dir+"/robot_parser.jar", dir+"/"+inputFile, dir+"/RobotCompiled.java"};
 			Process p1 = Runtime.getRuntime().exec(command);
 			
+			System.out.println("Java file created");
+			
 			//p1.getOutputStream();
 			
 			
@@ -52,7 +54,7 @@ public class Compiler {
 			Process p2 = Runtime.getRuntime().exec(command2);
 			int exitCode2 = p2.waitFor();
 			
-			
+			System.out.println("Java class created");
 			
 			reloadClass(dir);
 			
@@ -86,12 +88,9 @@ public class Compiler {
             // Create a new instance of the new class
             RobotInterface player = (RobotInterface)cls.newInstance();
             
-            //player.think();
-            
             parent.setPlayer(player);
             
         } catch (Exception e) {
-        	//System.out.println(e.getMessage());
         	e.printStackTrace();
         }
     }
