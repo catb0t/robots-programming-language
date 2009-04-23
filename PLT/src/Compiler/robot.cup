@@ -25,7 +25,7 @@ parser code {:
         public static void main(String args[]) throws Exception {
            bDebugFlag = true;
            try {
-              robotProgram = "package app;\n\nimport java.util.*;\n";
+              robotProgram = "import app.*;\n\nimport java.util.*;\n";
               globalDeclarations = "";
               sm = new RobotScopeManager();
 
@@ -48,7 +48,7 @@ parser code {:
 /* Terminals (tokens returned by the scanner) */
 terminal         SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
 terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
-terminal         GIVES, NOTHING, MEANS, TRUE, FALSE, OR, AND, NOT;
+terminal         GIVES, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT, OF, SELF;
 terminal         IF, THEN, ELSE, DONE;
 terminal         REPEAT, IN, EACH;
@@ -67,7 +67,7 @@ terminal RobotVar VARIABLE;
 /* Non-terminals */
 non terminal         expr_list, expr_part;
 non terminal Integer expr;
-non terminal String  statement, entry, variable_name, program, return_value, block;
+non terminal String  statement, entry, variable_name, program, block;
 non terminal         optnl, assign_op;
 non terminal String  function_name, function, functions, variable_name_local;
 non terminal String  boolean_final, base_value, declaration, boolean_expression, boolean_component;
@@ -198,25 +198,24 @@ functions       ::=   function:fn optnl
 function        ::=   INSTRUCTION function_name:fn {: parser.sm.increaseLevel(); :}
                       WITH arguments:arg MEANS NEWLINE optnl
                       block:b optnl
-                      GIVES return_value:rv NEWLINE
+                      GIVES VARIABLE:v NEWLINE
                       {:
                          // remove the final ,<space> : (arg1, arg2, ,<space>)
                          arg = arg.trim();
-                         if(arg.endsWith(",")) {
+                         if (arg.endsWith(",")) {
                          	arg = arg.substring(0, arg.length() - 1);
                          }
-                         RESULT = "\n\tpublic static " + rv + " " + fn + "(" + arg + ")";
-                         RESULT += " {\n" + "\n" + b + "\n\t}";
+                         RESULT = "\n\tpublic " + v.javaType() + " " + fn + "(" + arg + ") {\n";
+                         RESULT += "\n" + b + "\n";
+                         if (v.type() != RobotType.NOTHING) {
+                            RESULT += parser.sm.indent() + "return " + v.name() + ";\n";
+                         }
+                         RESULT += "\t}";
                          parser.sm.decreaseLevel();
                       :}
 ;
 
 function_name   ::=   FUNCTION_NAME:fn       {: RESULT = fn;   :}
-;
-
-return_value    ::=   VARIABLE:v             {: RESULT = v.javaType(); :}
-                |
-                      NOTHING                {: RESULT = "void"; :}
 ;
 
 //TODO: Arguments probably should use their own production rather than variable_name_local
@@ -364,7 +363,7 @@ entry                   ::=   THINK {: parser.sm.increaseLevel(); :} NEWLINE
                               END
                               {:
                                  RESULT =  "\n";
-                                 RESULT += "\tpublic static void think() {\n";
+                                 RESULT += "\tpublic void think() {\n";
                                  RESULT += "\n";
                                  RESULT += b;
                                  RESULT += "\n";
@@ -374,11 +373,11 @@ entry                   ::=   THINK {: parser.sm.increaseLevel(); :} NEWLINE
                               :}
 ;
 
-constant_value          ::=   MAX_HASH      {: RESULT = "Float.MAX_VALUE";  :}
+constant_value          ::=   MAX_HASH          {: RESULT = "Float.MAX_VALUE";  :}
                         |     MIN_HASH		{: RESULT = "Float.MIN_VALUE";  :}
                         |     NOTHING_NOT	{: RESULT = "new Enemy()";      :}
                         |     NOWHERE_AT	{: RESULT = "new Location()";   :}
-                        |     NOTHING_RES   {: RESULT = "new Resource()";   :}
+                        |     NOTHING_RES       {: RESULT = "new Resource()";   :}
 ;
 
 optnl                   ::=   optnl NEWLINE

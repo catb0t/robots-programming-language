@@ -110,7 +110,7 @@ min_hash=min\#
                   if (parser.bDebugFlag) {
                      System.out.println("matched " + yytext());
                   }
-                  return new Symbol(sym.NOTHING); 
+                  return new Symbol(sym.VARIABLE, new RobotVar("NULL")); 
          }
 
    repeat
