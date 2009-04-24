@@ -9,6 +9,7 @@ import javax.media.opengl.glu.GLU;
 
 public class Terrain {
 
+	public float minx, maxx, minz, maxz;
     private static final int MAP_SIZE = 128;                        // Size Of Our .RAW Height Map (NEW)
     private static final int STEP_SIZE = 1;                        // Width And Height Of Each Quad (NEW)
     private byte[] heightMap = new byte[MAP_SIZE * MAP_SIZE]; // Holds The Height Map Data (NEW)
@@ -39,7 +40,10 @@ public class Terrain {
 	{
 		gl = inGL;
 		terrainDL = gl.glGenLists(1);
-		
+		minx = -(MAP_SIZE/2)*scaleXZ;
+		maxx =  (MAP_SIZE/2)*scaleXZ;
+		minz = -(MAP_SIZE/2)*scaleXZ;
+		maxz =  (MAP_SIZE/2)*scaleXZ;
 		
         try {
             loadRawFile("media/terrain3.raw", heightMap);  // (NEW)

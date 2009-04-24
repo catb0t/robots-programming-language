@@ -12,7 +12,7 @@ import app.Robot;
 
 public class Powerup {
 	
-	//type = 1 is for energy, 2 speed, 3 is weapons, 4 is health and armor
+	//type = 0 is for energy, 1 speed, 2 is weapons, 3 is health and armor
 	int type;
 	Vector3 location;
 	private GLU glu = new GLU();
@@ -22,8 +22,9 @@ public class Powerup {
     Sphere sphere = null;
 	
 	
-	public Powerup(int Type)
+	public Powerup(Vector3 position, int Type)
 	{
+		location = position;
 		type = Type;
 		
 	}
