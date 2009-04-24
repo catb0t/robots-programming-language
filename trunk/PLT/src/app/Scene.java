@@ -49,6 +49,8 @@ public class Scene implements GLEventListener {
     private int fogfilter = 2;								// Which Fog Mode To Use      ( new )
     private float fogColor[] = {0.5f, 0.5f, 0.5f, 1.0f};		// Fog Color               ( new )
         
+    int numberOfPowerups = 100;
+    private Powerup[] resources = new Powerup[numberOfPowerups];
 
     int t = 0;
     long oldTime = 0;
@@ -210,6 +212,10 @@ public class Scene implements GLEventListener {
         playerAvatar = new Robot(gl, terrain);
         player = new Robot(terrain);
         
+        for(int i = 0; i < numberOfPowerups; i++)
+        {
+        	resources[i] = new Powerup(1);
+        }        
 
 
 	}

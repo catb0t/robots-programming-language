@@ -13,11 +13,14 @@ public class Robot implements RobotInterface {
 	
 	GL gl;
 	
+	float cameraDistance = 30;
+	
 	private int energy;
 	
 	float max_speed=1f;
 	float speed = 0.2f;
 	float maxIncline = 0.1f;
+	int ammo = 0;
 	
 	float verticalVelocity = 0;
 	float robotDirection = 0;
@@ -181,7 +184,7 @@ public class Robot implements RobotInterface {
     	if(goal.x != position.x || goal.z != position.z) //if we haven't moved then don't do anything
     	{
 
-    		System.out.println(incline);
+    	//	System.out.println(incline);
 	    	if( incline < maxIncline)
 	    	{
 	    		//update the position along the terrain
@@ -198,15 +201,15 @@ public class Robot implements RobotInterface {
     	}
     	position.y = newY;
  //   	goal.x = position.x + 10;
- //   	goal.z = position.z + 10;
+   // 	goal.z = position.z + 10;
     	
     	//update the camera
-    	float tempx = position.x + 10*(float)Math.cos((double)time/100.0);
-		float tempy = position.z + 10*(float)Math.sin((double)time/100.0);
+    	float tempx = position.x + cameraDistance*(float)Math.cos((double)time/100.0);
+		float tempy = position.z + cameraDistance*(float)Math.sin((double)time/100.0);
 		
 		
 		//figure out the camera direction... camera should probably look at the robot but be pointed in the direction of the closest object of interest
-		cameraDirection = new Vector3(tempx, position.y + 5, tempy);
+		cameraDirection = new Vector3(tempx, position.y + cameraDistance/2.0f, tempy);
     }
     
     public void renderRobot(GL gl, float time, boolean walking, float direction)
