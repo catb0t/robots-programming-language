@@ -429,6 +429,10 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		Main display = new Main();
 		display.init();
 		
+		Location l = new Location(0f, 0f, 0f);
+		Location l3 = new Location();
+		
+		System.out.println(l.equals(l3));
 	}
 	
 	public void displayJava () {
