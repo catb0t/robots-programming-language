@@ -119,7 +119,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		
 		JTabbedPane tabbedPane = new JTabbedPane();
 		
-		editArea = new TextArea("think\n|\n+---done",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		editArea = new TextArea("think\n|\n+---end",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		//editArea = new JEditorPane("text/html" , "<font color=\"font color\">think</font>\n|\n+---done");
 		editArea.addTextListener(this);
 		//editArea.addKeyListener(this);
