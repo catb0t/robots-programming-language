@@ -513,6 +513,11 @@ public class Robot implements RobotInterface {
 		speed = my_speed.percent;
 	}
 	
+	public void move_to (Location location, float my_speed)
+	{
+		move_to (location, new Percentage(my_speed));
+	}
+	
 	public void shoot ()
 	{
 		//decrease energy
