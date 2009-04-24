@@ -1,7 +1,7 @@
 package app;
 
 
-
+import java.util.*;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -14,6 +14,7 @@ import app.Terrain;
 import app.TextureReader;
 
 import java.io.IOException;
+import java.util.Random;
 
 
 
@@ -211,10 +212,16 @@ public class Scene implements GLEventListener {
         
         playerAvatar = new Robot(gl, terrain);
         player = new Robot(terrain);
+        Random generator = new Random();
         
         for(int i = 0; i < numberOfPowerups; i++)
         {
-        	resources[i] = new Powerup(1);
+        	//find location
+        	float x = generator.nextFloat()*(terrain.maxx - terrain.minx) + terrain.minx;
+        	float z = generator.nextFloat()*(terrain.maxz - terrain.minz) + terrain.minz;
+        	Vector3 pos = new Vector3(x, z, 0);
+        	float y = terrain.terrainIntersection(pos);
+        	resources[i] = new Powerup(pos, generator.nextInt(4));
         }        
 
 
