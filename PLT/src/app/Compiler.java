@@ -49,7 +49,7 @@ public class Compiler {
 			int exitCode1 = p1.waitFor();
 			*/
 			
-			String[] command2 = {"javac", "-cp", dir+"/src/:"+dir+"/lib/jogl.jar:"+dir+"/lib/gluegen-rt.jar", dir+"/RobotCompiled.java"};
+			String[] command2 = {"javac", "-cp", dir+"/bin/:"+dir+"/lib/jogl.jar:"+dir+"/lib/gluegen-rt.jar", dir+"/RobotCompiled.java"};
 			
 			Process p2 = Runtime.getRuntime().exec(command2);
 			int exitCode2 = p2.waitFor();

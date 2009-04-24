@@ -1098,13 +1098,13 @@ public class Func {
 	
 	public static float rollover (float a, float b)
 	{
-		if (b == 0)
+		if (b == 0f)
 		{
 			return a;
 		}
 		else
 		{
-			return a-a/b;
+			return a-((int) (a/b))*b;
 		}
 		
 	}

@@ -424,17 +424,6 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		editArea.removeTextListener(this);
 	}
 	
-	public static void main (String[] args) {
-		
-		Main display = new Main();
-		display.init();
-		
-		Location l = new Location(0f, 0f, 0f);
-		Location l3 = new Location();
-		
-		System.out.println(l.equals(l3));
-	}
-	
 	public void displayJava () {
 		try {
 			BufferedReader in = new BufferedReader(new FileReader("RobotCompiled.java"));
@@ -607,5 +596,32 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		}
 		
 		editArea.setCaretPosition(count);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+// Main
+
+	public static void main (String[] args) {
+
+		Main display = new Main();
+		display.init();
+
+		Location l = new Location(0f, 0f, 0f);
+		Location l1 = new Location();
+		LinkedList<Float> l3 = new LinkedList<Float>();
+
+		System.out.println(l.equals(l3));
 	}
 }
