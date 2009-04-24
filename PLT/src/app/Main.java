@@ -496,12 +496,30 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				}
 				else if (elements[start].equals("think")||elements[start].equals("instruction")) {
 					line = first.concat(line);
-					firstL.addLast("| ");
+					firstL.addLast("|   ");
 					first = createFirst(firstL);
 				}
-				else if (elements[start].equals("while")||elements[start].equals("for")||elements[start].equals("foreach")) {
+				else if (elements[start].equals("while")||elements[start].equals("for")||elements[start].equals("foreach")||elements[start].equals("if")||elements[start].equals("repeat")) {
 					line = first.concat(line);
-					firstL.addLast("| ");
+					firstL.addLast("|   ");
+					first = createFirst(firstL);
+				}
+				else if (elements[start].equals("+---else")) {
+					firstL.removeLast();
+					first = createFirst(firstL);
+					
+					line = first.concat(line);
+					
+					firstL.addLast("|   ");
+					first = createFirst(firstL);
+				}
+				else if (elements[start].equals("else")) {
+					firstL.removeLast();
+					first = createFirst(firstL);
+					
+					line = first.concat("+---").concat(line);
+					
+					firstL.addLast("|   ");
 					first = createFirst(firstL);
 				}
 				else {

@@ -26,7 +26,7 @@ public class Robot implements RobotInterface {
 	
 	public Vector3 forwardDirection = null;
 	public Vector3 cameraDirection = null;
-	public Vector3 position = null;
+	public Location position = null;
 	public Vector3 goal = null;
 	
 	LinkedList<Enemy> enemy_list;
@@ -49,7 +49,7 @@ public class Robot implements RobotInterface {
 	{
 		forwardDirection = new Vector3(0, 0, -1);
 		cameraDirection = new Vector3(0, 10, -10);
-		position = new Vector3(0, 0, 0);
+		position = new Location();
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
 	}
@@ -65,7 +65,7 @@ public class Robot implements RobotInterface {
 		
 		forwardDirection = new Vector3(0, 0, -1);
 		cameraDirection = new Vector3(0, 10, -1);
-		position = new Vector3(0, 0, 0);
+		position = new Location();
 		goal = new Vector3(0, 0, 0);
 		
 		sphere = new Sphere(gl);
@@ -132,7 +132,7 @@ public class Robot implements RobotInterface {
 	public void init(Terrain t) {
 		forwardDirection = new Vector3(0, 0, -1);
 		cameraDirection = new Vector3(0, 10, -10);
-		position = new Vector3(0, 0, 0);
+		position = new Location();
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
 	}
@@ -168,7 +168,7 @@ public class Robot implements RobotInterface {
     	if(realDistance < distance)
     		distance = realDistance;
     	//figure out what direction we're moving to
-    	float directionRadians = this.direction(position, goal);
+    	float directionRadians = this.direction(position.getVector3(), goal);
     	Vector3 newPosition = new Vector3((float)(position.x + distance*forwardDirection.x), (float)(position.z + distance*forwardDirection.z), (float)0);
     	//now that I have a new position, need to find out my distance from the ground
     	float newY = terrain.terrainIntersection(newPosition);
@@ -513,10 +513,6 @@ public class Robot implements RobotInterface {
 		speed = my_speed.percent;
 	}
 	
-	public void move_to (Vector2 location, float speed){
-		
-	}
-	
 	public void shoot ()
 	{
 		//decrease energy
@@ -610,7 +606,7 @@ public class Robot implements RobotInterface {
 	
 	public void setPosition(float x, float y, float z)
 	{
-		position = new Vector3(x, y, z);
+		position = new Location(x, y, z);
 	}
 	
 }
