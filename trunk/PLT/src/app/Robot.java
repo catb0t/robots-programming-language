@@ -2,6 +2,8 @@ package app;
 
 import java.io.*;
 import java.util.*;
+import java.lang.Math;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -532,9 +534,9 @@ public class Robot implements RobotInterface {
 		energy = energy - 5;
 	}
 	
-	public double distance (Vector3 origin, Vector3 goal)
+	public float distance (Location origin, Location goal)
 	{
-		return Math.sqrt(Math.pow(origin.x - goal.x, 2)+ Math.pow(origin.y - goal.y, 2)+ Math.pow(origin.z - goal.z, 2));
+		return (float) Math.sqrt(Math.pow(origin.x - goal.x, 2)+ Math.pow(origin.y - goal.y, 2)+ Math.pow(origin.z - goal.z, 2));
 	}
 	
 	public float direction (Vector3 origin, Vector3 goal)
@@ -542,7 +544,7 @@ public class Robot implements RobotInterface {
 		
 		forwardDirection = new Vector3(goal.x - origin.x, 0, goal.z - origin.z);
 		forwardDirection.normalize();
-		return (float)Math.atan2((double)(origin.z - goal.z), (double)(origin.y - goal.y));
+		return (float) Math.atan2((double)(origin.z - goal.z), (double)(origin.y - goal.y));
 	}
 	
 	public LinkedList<Enemy> get_enemies ()
