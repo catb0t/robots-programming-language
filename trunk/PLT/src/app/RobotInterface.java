@@ -1,4 +1,5 @@
 package app;
+import app.Func.*;
 
 public interface RobotInterface {
 
