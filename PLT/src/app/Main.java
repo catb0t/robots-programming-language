@@ -122,7 +122,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		editArea = new TextArea("think\n|\n+---done",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		//editArea = new JEditorPane("text/html" , "<font color=\"font color\">think</font>\n|\n+---done");
 		editArea.addTextListener(this);
-		editArea.addKeyListener(this);
+		//editArea.addKeyListener(this);
 		
 		tabbedPane.addTab("robot source", editArea);
 		
@@ -482,13 +482,13 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				line = line.concat(elements[elements.length-1]);
 				
 				
-				if (elements[start].equals("means")||elements[start].equals("done")) {
+				if (elements[start].equals("means")||elements[start].equals("done")||elements[start].equals("end")) {
 					firstL.removeLast();
 					first = createFirst(firstL);
 					
 					line = first.concat("+---").concat(line);
 				}
-				else if (elements[start].equals("+---means")||elements[start].equals("+---done")) {
+				else if (elements[start].equals("+---means")||elements[start].equals("+---done")||elements[start].equals("+---end")) {
 					firstL.removeLast();
 					first = createFirst(firstL);
 					
