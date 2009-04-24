@@ -25,6 +25,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	public Terrain terrain = null;
 	
 	TextArea editArea;
+	//JEditorPane editArea;
 	TextArea javaArea;
 	JButton start;
 	JMenuBar menu;
@@ -119,6 +120,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		JTabbedPane tabbedPane = new JTabbedPane();
 		
 		editArea = new TextArea("think\n|\n+---done",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		//editArea = new JEditorPane("text/html" , "<font color=\"font color\">think</font>\n|\n+---done");
 		editArea.addTextListener(this);
 		editArea.addKeyListener(this);
 		
@@ -298,7 +300,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				filename = null;
 			}
 			fileChanged = false;
-			editArea.removeTextListener(this);
+			//editArea.removeTextListener(this);
 			editArea.addTextListener(this);
 		}
 		else if ("save".equals(event.getActionCommand())) {
@@ -458,7 +460,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		
 		for (int i=0; i<program.length; i++) {
 			
-			System.out.println(program[i]);
+			//System.out.println(program[i]);
 			
 			String[] elements = program[i].split(" ");
 			
