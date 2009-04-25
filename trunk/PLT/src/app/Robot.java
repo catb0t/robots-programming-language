@@ -34,8 +34,8 @@ public class Robot implements RobotInterface {
 	public Vector3 position = null;
 	public Vector3 goal = null;
 	
-	LinkedList<Enemy> enemy_list;
-	LinkedList<Resource> resource_list;
+	RobotList<Enemy> enemy_list;
+	RobotList<Resource> resource_list;
 	
 	Vector3 direction = null;
 	Terrain terrain;
@@ -546,12 +546,12 @@ public class Robot implements RobotInterface {
 		return (float) Math.atan2((double)(origin.z - goal.z), (double)(origin.y - goal.y));
 	}
 	
-	public LinkedList<Enemy> get_enemies ()
+	public RobotList<Enemy> get_enemies ()
 	{
 		return enemy_list;
 	}
 	
-	public LinkedList<Resource> get_ressources ()
+	public RobotList<Resource> get_ressources ()
 	{
 		return resource_list;
 	}
@@ -569,7 +569,7 @@ public class Robot implements RobotInterface {
 	
 	public void revert_Enemy ()
 	{
-		LinkedList<Enemy> sol = new LinkedList<Enemy>();
+		RobotList<Enemy> sol = new RobotList<Enemy>(Enemy.class);
 		for (int i=0; i<enemy_list.size(); i++)
 		{
 			sol.add(enemy_list.removeLast());
@@ -578,7 +578,7 @@ public class Robot implements RobotInterface {
 	
 	public void revert_Resource ()
 	{
-		LinkedList<Resource> sol = new LinkedList<Resource>();
+		RobotList<Resource> sol = new RobotList<Resource>(Resource.class);
 		for (int i=0; i<resource_list.size(); i++)
 		{
 			sol.add(resource_list.removeLast());
