@@ -49,7 +49,8 @@ public class Location {
 
 	      Location equalTest = (Location) o;
 
-	      return (this.x==equalTest.x&&this.y==equalTest.y);
-	   }
+	      return (Math.abs(this.x - equalTest.x) < 0.000001
+                   && Math.abs(this.y - equalTest.y) < 0.000001);
+           }
 
 }
