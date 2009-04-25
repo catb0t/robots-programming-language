@@ -14,7 +14,7 @@ public class Enemy {
 	
 	public String toString()
 	{
-		String sol = "enemy name: "+name+" at ("+Float.toString(location.getX())+","+Float.toString(location.getY())+","+Float.toString(location.getZ())+","+"), energy="+Float.toString(energy);
+		String sol = "enemy name: "+name+" at ("+Float.toString(location.getX())+","+Float.toString(location.getY())+","+"), energy="+Float.toString(energy);
 		return sol;
 	}
 	

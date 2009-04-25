@@ -94,7 +94,7 @@ public class Scene implements GLEventListener {
 		if( Math.abs(player.position.x - player.goal.x) > 0.1 || Math.abs(player.position.z - player.goal.z) > 0.1 )
 		{
 			//figure out walking direction
-			player.robotDirection = player.direction(player.position.getVector3(), player.goal);
+			player.robotDirection = player.direction(player.position, player.goal);
 			player.robotDirection = player.robotDirection*(180.0f/3.14f) + 90;
 			walking = true;
 		}

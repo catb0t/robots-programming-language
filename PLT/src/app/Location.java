@@ -4,20 +4,17 @@ public class Location {
 	
 	public float x;
 	public float y;
-	public float z;
 	
 	public Location ()
 	{
 		x=0f;
 		y=0f;
-		z=0f;
 	}
 	
-	public Location (float a, float b, float c)
+	public Location (float a, float b)
 	{
 		x=a;
 		y=b;
-		z=c;
 	}
 	
 	public float getX ()
@@ -30,18 +27,13 @@ public class Location {
 		return y;
 	}
 	
-	public float getZ ()
-	{
-		return z;
-	}
-	
 	public void print() {
-		System.out.println("x: "+x+", y: "+z+", z: "+z);
+		System.out.println("x: "+x+", y: "+y);
 	}
 	
 	public Vector3 getVector3()
 	{
-		return new Vector3(x,y,z);
+		return new Vector3(x,0f,y);
 	}
 	
 	 /*
@@ -57,7 +49,7 @@ public class Location {
 
 	      Location equalTest = (Location) o;
 
-	      return (this.x==equalTest.x&&this.y==equalTest.y&&this.z==equalTest.z);
+	      return (this.x==equalTest.x&&this.y==equalTest.y);
 	   }
 
 }
