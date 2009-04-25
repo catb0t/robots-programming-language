@@ -2,7 +2,7 @@ package app;
 
 import java.util.LinkedList;
 
-public class Number {
+public class Number extends RobotType {
 
 	private float value;
 	

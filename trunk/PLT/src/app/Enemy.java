@@ -1,12 +1,13 @@
 package app;
 
-public class Enemy {
+public class Enemy extends RobotType {
 
 	public String name;
 	public Location location;
 	public float energy;
 	
-	public Enemy(){
+	public Enemy() {
+		super();
 		name ="";
 		location = new Location();
 		energy = 0;

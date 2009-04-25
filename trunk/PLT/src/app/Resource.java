@@ -1,6 +1,6 @@
 package app;
 
-public class Resource {
+public class Resource extends RobotType {
 
 	public String name;
 	public Location location;
@@ -9,6 +9,7 @@ public class Resource {
 	
 	public Resource ()
 	{
+		super();
 		name = "";
 		energy=0;
 		ammostash = 0;

@@ -11,10 +11,10 @@ public class RobotList<E> extends LinkedList<E> {
       clazz = cls;
    }
 
-   public E get(int index) {
+   public E get(float index) {
 
       E item = null;
-      int indexZeroBased = index - 1;
+      int indexZeroBased = ((int) index) - 1;
 
       try {
          
@@ -40,6 +40,34 @@ public class RobotList<E> extends LinkedList<E> {
       }
 
       return item;
+   }
+   
+   
+   public void add (float index, E item) {
+	   int indexZeroBased = ((int) index) - 1;
+	   
+	   try {
+	         
+	         super.add(indexZeroBased, item);
+
+	      } catch (IndexOutOfBoundsException e) {
+	         
+	         try {
+
+	            for (int i = this.size(); i <= indexZeroBased; i++) {
+	               item = clazz.newInstance();
+	               this.add(item);
+	            }
+
+	         } catch (InstantiationException e2) {
+	            e2.printStackTrace();
+	         } catch (IllegalAccessException e2) {
+	            e2.printStackTrace();
+	         }
+
+	      } catch (Exception other) {
+	         other.printStackTrace();
+	      }
    }
 
 }

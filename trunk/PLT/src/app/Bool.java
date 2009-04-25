@@ -1,21 +1,26 @@
 package app;
 
-public class Bool {
+import app.RobotType;
+
+public class Bool extends RobotType {
 
 	private boolean value;
 	
 	public Bool ()
 	{
+		super();
 		value = false;
 	}
 	
 	public Bool (boolean b)
 	{
+		super();
 		value = b;
 	}
 	
 	public Bool (Bool b)
 	{
+		super();
 		value = b.getValue();
 	}
 	
