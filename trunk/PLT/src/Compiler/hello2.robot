@@ -37,6 +37,9 @@ x# of 2th of targetLocation@...=10
  y# of 3th of targetLocation@...=10
  x# of 4th of targetLocation@...=x# of my_loc@
  y# of 4th of targetLocation@...=y# of my_loc@
+ 
+ x? = true
+ z? = x? && false
 
 myLoc@ = count#th of targetLocation@...
 

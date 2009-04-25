@@ -314,6 +314,30 @@ min_hash=min\#
                   return new Symbol(sym.NOWHERE_AT);
          }
 
+   and|\&\&
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched &&: " + yytext());
+                  }
+                  return new Symbol(sym.AND);
+         }
+
+   or|\|\|
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched ||: " + yytext());
+                  }
+                  return new Symbol(sym.OR);
+         }
+
+   not|\!
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched !: " + yytext());
+                  }
+                  return new Symbol(sym.NOT);
+         }
+
    {identifier}
          {
                   if (parser.bDebugFlag) {
