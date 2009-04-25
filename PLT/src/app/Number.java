@@ -36,6 +36,9 @@ public class Number extends RobotType {
 		value = a.getValue();
 	}
 	
+	
+	
+	/*
 	public Number rollover (Number n)
 	{	
 		float a = this.getValue();
@@ -108,4 +111,5 @@ public class Number extends RobotType {
 		
 		return 0f;
 	}
+	*/
 }

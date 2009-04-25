@@ -1,6 +1,5 @@
 package app;
 
-import java.util.LinkedList;
 
 //static functions
 public class Func {
@@ -13,7 +12,7 @@ public class Func {
 		return a+b;
 	}
 	
-	public static float add (float a, LinkedList b) {
+	public static float add (float a, RobotList b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -24,7 +23,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float add (LinkedList a, float b) {
+	public static float add (RobotList a, float b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -161,7 +160,7 @@ public class Func {
 		return Percentage.add(a,b);
 	}
 	
-	public static float add (Percentage a, LinkedList b)
+	public static float add (Percentage a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -173,7 +172,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float add (LinkedList a, Percentage b)
+	public static float add (RobotList a, Percentage b)
 	{
 		Exception e = new Exception();
 		try {
@@ -283,7 +282,7 @@ public class Func {
 	
 	//list => 1+ 2*4
 	
-	public static float add (LinkedList a, LinkedList b)
+	public static float add (RobotList a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -295,7 +294,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float add (LinkedList a, Enemy b)
+	public static float add (RobotList a, Enemy b)
 	{
 		Exception e = new Exception();
 		try {
@@ -307,7 +306,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float add (Enemy a, LinkedList b)
+	public static float add (Enemy a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -319,7 +318,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float add (LinkedList a, Resource b)
+	public static float add (RobotList a, Resource b)
 	{
 		Exception e = new Exception();
 		try {
@@ -331,7 +330,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float add (Resource a, LinkedList b)
+	public static float add (Resource a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -343,7 +342,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float add (LinkedList a, Location b)
+	public static float add (RobotList a, Location b)
 	{
 		Exception e = new Exception();
 		try {
@@ -355,7 +354,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float add (Location a, LinkedList b)
+	public static float add (Location a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -367,7 +366,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float add (LinkedList a, boolean b)
+	public static float add (RobotList a, boolean b)
 	{
 		Exception e = new Exception();
 		try {
@@ -379,7 +378,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float add (boolean a, LinkedList b)
+	public static float add (boolean a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -576,7 +575,7 @@ public class Func {
 	}
 	
 	
-	public static float times (float a, LinkedList b) {
+	public static float times (float a, RobotList b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -587,7 +586,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float times (LinkedList a, float b) {
+	public static float times (RobotList a, float b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -696,7 +695,7 @@ public class Func {
 		return Percentage.times(a,b);
 	}
 	
-	public static float times (Percentage a, LinkedList b)
+	public static float times (Percentage a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -708,7 +707,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float times (LinkedList a, Percentage b)
+	public static float times (RobotList a, Percentage b)
 	{
 		Exception e = new Exception();
 		try {
@@ -804,7 +803,7 @@ public class Func {
 	
 	//list => 1+ 2*4
 	
-	public static float times (LinkedList a, LinkedList b)
+	public static float times (RobotList a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -816,7 +815,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float times (LinkedList a, Enemy b)
+	public static float times (RobotList a, Enemy b)
 	{
 		Exception e = new Exception();
 		try {
@@ -828,7 +827,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float times (Enemy a, LinkedList b)
+	public static float times (Enemy a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -840,7 +839,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float times (LinkedList a, Resource b)
+	public static float times (RobotList a, Resource b)
 	{
 		Exception e = new Exception();
 		try {
@@ -852,7 +851,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float times (Resource a, LinkedList b)
+	public static float times (Resource a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -864,7 +863,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float times (LinkedList a, Location b)
+	public static float times (RobotList a, Location b)
 	{
 		Exception e = new Exception();
 		try {
@@ -876,7 +875,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float times (Location a, LinkedList b)
+	public static float times (Location a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -888,7 +887,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float times (LinkedList a, boolean b)
+	public static float times (RobotList a, boolean b)
 	{
 		Exception e = new Exception();
 		try {
@@ -900,7 +899,7 @@ public class Func {
 		return 0f;
 	}
 	
-	public static float times (boolean a, LinkedList b)
+	public static float times (boolean a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1111,7 +1110,7 @@ public class Func {
 	
 	//others are errors.
 	
-	public static float rollover (float a, LinkedList b) {
+	public static float rollover (float a, RobotList b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -1122,7 +1121,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (LinkedList a, float b) {
+	public static float rollover (RobotList a, float b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -1267,7 +1266,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (Percentage a, LinkedList b)
+	public static float rollover (Percentage a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1279,7 +1278,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (LinkedList a, Percentage b)
+	public static float rollover (RobotList a, Percentage b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1389,7 +1388,7 @@ public class Func {
 
 	//list => 1+ 2*4
 
-	public static float rollover (LinkedList a, LinkedList b)
+	public static float rollover (RobotList a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1401,7 +1400,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (LinkedList a, Enemy b)
+	public static float rollover (RobotList a, Enemy b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1413,7 +1412,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (Enemy a, LinkedList b)
+	public static float rollover (Enemy a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1425,7 +1424,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (LinkedList a, Resource b)
+	public static float rollover (RobotList a, Resource b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1437,7 +1436,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (Resource a, LinkedList b)
+	public static float rollover (Resource a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1449,7 +1448,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (LinkedList a, Location b)
+	public static float rollover (RobotList a, Location b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1461,7 +1460,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (Location a, LinkedList b)
+	public static float rollover (Location a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1473,7 +1472,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (LinkedList a, boolean b)
+	public static float rollover (RobotList a, boolean b)
 	{
 		Exception e = new Exception();
 		try {
@@ -1485,7 +1484,7 @@ public class Func {
 		return 0f;
 	}
 
-	public static float rollover (boolean a, LinkedList b)
+	public static float rollover (boolean a, RobotList b)
 	{
 		Exception e = new Exception();
 		try {
