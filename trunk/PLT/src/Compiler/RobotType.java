@@ -8,7 +8,7 @@ public enum RobotType {
    LOCATION   ("@"  , "Location"  ),
    ENEMY      ("!"  , "Enemy"     ),
    RESOURCE   ("$"  , "Resource"  ),
-   LIST       ("...", "LinkedList"),
+   LIST       ("...", "RobotList"),
    NOTHING    ("NULL", "void"     );
 
    private final String postFix; 

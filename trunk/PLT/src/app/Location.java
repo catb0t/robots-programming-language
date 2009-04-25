@@ -11,6 +11,12 @@ public class Location extends RobotType {
 		x=0f;
 		y=0f;
 	}
+
+        public Location(Location l) {
+           super();
+           x = l.x;
+           y = l.y;
+        }
 	
 	public Location (float a, float b)
 	{
