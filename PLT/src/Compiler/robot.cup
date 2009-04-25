@@ -46,7 +46,6 @@ parser code {:
     		System.exit(0);
   		}
 :}
-
 /* Terminals (tokens returned by the scanner) */
 terminal         SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
 terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
@@ -71,20 +70,20 @@ non terminal         expr_list, expr_part;
 non terminal Integer expr;
 non terminal String  statement, entry, variable_name, program, block;
 non terminal         optnl, assign_op;
-non terminal String  function_name, function, functions, variable_name_local;
-non terminal String  boolean_final, base_value, declaration, boolean_expression, boolean_component;
+non terminal String  function, functions, variable_name_local;
+non terminal String  boolean_final, declaration, boolean_expression, boolean_component;
 non terminal String  any_expr;
-non terminal String  arithmetic_expression, arithmetic_operator, constant_value;
+non terminal String  arithmetic_operator, constant_value;
 non terminal String  call, field_access, local_declaration;
-non terminal String  field_name;
+//non terminal String  field_name;
 non terminal String  conditional, else_statement;
 non terminal String  argument, arguments, arguments_act, function_call;
 non terminal String  comparison_operator, index;
 non terminal String  assignment;
 non terminal String  loop;
+non terminal Expression arithmetic_expression;
 
 /* Precedences: Follow Java conventions */
-precedence right OF;
 
 precedence left  OR;
 precedence left  AND;
@@ -96,6 +95,8 @@ precedence nonassoc IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_LOWER_THAN, IS
 
 precedence left PLUS, MINUS, ROLLOVER;
 precedence left TIMES, DIVIDE;
+
+precedence right OF;
 
 precedence right NOT;
 
@@ -171,14 +172,19 @@ declaration     ::= /*variable_name:vn*/ VARIABLE:v NEWLINE
 ;
 
 //TODO: What happens if base_value is not already declared?  Should we create a new instance?
-field_access    ::= field_name:fn OF base_value:fa
+field_access    ::= VARIABLE:v OF arithmetic_expression:ae
                     {:
-                       RESULT = fa + "." + fn;
+                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + "." + v.name();
                     :}
                 |   
-                    index:idx OF base_value:fa
+                    function_call:fc OF arithmetic_expression:ae
                     {:
-                       RESULT = fa + ".get(" + idx + ")";
+                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + "." + fc;
+                    :}
+                |   
+                    index:idx OF arithmetic_expression:ae
+                    {:
+                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + ".get(" + idx + ")";
                     :}
                 /*|   
                     variable_name:vn
@@ -196,15 +202,20 @@ index           ::=  NUMBER_NAME_IDX:nnidx
                      {: RESULT = nnidx.substring(0, nnidx.length()-3);:}
                 |
                      INT_IDX:nidx
-                     {: RESULT = nidx.substring(0, nidx.length()-2);  :}
+                     {: RESULT = nidx.substring(0, nidx.length()-2) + "f";  :}
 ;
-
+/*
 field_name      ::=  VARIABLE:v
                      {:
                        RESULT = v.name();
                      :}
+                |
+                     function_call:fc
+                     {:
+                        RESULT = fc;
+                     :}
 ;
-
+*/
 // TODO: We don't need to call isDeclared, it's already being called in declare variable
 // See local_variable to see shorter usage
 // Also, I was thinking that we can add a Java Enum to enumerate our types and enter
@@ -222,7 +233,7 @@ functions       ::=   function:fn optnl
                       /* empty */            {: RESULT = ""; :}
 ;
 
-function        ::=   INSTRUCTION function_name:fn {: parser.sm.increaseLevel(); :}
+function        ::=   INSTRUCTION FUNCTION_NAME:fn {: parser.sm.increaseLevel(); :}
                       WITH arguments:arg MEANS NEWLINE optnl
                       block:b optnl
                       GIVES VARIABLE:v NEWLINE
@@ -240,9 +251,6 @@ function        ::=   INSTRUCTION function_name:fn {: parser.sm.increaseLevel();
                          RESULT += "\t}";
                          parser.sm.decreaseLevel();
                       :}
-;
-
-function_name   ::=   FUNCTION_NAME:fn       {: RESULT = fn;   :}
 ;
 
 //TODO: Arguments probably should use their own production rather than variable_name_local
@@ -263,8 +271,8 @@ variable_name_local  ::=  VARIABLE:v
                              RESULT = parser.sm.declareIfNecessary(v) + v.name();
                           :}
 ;
-
-base_value      ::=   /*field_name:fn            {:   RESULT = fn;     :}
+/*
+base_value      ::=   field_name:fn            {:   RESULT = fn;     :}
                 |
                       constant_value:cv        {:   RESULT = cv;     :}
                 |
@@ -273,10 +281,10 @@ base_value      ::=   /*field_name:fn            {:   RESULT = fn;     :}
                       field_access:fa          {:   RESULT = fa;     :}
                 |
                       SELF                     {:   RESULT = "this"; :}
-                |*/
+                |
                       arithmetic_expression:ae {:   RESULT = ae;     :}
 ;
-
+*/
 any_expr        ::=   boolean_expression:be    {:   RESULT = be; :}
                 /*|
                       arithmetic_expression:ae {:   RESULT = ae; :}*/
@@ -284,42 +292,64 @@ any_expr        ::=   boolean_expression:be    {:   RESULT = be; :}
 
 arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2
                               {:
+                                 RESULT = new Expression();
                                  // Call the appropriate Java function
+                                 RESULT.declarations.append(ae1.declarations);
+                                 RESULT.declarations.append(ae2.declarations);
+
                                  if(ao == "%") { //ROLLOVER
-                                     RESULT = "Func.rollover(" + ae1 + ", " + ae2 + ")";
+                                     RESULT.javaCode.append("Func.rollover(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else if(ao == "+") {
-                                     RESULT = "Func.add(" + ae1 + ", " + ae2 + ")";
+                                     RESULT.javaCode.append("Func.add(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else if(ao == "*") {
-                                     RESULT = "Func.times(" + ae1 + ", " + ae2 + ")";
+                                     RESULT.javaCode.append("Func.times(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else {
-                                     RESULT = ae1 + ao + ae2;
+                                     RESULT.javaCode.append(ae1.javaCode).append(ao).append(ae2.javaCode);
                                  }
                               :}
                         |
                               LPAREN arithmetic_expression:ae RPAREN
                               {:
-                                 RESULT = "( " + ae + " )";
+                                 RESULT = new Expression();
+                                 RESULT.declarations = ae.declarations;
+                                 RESULT.javaCode.append("( ").append(ae.javaCode).append(" )");
                               :}
                         |
                               NUMBER_EXPRESSION:ne
                               {:
-                                 RESULT = ne.toString();
+                                 RESULT = new Expression(ne);
                               :}
                         |
                               NUMBER_PERCENTAGE:pe
                               {:
-                                 RESULT = "new Percentage(" + pe.substring(0, pe.length() - 1) + ")";
+                                 RESULT = new Expression("new Percentage(" + pe.substring(0, pe.length() - 1) + ")");
                               :}
                         |     
-                              field_name:fn            {:   RESULT = fn;     :}
+                              VARIABLE:v
+                              {:
+                                 RESULT = new Expression(v.name());
+                                 
+                                 parser.temp = parser.sm.declareIfNecessary(v);
+                                 if(!parser.temp.equals("")) {
+                                 	 parser.temp += v.name() + " = new " + v.javaType() + "(";
+                                         //TODO: put this logic into RobotVar
+                                         if (v.isList()) parser.temp += v.type().javaType() + ".class";
+                                         parser.temp += ");\n" + parser.sm.indent();
+                                         RESULT.declarations.append(parser.temp);
+                                 }
+                                 
+                              :}
                         |
-                              constant_value:cv        {:   RESULT = cv;     :}
+                              function_call:fc
+                              {:
+                                 RESULT = new Expression(fc);
+                              :}
                         |
-                              function_call:fc         {:   RESULT = fc;     :}
+                              constant_value:cv        {:   RESULT = new Expression(cv);     :}
                         |
-                              field_access:fa          {:   RESULT = fa;     :}
+                              field_access:fa          {:   RESULT = new Expression(fa);     :}
                         |
-                              SELF                     {:   RESULT = "this"; :}
+                              SELF                     {:   RESULT = new Expression("this"); :}
 ;
 
 arithmetic_operator     ::=   PLUS     {: RESULT = "+";   :}
@@ -352,7 +382,7 @@ boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
                               {:  RESULT = bec1 + co + bec2;  :}
 ;
 
-boolean_component       ::=   base_value:bv {: RESULT = bv; :}
+boolean_component       ::=   arithmetic_expression:ae {: RESULT = ae.javaCode.toString(); :}
 ;
                       
 comparison_operator     ::=   IS_EQUAL_TO 
@@ -492,9 +522,7 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                               :} 
 ;
 
-function_call           ::=   function_name:fn
-                              arguments_act:args
-                              NEWLINE
+function_call           ::=   FUNCTION_NAME:fn arguments_act:args
                               {:
                                  // remove the final ,<space> : (arg1, arg2,<space>)
                                  args = args.trim();

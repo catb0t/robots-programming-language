@@ -39,9 +39,9 @@ JAR_NAME       := robot_parser.jar
 PARSER_FILES   := parser sym
 LEX_FILES      := Yylex
 
-PARSE_SETTINGS := -dump_states -dump_grammar -expect 13
+PARSE_SETTINGS := -dump_states -dump_grammar -expect 41
 
-HELPER_FILES   := RobotVar RobotType RobotVarScope RobotScopeManager
+HELPER_FILES   := RobotVar RobotType RobotVarScope RobotScopeManager Expression
 
 ######################
 # GENERATED SETTINGS #
@@ -81,7 +81,7 @@ $(HELPER_CLASSES): $(HELPER_SRC)
 # TARGETS FOR TEST PROGRAMS #
 #############################
 
-TEST_PROGRAMS := hello hello2 tutorial2 FindShoot
+TEST_PROGRAMS := hello hello2 tutorial2 FindShoot PatrolRobot
 UNIT_TESTS := RobotVarTest
 
 $(TEST_PROGRAMS): $(PARSER)
