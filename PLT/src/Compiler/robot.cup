@@ -43,6 +43,11 @@ parser code {:
               System.out.println(e.getMessage());
            }
         }
+        
+        public void syntax_error(java_cup.runtime.Symbol current) {
+    		System.out.println("Syntax error (" + current.sym + ")" + current + "\n");
+    		System.exit(0);
+  		}
 :}
 
 /* Terminals (tokens returned by the scanner) */
@@ -157,7 +162,9 @@ declaration     ::= /*variable_name:vn*/ VARIABLE:v NEWLINE
                     field_access:fa assign_op any_expr:ex NEWLINE
                     optnl declaration:dcl
                     {:
-                       RESULT = fa + " = " + ex + ";\n" + dcl;
+                       //RESULT = fa + " = " + ex + ";\n" + dcl;
+                       RESULT = dcl;
+                       parser.globalAssignments += fa + " = " + ex + ";\n";
                     :}
                  |
                     /* empty */
@@ -256,7 +263,8 @@ arguments        ::=   variable_name_local:arg arguments:args
 
 variable_name_local  ::=  VARIABLE:v
                           {:
-                             RESULT = parser.sm.declareIfNecessary(v) + v.name(); 
+                             RESULT = parser.sm.declareIfNecessary(v) + v.name();
+                             //RESULT += " = new " + v.javaType() + "()";
                           :}
 ;
 
@@ -423,9 +431,11 @@ block                   ::=   statement:s {: RESULT = parser.sm.indent() + s + "
 ;
 
 
-assignment              ::=   variable_name_local:vnl assign_op any_expr:ex NEWLINE
+assignment              ::=   /*variable_name_local:vnl*/ VARIABLE:v assign_op any_expr:ex NEWLINE
                               {:
-                                 RESULT = vnl + " = " + ex; 
+                                 //RESULT = vnl + " = " + ex;
+                                 RESULT = parser.sm.declareIfNecessary(v) + v.name();
+                              	 RESULT += " = new " + v.javaType() + "(" + ex + ")";
                               :}
                         |
                               field_access:fa assign_op any_expr:ex NEWLINE
@@ -511,9 +521,14 @@ arguments_act           ::=   any_expr:arg arguments_act:args
                               :}
 ;
 
-local_declaration       ::=   variable_name_local:vnl NEWLINE 
+local_declaration       ::=   /*variable_name_local:vnl*/ VARIABLE:v NEWLINE 
                               {:
-                                 RESULT = vnl /* + dcl*/;
+                                 //RESULT = vnl /* + dcl*/;
+                                 parser.temp = parser.sm.declareIfNecessary(v);
+                                 RESULT = parser.temp + v.name();
+                                 if(!parser.temp.equals("")) {
+                                 	 RESULT += " = new " + v.javaType() + "()";
+                                 }
                               :}
                         /*|
                               variable_name_local:vnl assign_op value:val NEWLINE
