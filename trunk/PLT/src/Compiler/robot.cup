@@ -4,18 +4,11 @@ import java_cup.runtime.*;
 import java.io.*;
 import java.util.*;
 
-/* value   ::= variable_name
-         | base_value
-         | boolean_expression
-         | arithmetic_expression
-         | constant_expression of variable_name
-         | my constant_expression
-         | constant_value */
-
 parser code {:
 	public static String  robotProgram;
 	public static String  globalAssignments;
 	public static boolean bDebugFlag;
+	public static Yylex   scanner;
 
 	/* stores a basic symbol table */
 	public static RobotScopeManager sm;
@@ -28,8 +21,8 @@ parser code {:
               robotProgram = "import app.*;\nimport java.util.*;\n";
               globalAssignments = "";
               sm = new RobotScopeManager();
-
-              new parser(new Yylex(new BufferedReader(new FileReader(args[0])))).debug_parse();
+			  scanner = new Yylex(new BufferedReader(new FileReader(args[0])));
+              new parser(scanner).debug_parse();
 
               // dump generated java code to file
               FileWriter fwTranslatedCode = new FileWriter(args[1], false);
@@ -45,7 +38,11 @@ parser code {:
         }
         
         public void syntax_error(java_cup.runtime.Symbol current) {
-    		System.out.println("Syntax error (" + current.sym + ")" + current + "\n");
+    		System.out.println("*** Syntax error ***\n");
+    		System.out.println("Line#: " + scanner.getLineNumber());
+    		System.out.println("Column#: " + scanner.getColumnNumber());
+    		System.out.println("Near token: " + scanner.lastToken());
+    		System.out.println("Terminal/Non-terminal #: " + current + "\n");
     		System.exit(0);
   		}
 :}
@@ -264,7 +261,6 @@ arguments        ::=   variable_name_local:arg arguments:args
 variable_name_local  ::=  VARIABLE:v
                           {:
                              RESULT = parser.sm.declareIfNecessary(v) + v.name();
-                             //RESULT += " = new " + v.javaType() + "()";
                           :}
 ;
 
@@ -440,7 +436,7 @@ assignment              ::=   /*variable_name_local:vnl*/ VARIABLE:v assign_op a
                         |
                               field_access:fa assign_op any_expr:ex NEWLINE
                               {: 
-                                 RESULT = fa + " = " + ex; 
+                                 RESULT = fa + " = " + ex;
                               :}
 ;
 

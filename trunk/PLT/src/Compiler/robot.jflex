@@ -18,6 +18,22 @@ import java_cup.runtime.Symbol;
 %ignorecase
 %state COMMENTS, SAYSTATE
 
+%{
+    // for error handling : called by parser
+	public int getLineNumber() {
+		return yyline;
+	}
+	
+	public int getColumnNumber() {
+	    return yycolumn;
+	}
+	
+	public String lastToken() {
+	    return yytext();
+	}
+
+%}
+
 anything=[^ \t\r\f\n].+
 whitespace=[ \t\r\f]
 block={whitespace}*(\||\+---)
