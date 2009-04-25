@@ -1,18 +1,20 @@
 package app;
 
-public class Location {
+public class Location extends RobotType {
 	
 	public float x;
 	public float y;
 	
 	public Location ()
 	{
+		super();
 		x=0f;
 		y=0f;
 	}
 	
 	public Location (float a, float b)
 	{
+		super();
 		x=a;
 		y=b;
 	}

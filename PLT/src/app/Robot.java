@@ -21,7 +21,7 @@ public class Robot implements RobotInterface {
 	
 	float max_speed=1f;
 	float speed = 0.2f;
-	float maxIncline = 0.1f;
+	float maxIncline = 1f;
 	int ammo = 0;
 	
 	float verticalVelocity = 0;

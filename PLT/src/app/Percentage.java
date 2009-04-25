@@ -1,16 +1,18 @@
 package app;
 
-public class Percentage {
+public class Percentage extends RobotType {
 
 	public float percent;
 	
 	public Percentage ()
 	{
+		super();
 		percent = 0;
 	}
 	
 	public Percentage (float u)
 	{
+		super();
 		percent = u;
 		cap();
 	}
