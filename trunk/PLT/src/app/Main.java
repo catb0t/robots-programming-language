@@ -618,7 +618,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		Main display = new Main();
 		display.init();
 
-		Location l = new Location(0f, 0f, 0f);
+		Location l = new Location(0f, 0f);
 		Location l1 = new Location();
 		LinkedList<Float> l3 = new LinkedList<Float>();
 

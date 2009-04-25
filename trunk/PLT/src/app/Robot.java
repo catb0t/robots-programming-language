@@ -31,7 +31,7 @@ public class Robot implements RobotInterface {
 	
 	public Vector3 forwardDirection = null;
 	public Vector3 cameraDirection = null;
-	public Location position = null;
+	public Vector3 position = null;
 	public Vector3 goal = null;
 	
 	LinkedList<Enemy> enemy_list;
@@ -54,7 +54,7 @@ public class Robot implements RobotInterface {
 	{
 		forwardDirection = new Vector3(0, 0, -1);
 		cameraDirection = new Vector3(0, 10, -10);
-		position = new Location();
+		position = new Vector3(0f,0f,0f);
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
 	}
@@ -70,7 +70,7 @@ public class Robot implements RobotInterface {
 		
 		forwardDirection = new Vector3(0, 0, -1);
 		cameraDirection = new Vector3(0, 10, -1);
-		position = new Location();
+		position = new Vector3(0f,0f,0f);
 		goal = new Vector3(0, 0, 0);
 		
 		sphere = new Sphere(gl);
@@ -137,7 +137,7 @@ public class Robot implements RobotInterface {
 	public void init(Terrain t) {
 		forwardDirection = new Vector3(0, 0, -1);
 		cameraDirection = new Vector3(0, 10, -10);
-		position = new Location();
+		position = new Vector3(0f,0f,0f);
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
 	}
@@ -173,7 +173,7 @@ public class Robot implements RobotInterface {
     	if(realDistance < distance)
     		distance = realDistance;
     	//figure out what direction we're moving to
-    	float directionRadians = this.direction(position.getVector3(), goal);
+    	float directionRadians = this.direction(position, goal);
     	Vector3 newPosition = new Vector3((float)(position.x + distance*forwardDirection.x), (float)(position.z + distance*forwardDirection.z), (float)0);
     	//now that I have a new position, need to find out my distance from the ground
     	float newY = terrain.terrainIntersection(newPosition);
@@ -481,17 +481,16 @@ public class Robot implements RobotInterface {
 		return new Vector3(position.x, position.y, position.z);
 	}
 	
-	public Vector2 getPositionVector2(){
-		return new Vector2(position.x,position.y);
-	}
+	//public Vector2 getPositionVector2(){
+	//	return new Vector2(position.x,position.z);
+	//}
 	
 	//******************************************************************************************************
 	// THINK!!!!
 	//******************************************************************************************************
+	
 	public void think()
-	{
-
-		
+	{		
 		//goal = new Vector3(0, 0, 0);
 		
 		
@@ -536,7 +535,7 @@ public class Robot implements RobotInterface {
 	
 	public float distance (Location origin, Location goal)
 	{
-		return (float) Math.sqrt(Math.pow(origin.x - goal.x, 2)+ Math.pow(origin.y - goal.y, 2)+ Math.pow(origin.z - goal.z, 2));
+		return (float) Math.sqrt(Math.pow(origin.x - goal.x, 2)+ Math.pow(origin.y - goal.y, 2));
 	}
 	
 	public float direction (Vector3 origin, Vector3 goal)
@@ -616,7 +615,11 @@ public class Robot implements RobotInterface {
 	
 	public void setPosition(float x, float y, float z)
 	{
-		position = new Location(x, y, z);
+		position = new Vector3(x, y, z);
+	}
+	
+	public Location getLocation() {
+		return new Location(position.x, position.z);
 	}
 	
 }

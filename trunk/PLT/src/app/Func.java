@@ -531,7 +531,7 @@ public class Func {
 	
 	public static Location add (Location a, Location b)
 	{
-		return new Location (a.getX()+b.getX(), a.getY()+b.getY(), a.getZ()+b.getZ());
+		return new Location (a.getX()+b.getX(), a.getY()+b.getY());
 	}
 	
 	public static float add (Location a, boolean b)
@@ -610,12 +610,12 @@ public class Func {
 	
 	public static Location times (float a, Location b)
 	{
-		return new Location(b.getX()*a, b.getY()*a, b.getZ()*a);
+		return new Location(b.getX()*a, b.getY()*a);
 	}
 	
 	public static Location times (Location b, float a)
 	{
-		return new Location(b.getX()*a, b.getY()*a, b.getZ()*a);
+		return new Location(b.getX()*a, b.getY()*a);
 	}
 	
 	public static float times (float a, Enemy b)
@@ -770,12 +770,12 @@ public class Func {
 	
 	public static Location times (Percentage a, Location b)
 	{
-		return new Location(b.getX()*a.percent, b.getY()*a.percent, b.getZ()*a.percent);
+		return new Location(b.getX()*a.percent, b.getY()*a.percent);
 	}
 
 	public static Location times (Location b, Percentage a)
 	{
-		return new Location(b.getX()*a.percent, b.getY()*a.percent, b.getZ()*a.percent);
+		return new Location(b.getX()*a.percent, b.getY()*a.percent);
 	}
 	
 	public static float times (Percentage a, boolean b)
