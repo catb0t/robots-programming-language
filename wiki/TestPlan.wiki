@@ -1,3 +1,5 @@
+#summary Verification and Validation
+
 = Introduction =
 
   # TDD (Test Driven Development)
@@ -26,4 +28,9 @@
             * Patrol a robot
             * Find and shoot enemy
             * Find resources
-            * Destroy all enemies  
+            * Destroy all enemies
+  # TODO
+     * Finish Grammar test
+     * Check Test Traceability
+     * Combine App. JUnit and compiler JUnit
+     * Regression test....
