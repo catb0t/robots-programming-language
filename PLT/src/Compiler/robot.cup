@@ -72,7 +72,7 @@ terminal String  NUMBER_NAME_IDX;
 terminal String  FUNCTION_NAME;
 terminal RobotVar VARIABLE;
 terminal String  INTEGER;
-terminal         TIMES_REPEAT;
+terminal         TIMES_REPEAT, WHILE;
 
 /* Non-terminals */
 non terminal         expr_list, expr_part;
@@ -532,14 +532,13 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                                  RESULT += "\n" + parser.sm.indent() + "}\n";
                               :}
                          |
-                              REPEAT NUMBER_EXPRESSION:num TIMES_REPEAT NEWLINE
+                              REPEAT arithmetic_expression:ae TIMES_REPEAT NEWLINE
                               {:
-                              	 Float __tmpNum = new Float(num);
-                              	 if(__tmpNum.intValue() < 0) {
-                              	 	parser.custom_error(new String("Repeat times loop must have a positive argument"));
-                              	 }
+                                 if((new String(ae.declarations)).compareTo(new String("")) != 0) {
+                                 	parser.custom_error(new String("Undeclared variables found in arithemtic expression"));
+                                 }
 
-                                 RESULT = "\n" + parser.sm.indent() + "for(int __temp = 0; __temp < " + __tmpNum.intValue() + "; __temp++) {\n\n";
+                                 RESULT = "\n" + parser.sm.indent() + "for(int __temp = 0; __temp < (" + (new String(ae.javaCode)) + ").intValue(); __temp++) {\n\n";
                                  parser.sm.increaseLevel();
                               :}
                               optnl
@@ -551,6 +550,22 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                                  RESULT += b;
                                  RESULT += "\n" + parser.sm.indent() + "}\n";
                               :}
+                         |
+                              WHILE boolean_expression:be NEWLINE
+                              {:
+                                 RESULT = "\n" + parser.sm.indent() + "while(" + be + ") {\n\n";
+                                 parser.sm.increaseLevel();
+                              :}
+                              optnl
+                              block:b
+                              optnl
+                              DONE NEWLINE
+                              {:
+                                 parser.sm.decreaseLevel();
+                                 RESULT += b;
+                                 RESULT += "\n" + parser.sm.indent() + "}\n";
+                              :}
+                              
 ;
 
 function_call           ::=   FUNCTION_NAME:fn arguments_act:args
