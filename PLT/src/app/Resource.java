@@ -4,15 +4,15 @@ public class Resource extends RobotType {
 
 	public String name;
 	public Location location;
-	public float energy = 0;
-	public float ammostash;
+	public Float energy = 0f;
+	public Float ammostash;
 	
 	public Resource ()
 	{
 		super();
 		name = "";
-		energy=0;
-		ammostash = 0;
+		energy=0f;
+		ammostash = 0f;
 	}
 	
 	
