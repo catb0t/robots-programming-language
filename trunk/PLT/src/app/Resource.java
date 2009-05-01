@@ -9,7 +9,6 @@ public class Resource {
 	
 	public Resource ()
 	{
-		super();
 		name = "";
 		energy=0f;
 		ammostash = 0f;

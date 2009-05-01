@@ -6,13 +6,11 @@ public class Percentage {
 	
 	public Percentage ()
 	{
-		super();
 		percent = new Float(0f);
 	}
 	
 	public Percentage (float u)
 	{
-		super();
 		percent = u;
 		cap();
 	}

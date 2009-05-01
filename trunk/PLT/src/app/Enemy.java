@@ -7,7 +7,6 @@ public class Enemy {
 	public Float energy;
 	
 	public Enemy() {
-		super();
 		name ="";
 		location = new Location();
 		energy = new Float(0f);
