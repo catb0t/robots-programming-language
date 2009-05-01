@@ -148,7 +148,7 @@ declaration     ::= /*variable_name:vn*/ VARIABLE:v NEWLINE
                     {:
                        //RESULT = parser.sm.declareIfNecessary(v) + v.name();
                        parser.temp = parser.sm.declareIfNecessary(v);
-                       String t = parser.temp + v.name() + " = new " + v.javaType() + "(" + ex + ");\n";
+                       String t = parser.temp + v.name() + " = " + ex + ";\n";
                        if(parser.temp.compareTo("") != 0) {
                           RESULT = t + dcl;
                        } else {
@@ -317,7 +317,7 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                         |
                               NUMBER_EXPRESSION:ne
                               {:
-                                 RESULT = new Expression(ne);
+                                 RESULT = new Expression("new Float(" + ne + ")");
                               :}
                         |
                               NUMBER_PERCENTAGE:pe
@@ -377,6 +377,14 @@ boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
                               boolean_component:bec
                               {:  RESULT = bec;  :}
                         |
+                              boolean_component:bec1 IS_EQUAL_TO
+                              boolean_component:bec2
+                              {:  RESULT = bec1 + ".equals(" + bec2 + ")";  :}
+                        |
+                              boolean_component:bec1 IS_DIFFERENT_FROM
+                              boolean_component:bec2
+                              {:  RESULT = "!" + bec1 + ".equals(" + bec2 + ")";  :}
+                        |
                               boolean_component:bec1 comparison_operator:co
                               boolean_component:bec2
                               {:  RESULT = bec1 + co + bec2;  :}
@@ -385,10 +393,7 @@ boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
 boolean_component       ::=   arithmetic_expression:ae {: RESULT = ae.javaCode.toString(); :}
 ;
                       
-comparison_operator     ::=   IS_EQUAL_TO 
-                              {: RESULT = "=="; :}
-                        |     
-                              IS_LOWER_THAN
+comparison_operator     ::=   IS_LOWER_THAN
                               {: RESULT = "<="; :}
                         |     
                               IS_STRICTLY_LOWER_THAN
@@ -399,9 +404,6 @@ comparison_operator     ::=   IS_EQUAL_TO
                         |
                               IS_GREATER_THAN
                               {: RESULT = ">="; :}
-                        |
-                              IS_DIFFERENT_FROM
-                              {: RESULT = "!="; :}
 ;
 
 boolean_final           ::=   TRUE  {:   RESULT = "true";   :}
@@ -461,7 +463,7 @@ assignment              ::=   /*variable_name_local:vnl*/ VARIABLE:v assign_op a
                               {:
                                  //RESULT = vnl + " = " + ex;
                                  RESULT = parser.sm.declareIfNecessary(v) + v.name();
-                              	 RESULT += " = new " + v.javaType() + "(" + ex + ")";
+                              	 RESULT += " = " + ex;
                               :}
                         |
                               field_access:fa assign_op any_expr:ex NEWLINE
