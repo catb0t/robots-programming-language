@@ -140,7 +140,7 @@ min_hash=min\#
    times
         {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched times_repeat" + yytext());
+                     System.out.println("matched times_repeat: " + yytext());
                   }
                   return new Symbol(sym.TIMES_REPEAT); 
         }
@@ -301,6 +301,14 @@ min_hash=min\#
                      System.out.println("matched done: " + yytext());
                   }
                   return new Symbol(sym.DONE);
+         }
+
+   while
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched while: " + yytext());
+                  }
+                  return new Symbol(sym.WHILE);
          }
 
    {max_hash}
