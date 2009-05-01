@@ -38,11 +38,18 @@ parser code {:
         }
         
         public void syntax_error(java_cup.runtime.Symbol current) {
-    		System.out.println("*** Syntax error ***\n");
-    		System.out.println("Line#: " + scanner.getLineNumber());
+    		System.out.println("*** Syntax error ***");
+    		System.out.println("Line#: " + (scanner.getLineNumber() + 1));
     		System.out.println("Column#: " + scanner.getColumnNumber());
     		System.out.println("Near token: " + scanner.lastToken());
     		System.out.println("Terminal/Non-terminal #: " + current + "\n");
+    		System.exit(0);
+  		}
+  		
+  		public void custom_error(String errMsg) {
+            System.out.println("*** Syntax error ***\n" + errMsg);
+            System.out.println("Line#: " + (scanner.getLineNumber() + 1));
+    		System.out.println("Column#: " + scanner.getColumnNumber());
     		System.exit(0);
   		}
 :}
@@ -64,6 +71,8 @@ terminal         IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_EQUAL_TO;
 terminal String  NUMBER_NAME_IDX;
 terminal String  FUNCTION_NAME;
 terminal RobotVar VARIABLE;
+terminal String  INTEGER;
+terminal         TIMES_REPEAT;
 
 /* Non-terminals */
 non terminal         expr_list, expr_part;
@@ -521,7 +530,28 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                                  parser.sm.decreaseLevel();
                                  RESULT += b;
                                  RESULT += "\n" + parser.sm.indent() + "}\n";
-                              :} 
+                              :}
+                         |
+                              REPEAT NUMBER_EXPRESSION:num TIMES_REPEAT NEWLINE
+                              {:
+                              	 Float __tmpNum = new Float(num);
+                              	 System.out.println
+                              	 if(__tmpNum.intValue() < 0) {
+                              	 	parser.custom_error(new String("Repeat times loop must have a positive argument"));
+                              	 }
+
+                                 RESULT = "\n" + parser.sm.indent() + "for(int __temp = 0; __temp < " + __tmpNum.intValue() + "; __temp++) {\n\n";
+                                 parser.sm.increaseLevel();
+                              :}
+                              optnl
+                              block:b
+                              optnl
+                              DONE NEWLINE
+                              {:
+                                 parser.sm.decreaseLevel();
+                                 RESULT += b;
+                                 RESULT += "\n" + parser.sm.indent() + "}\n";
+                              :}
 ;
 
 function_call           ::=   FUNCTION_NAME:fn arguments_act:args
