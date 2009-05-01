@@ -81,17 +81,20 @@ public class FuncSet extends BasicFuncSet {
 	
 	public Float rollover (Float n1, Float n2)
 	{
-		float a = n1;
-		float b = n2;
+           int a = (int)Math.floor(n1);
+           int b = (int)Math.floor(n2);
+           int retVal;
+
+           if (a == 0 || b == 0) {
+              retVal = 1;
+           } else if (a == b) {
+              retVal = b;
+           } else {
+              retVal = a % b;
+           }
+
+           return new Float(retVal);
+
+        }
 		
-		if (b == 0f)
-		{
-			return new Float(a);
-		}
-		else
-		{
-			return new Float(a-((int) (a/b))*b + 1f);
-		}
-		
-	}
 }

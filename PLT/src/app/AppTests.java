@@ -51,13 +51,13 @@ public class AppTests {
 
 		float f1;
 
-		f1 = Func.rollover(1f, 0f); assertTrue(f1 == 1f);
-		f1 = Func.rollover(0f, 4f); assertTrue(f1 == 0f);
-		f1 = Func.rollover(1f, 4f); assertTrue(f1 == 1f);
-		f1 = Func.rollover(2f, 4f); assertTrue(f1 == 2f);
-		f1 = Func.rollover(3f, 4f); assertTrue(f1 == 3f);
-		f1 = Func.rollover(4f, 4f); assertTrue(f1 == 0f);
-		f1 = Func.rollover(5f, 4f); assertTrue(f1 == 1f);
+		f1 = funcset.rollover(1f, 0f); assertTrue(f1 == 1f);
+		f1 = funcset.rollover(0f, 4f); assertTrue(f1 == 1f);
+		f1 = funcset.rollover(1f, 4f); assertTrue(f1 == 1f);
+		f1 = funcset.rollover(2f, 4f); assertTrue(f1 == 2f);
+		f1 = funcset.rollover(3f, 4f); assertTrue(f1 == 3f);
+		f1 = funcset.rollover(4f, 4f); assertTrue(f1 == 4f);
+		f1 = funcset.rollover(5f, 4f); assertTrue(f1 == 1f);
 
 	}
 
