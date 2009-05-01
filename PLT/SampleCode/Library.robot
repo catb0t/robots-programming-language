@@ -31,7 +31,8 @@ think
      
      //5.9 Sort
      furthest_enemies!... = sort enemy_info!...
-     most_valuable_resources$... = sort resource_info$... > ammo_stash#
+     most_valuable_resources$... = sort resource_info$... > ammo_stash#  //Compile Error !!! -- r232 @ 5/1
+     
      //5.10 modify_list
      modify_list cliff_locations@ add loc_of_cliff@
      
@@ -58,6 +59,6 @@ think
      result#=tan 125
      
      //5.13.6 rollover
-     result#=rollover testnum# 10      //Compile Error !!!
+     result#= testnum# rollover  10      //Compile Error !!! -- r232 @ 5/1
      
 end
