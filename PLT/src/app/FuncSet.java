@@ -90,7 +90,7 @@ public class FuncSet extends BasicFuncSet {
 		}
 		else
 		{
-			return new Float(a-((int) (a/b))*b);
+			return new Float(a-((int) (a/b))*b + 1f);
 		}
 		
 	}
