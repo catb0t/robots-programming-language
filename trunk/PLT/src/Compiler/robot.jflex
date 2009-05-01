@@ -41,7 +41,7 @@ identifier=[a-zA-Z][a-zA-Z0-9_]*
 id_suffix=[!@#$%?]
 list_suffix=\.\.\.
 digits=[0-9]+
-number={digits}(\.{digits})?(E[+-]?{digits})?
+number=(\-)?{digits}(\.{digits})?(E[+-]?{digits})?
 percentage={number}%
 max_hash=max\#
 min_hash=min\#
@@ -135,6 +135,14 @@ min_hash=min\#
                      System.out.println("matched " + yytext());
                   }
                   return new Symbol(sym.REPEAT); 
+        }
+
+   times
+        {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched times_repeat" + yytext());
+                  }
+                  return new Symbol(sym.TIMES_REPEAT); 
         }
 
    each
