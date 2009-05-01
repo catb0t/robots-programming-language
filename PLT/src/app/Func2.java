@@ -1,10 +1,94 @@
 package app;
 
+//static functions
 public class Func2 {
 
-	//float functions => 1+2*6
-	static void add (Object a, Object b) {
-		
-		System.out.println(a.getClass().equals(b.getClass()));
+	/*    FAILURE
+	// add function
+	public static RobotType add (Object a, Object b) {
+
+		if (a.getClass() == b.getClass()) {
+			
+			if (a.getClass() == Number.class) {
+				
+				Number at = (Number) a;
+				Number bt = (Number) b;
+				
+				return new Number(at.value+bt.value);
+				
+			}
+			else if (a.getClass() == Percentage.class) {
+				
+				Percentage at = (Percentage) a;
+				Percentage bt = (Percentage) b;
+				
+				return new Percentage(at.percent+bt.percent);
+				
+			}
+			else if (a.getClass() == RobBool.class) {
+				
+				RobBool at = (RobBool) a;
+				RobBool bt = (RobBool) b;
+				
+				return new RobBool(at.value||bt.value);
+				
+			}
+			else if (a.getClass() == Location.class) {
+				
+				Location at = (Location) a;
+				Location bt = (Location) b;
+				
+				return new Location(at.x+bt.x, at.y+bt.y);
+				
+			}
+		}
+
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Number();
+
 	}
+	*/
+	
+	
+	/// ADD SEND MESSAGE TO KILL PROCESS //////
+	
+	public RobNumber add (Object a, Object b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new RobNumber();
+	}
+	
+	public RobNumber times (Object a, Object b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new RobNumber();
+	}
+	
+	public RobNumber Rollover (Object a, Object b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new RobNumber();
+	}
+	
 }

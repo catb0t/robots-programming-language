@@ -48,6 +48,8 @@ public class Robot implements RobotInterface {
 	
     float oldTime = 0;
     
+    Func3 func3 = new Func3();
+    
 
 	
 	public Robot(Terrain t)
@@ -508,6 +510,13 @@ public class Robot implements RobotInterface {
 		System.out.println(s);
 	}
 	
+	public void move_to (Location location)
+	{
+		
+		goal = location.getVector3();
+		
+		speed = 1;
+	}
 	
 	public void move_to (Location location, Percentage my_speed)
 	{

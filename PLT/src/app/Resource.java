@@ -52,4 +52,18 @@ public class Resource extends RobotType {
 		String sol = "resource name: "+name+", energy="+Float.toString(energy)+", ammostash="+Float.toString(ammostash);
 		return sol;
 	}
+	
+	public boolean equals(Object o) {
+
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Resource equalTest = (Resource) o;
+
+		return (this.name.equals(equalTest.name)
+				&&(this.location.equals(equalTest.location))
+				&&(this.energy==equalTest.energy))
+				&&(this.ammostash==equalTest.ammostash);
+	}
 }

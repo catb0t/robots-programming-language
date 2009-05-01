@@ -19,10 +19,21 @@ public class Enemy extends RobotType {
 		return sol;
 	}
 	
+	public float getEnergy() {
+		return energy;
+	}
 	
-	//operators
-	public float addition ()
-	{
-		return 0;
+	
+	public boolean equals(Object o) {
+
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Enemy equalTest = (Enemy) o;
+
+		return (this.name.equals(equalTest.name)
+				&&(this.location.equals(equalTest.location))
+				&&(this.energy==equalTest.energy));
 	}
 }
