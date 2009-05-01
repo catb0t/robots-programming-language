@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import com.sun.opengl.util.Animator;
 
+
 public class Main extends JFrame implements ActionListener, TextListener, KeyListener {
 	
 	private static final long serialVersionUID = 7633042051769682994L;
@@ -206,7 +207,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		this.setVisible(true);
 
 		
-		anime = new Animation(player, scene);
+		anime = new Animation(player, scene, outputArea);
 		//start.doClick();
 	  
 	    

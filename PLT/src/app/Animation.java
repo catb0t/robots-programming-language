@@ -1,5 +1,7 @@
 package app;
 
+import java.awt.TextArea;
+
 public class Animation implements Runnable {
 
 	Thread animator;
@@ -7,10 +9,13 @@ public class Animation implements Runnable {
 	Robot player;
 	Scene scene;
 	
+	private TextArea outputArea;
 	
-	public Animation (Robot p, Scene s) {
+	
+	public Animation (Robot p, Scene s, TextArea out) {
 		player = p;
 		scene = s;
+		outputArea= out;
 		
 		animator = null;
 	}
@@ -44,6 +49,7 @@ public class Animation implements Runnable {
 			}
 		} catch (Exception ex) {
 			animator = null;
+			outputArea.setText(outputArea.getText().concat("\n\n").concat("Error in the main program"));
 			ex.printStackTrace();
 		}
 
