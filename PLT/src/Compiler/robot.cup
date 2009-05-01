@@ -535,7 +535,6 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                               REPEAT NUMBER_EXPRESSION:num TIMES_REPEAT NEWLINE
                               {:
                               	 Float __tmpNum = new Float(num);
-                              	 System.out.println
                               	 if(__tmpNum.intValue() < 0) {
                               	 	parser.custom_error(new String("Repeat times loop must have a positive argument"));
                               	 }
