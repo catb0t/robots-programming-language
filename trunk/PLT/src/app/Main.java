@@ -618,18 +618,5 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		Main display = new Main();
 		display.init();
 		
-		RobotList<Location> r = new RobotList<Location>(Location.class);
-		
-		Location u = r.get(3);
-		
-		r.get(3).x = 10f;
-		System.out.println(r.get(3).x);
-		
-		u.x = 1f;
-		
-		Location p = new Location();
-		p.y =  1f;
-		
-		//r.add(3f, p);
 	}
 }

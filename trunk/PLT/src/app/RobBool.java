@@ -1,24 +1,22 @@
 package app;
 
-import app.RobotType;
+public class RobBool extends RobotType {
 
-public class Bool extends RobotType {
-
-	private boolean value;
+	public boolean value;
 	
-	public Bool ()
+	public RobBool ()
 	{
 		super();
 		value = false;
 	}
 	
-	public Bool (boolean b)
+	public RobBool (boolean b)
 	{
 		super();
 		value = b;
 	}
 	
-	public Bool (Bool b)
+	public RobBool (RobBool b)
 	{
 		super();
 		value = b.getValue();
@@ -34,11 +32,12 @@ public class Bool extends RobotType {
 		value = b;
 	}
 	
-	public void setValue (Bool b)
+	public void setValue (RobBool b)
 	{
 		value = b.getValue();
 	}
 	
+	/*
 	public float rollover (Boolean n)
 	{
 		Exception e = new Exception();
@@ -49,5 +48,17 @@ public class Bool extends RobotType {
 		}
 		
 		return 0f;
+	}
+	*/
+	
+	public boolean equals(Object o) {
+
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		RobBool equalTest = (RobBool) o;
+
+		return (this.value == equalTest.value);
 	}
 }

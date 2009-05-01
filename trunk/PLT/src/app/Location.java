@@ -49,16 +49,16 @@ public class Location extends RobotType {
 	      return (name != null ? name.hashCode() : 0);
 	   }
 */
-	   public boolean equals(Object o) {
-	      
-	      if (this == o) return true;
-	     
-	      if (o == null || getClass() != o.getClass()) return false;
+	public boolean equals(Object o) {
 
-	      Location equalTest = (Location) o;
+		if (this == o) return true;
 
-	      return (Math.abs(this.x - equalTest.x) < 0.000001
-                   && Math.abs(this.y - equalTest.y) < 0.000001);
-           }
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Location equalTest = (Location) o;
+
+		return (Math.abs(this.x - equalTest.x) < 0.000001
+				&& Math.abs(this.y - equalTest.y) < 0.000001);
+	}
 
 }

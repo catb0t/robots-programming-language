@@ -19,13 +19,13 @@ public class Percentage extends RobotType {
 	
 	public void cap ()
 	{
-		if (percent>1)
+		if (percent>100f)
 		{
-			percent = 1;
+			percent = 100f;
 		}
-		else if (percent<0)
+		else if (percent<0f)
 		{
-			percent = 0;
+			percent = 0f;
 		}
 	}
 	
@@ -38,7 +38,7 @@ public class Percentage extends RobotType {
 	
 	public static Percentage times (Percentage p1, Percentage p2)
 	{
-		Percentage sol = new Percentage(p1.percent*p2.percent); 
+		Percentage sol = new Percentage(p1.percent*p2.percent/100f); 
 		//sol.cap();
 		return sol;
 	}
@@ -47,4 +47,17 @@ public class Percentage extends RobotType {
 	{
 		return Float.toString(percent);
 	}
+	
+	public boolean equals(Object o) {
+
+		if (this == o) return true;
+
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Percentage equalTest = (Percentage) o;
+
+		return (Math.abs(this.percent - equalTest.percent) < 0.000001);
+	}
+	
+	
 }
