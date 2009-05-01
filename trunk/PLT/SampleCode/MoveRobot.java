@@ -1,10 +1,10 @@
-package app;
-
+import app.*;
 import java.util.*;
 
 public class RobotCompiled extends Robot {
 
-	public static void think() {
+
+	public void think() {
 
 		targetLocation.x = 10f;
 		targetLocation.y = 10f;

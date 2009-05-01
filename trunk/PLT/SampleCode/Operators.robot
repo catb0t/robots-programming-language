@@ -43,11 +43,11 @@ think
    if a# is_different_from b# then
    done
    
-   //Boolean operator -------- grammar error !!!! in testing 4/24
+   //Boolean operator 
    x?=true
    y?=false
-   z?= x? && y?
-   z?= x? || y?
+   z?= x? && y?    //-------- grammar error !!!! in testing 5/1
+   z?= x? || y?    
    z?= !x?
    z?= x? and y?
    z?= x? or y?
