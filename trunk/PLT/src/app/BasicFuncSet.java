@@ -58,7 +58,7 @@ public class BasicFuncSet {
 	
 	/// ADD SEND MESSAGE TO KILL PROCESS //////
 	
-	public RobNumber add (Object a, Object b) {
+	public Float add (Object a, Object b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -66,10 +66,10 @@ public class BasicFuncSet {
 			ex.printStackTrace();
 		}
 
-		return new RobNumber();
+		return new Float(0f);
 	}
 	
-	public RobNumber times (Object a, Object b) {
+	public Float times (Object a, Object b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -77,10 +77,10 @@ public class BasicFuncSet {
 			ex.printStackTrace();
 		}
 
-		return new RobNumber();
+		return new Float(0f);
 	}
 	
-	public RobNumber Rollover (Object a, Object b) {
+	public Float Rollover (Object a, Object b) {
 		Exception e = new Exception();
 		try {
 			throw e;
@@ -88,7 +88,7 @@ public class BasicFuncSet {
 			ex.printStackTrace();
 		}
 
-		return new RobNumber();
+		return new Float(0f);
 	}
 	
 }

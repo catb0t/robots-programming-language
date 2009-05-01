@@ -4,13 +4,13 @@ public class Enemy extends RobotType {
 
 	public String name;
 	public Location location;
-	public float energy;
+	public Float energy;
 	
 	public Enemy() {
 		super();
 		name ="";
 		location = new Location();
-		energy = 0;
+		energy = new Float(0f);
 	}
 	
 	public String toString()

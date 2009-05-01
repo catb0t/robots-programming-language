@@ -8,9 +8,9 @@ public class FuncSet extends BasicFuncSet {
 	
 	//add functions which do not return errors
 	
-	public RobNumber add (RobNumber a, RobNumber b) {
+	public Float add (Float a, Float b) {
 		
-		return new RobNumber(a.value+b.value);
+		return new Float(a+b);
 		
 	}
 	
@@ -26,36 +26,36 @@ public class FuncSet extends BasicFuncSet {
 		
 	}
 	
-	public RobBool add (RobBool a, RobBool b) {
+	public Boolean add (Boolean a, Boolean b) {
 
-		return new RobBool(a.value||b.value);
+		return new Boolean(a||b);
 
 	}
 	
 	//times functions which do not return errors
 	
-	public RobNumber times (RobNumber a, RobNumber b) {
-		return new RobNumber(a.value*b.value);
+	public Float times (Float a, Float b) {
+		return new Float(a*b);
 	}
 	
-	public RobNumber times (RobNumber a, Percentage b)
+	public Float times (Float a, Percentage b)
 	{
-		return new RobNumber(a.value*b.percent/100f);
+		return new Float(a*b.percent/100f);
 	}
 	
-	public RobNumber times (Percentage a, RobNumber b)
+	public Float times (Percentage a, Float b)
 	{
-		return new RobNumber(a.percent/100f*b.value);
+		return new Float(a.percent/100f*b);
 	}
 	
-	public Location times (RobNumber a, Location b)
+	public Location times (Float a, Location b)
 	{
-		return new Location(b.x*a.value, b.y*a.value);
+		return new Location(b.x*a, b.y*a);
 	}
 	
-	public Location times (Location b, RobNumber a)
+	public Location times (Location b, Float a)
 	{
-		return new Location(b.x*a.value, b.y*a.value);
+		return new Location(b.x*a, b.y*a);
 	}
 	
 	public Percentage times (Percentage a, Percentage b) {
@@ -72,25 +72,25 @@ public class FuncSet extends BasicFuncSet {
 		return new Location(b.x*a.percent/100f, b.y*a.percent/100f);
 	}
 	
-	public RobBool times (RobBool a, RobBool b)
+	public Boolean times (Boolean a, Boolean b)
 	{
-		return new RobBool(a.value&&b.value);
+		return new Boolean(a&&b);
 	}
 	
 	//rollover functions which do not return errors
 	
-	public RobNumber rollover (RobNumber n1, RobNumber n2)
+	public Float rollover (Float n1, Float n2)
 	{
-		float a = n1.value;
-		float b = n2.value;
+		float a = n1;
+		float b = n2;
 		
 		if (b == 0f)
 		{
-			return new RobNumber(a);
+			return new Float(a);
 		}
 		else
 		{
-			return new RobNumber(a-((int) (a/b))*b);
+			return new Float(a-((int) (a/b))*b);
 		}
 		
 	}
