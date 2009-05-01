@@ -76,25 +76,30 @@ public class FuncSet extends BasicFuncSet {
 	{
 		return new Boolean(a&&b);
 	}
-	
+
 	//rollover functions which do not return errors
-	
+
 	public Float rollover (Float n1, Float n2)
 	{
-           int a = (int)Math.floor(n1);
-           int b = (int)Math.floor(n2);
-           int retVal;
+		int a = (int)Math.floor(n1);
+		int b = (int)Math.floor(n2);
+		int retVal;
 
-           if (a == 0 || b == 0) {
-              retVal = 1;
-           } else if (a == b) {
-              retVal = b;
-           } else {
-              retVal = a % b;
-           }
+		if (a == 0) {
+			retVal = 0; 
+		}
+		else if (b == 0) {
+			retVal = 1;
+		}
+		else if ((a % b) == 0) {
+			retVal = b;
+		}
+		else {
+			retVal = a % b;
+		}
 
-           return new Float(retVal);
+		return new Float(retVal);
 
-        }
-		
+	}
+
 }

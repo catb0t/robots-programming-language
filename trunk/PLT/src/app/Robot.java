@@ -525,7 +525,7 @@ public class Robot implements RobotInterface {
 		
 		goal = location.getVector3();
 		
-		speed = my_speed.percent;
+		speed = my_speed.percent/100f;
 	}
 	
 	public void move_to (Location location, float my_speed)
