@@ -30,7 +30,7 @@
             * Find resources
             * Destroy all enemies
   # TODO
-     * Finish Grammar test : ~ Apr 29.
-     * Check Test Traceability : ~ May 1.
+     * Finish Grammar test : ~ Apr 29. (done May 1)
+     * Check Test Traceability : ~ May 1. (done May 1)
      * Combine App. JUnit and compiler JUnit : ~ May 1.
      * Regression test.... : ~ May 8.
