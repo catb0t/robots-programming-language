@@ -1,7 +1,7 @@
 package app;
 
 //static functions
-public class Func2 {
+public class BasicFuncSet {
 
 	/*    FAILURE
 	// add function

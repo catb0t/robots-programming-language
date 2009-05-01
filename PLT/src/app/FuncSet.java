@@ -1,8 +1,8 @@
 package app;
 
-public class Func3 extends Func2 {
+public class FuncSet extends BasicFuncSet {
 	
-	public Func3 () {
+	public FuncSet () {
 		
 	}
 	
@@ -14,13 +14,13 @@ public class Func3 extends Func2 {
 		
 	}
 	
-	public static Percentage add (Percentage a, Percentage b) {
+	public Percentage add (Percentage a, Percentage b) {
 
 		return Percentage.add(a,b);
 
 	}
 	
-	public static Location add (Location a, Location b) {
+	public Location add (Location a, Location b) {
 		
 		return new Location(a.x+b.x, a.y+b.y);
 		
