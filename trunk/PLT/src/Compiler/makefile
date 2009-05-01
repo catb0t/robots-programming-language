@@ -39,7 +39,7 @@ JAR_NAME       := robot_parser.jar
 PARSER_FILES   := parser sym
 LEX_FILES      := Yylex
 
-PARSE_SETTINGS := -dump_states -dump_grammar -expect 41
+PARSE_SETTINGS := -dump_states -dump_grammar -expect 42
 
 HELPER_FILES   := RobotVar RobotType RobotVarScope RobotScopeManager Expression
 
