@@ -508,6 +508,8 @@ public class Robot implements RobotInterface {
 	public void say (String s)
 	{
 		System.out.println(s);
+		//String l = Main.outputArea.getText();
+		//Main.outputArea.setText(l.concat("\n").concat(s));
 	}
 	
 	public void move_to (Location location)
