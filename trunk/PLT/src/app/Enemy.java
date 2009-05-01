@@ -1,6 +1,6 @@
 package app;
 
-public class Enemy extends RobotType {
+public class Enemy {
 
 	public String name;
 	public Location location;

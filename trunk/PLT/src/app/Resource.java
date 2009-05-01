@@ -1,6 +1,6 @@
 package app;
 
-public class Resource extends RobotType {
+public class Resource {
 
 	public String name;
 	public Location location;

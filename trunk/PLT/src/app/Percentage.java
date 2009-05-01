@@ -1,6 +1,6 @@
 package app;
 
-public class Percentage extends RobotType {
+public class Percentage {
 
 	public Float percent;
 	

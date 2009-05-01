@@ -27,6 +27,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	TextArea editArea;
 	//JEditorPane editArea;
 	TextArea javaArea;
+	TextArea outputArea;
 	JButton start;
 	JMenuBar menu;
 	
@@ -130,6 +131,11 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		javaArea.setEditable(false);
 		
 		tabbedPane.addTab("java source", javaArea);
+		
+		outputArea = new TextArea("",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		outputArea.setEditable(false);
+		
+		tabbedPane.addTab("output", outputArea);
 		
 		//editor.add(editArea);
 		editor.add(tabbedPane);
