@@ -48,7 +48,7 @@ public class Robot implements RobotInterface {
 	
     float oldTime = 0;
     
-    FuncSet funcset = new FuncSet();
+    public FuncSet funcset = new FuncSet();
     
 
 	

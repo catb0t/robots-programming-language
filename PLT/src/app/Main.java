@@ -248,6 +248,8 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				out.print(editArea.getText());
 				out.close();
 				
+				
+				
 				compiler.setFileName("tempcode.robot");
 				compiler.run();
 				

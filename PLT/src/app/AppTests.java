@@ -196,6 +196,7 @@ public class AppTests {
 		//assertTrue(new Float((new Location()).x).equals(0f));
 		assertTrue((new Location()).x.equals(0f));
 		assertTrue((new Float(new Float(2f)))==(2f));
+		assertTrue(1f<=(new Float(2f)));
 		
 	}
 	
