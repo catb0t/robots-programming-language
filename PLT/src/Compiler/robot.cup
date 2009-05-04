@@ -307,11 +307,11 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                                  RESULT.declarations.append(ae2.declarations);
 
                                  if(ao == "%") { //ROLLOVER
-                                     RESULT.javaCode.append("Func.rollover(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                                     RESULT.javaCode.append("funcset.rollover(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else if(ao == "+") {
-                                     RESULT.javaCode.append("Func.add(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                                     RESULT.javaCode.append("funcset.add(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else if(ao == "*") {
-                                     RESULT.javaCode.append("Func.times(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                                     RESULT.javaCode.append("funcset.times(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else {
                                      RESULT.javaCode.append(ae1.javaCode).append(ao).append(ae2.javaCode);
                                  }
