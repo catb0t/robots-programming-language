@@ -2,8 +2,11 @@ package app;
 
 //import RobotReloadableClass;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -32,36 +35,61 @@ public class Compiler {
 	}
 	
 	public void run () {
-		try {
-			
-			System.out.println(System.getProperty("user.dir"));
-			String dir = System.getProperty("user.dir");
-			
-			/*
-			String[] command = {"java", "-jar", dir+"/robot_parser.jar", dir+"/"+inputFile, dir+"/RobotCompiled.java"};
-			Process p1 = Runtime.getRuntime().exec(command);
-			
-			System.out.println("Java file created");
-			
-			//p1.getOutputStream();
-			
-			
-			int exitCode1 = p1.waitFor();
-			*/
-			
-			String[] command2 = {"javac", "-cp", dir+"/bin/:"+dir+"/lib/jogl.jar:"+dir+"/lib/gluegen-rt.jar", dir+"/RobotCompiled.java"};
-			
-			Process p2 = Runtime.getRuntime().exec(command2);
-			int exitCode2 = p2.waitFor();
+		System.out.println(System.getProperty("user.dir"));
+		String dir = System.getProperty("user.dir");
 		
-			
-			System.out.println("Java class created");
-			
-			reloadClass(dir);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+		try
+		{            
+			Runtime rt = Runtime.getRuntime();
+			String command = "java -jar "+dir+"/robot_parser.jar "+dir+"/tempcode.robot "+dir+"/RobotCompiled.java"+" &> /dev/null";
+			Process proc = rt.exec(command);
+			InputStream stderr = proc.getErrorStream();
+			InputStreamReader isr = new InputStreamReader(stderr);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			System.out.println("<ERROR>");
+			while ( (line = br.readLine()) != null)
+				System.out.println(line);
+			System.out.println("</ERROR>");
+			int exitVal = proc.waitFor();
+			System.out.println("Process exitValue: " + exitVal);
+
+			System.out.println("Java file created");
+
+		} catch (Throwable t)
+		{
+			t.printStackTrace();
 		}
+		
+		try
+		{            
+			Runtime rt = Runtime.getRuntime();
+			String command = "javac -cp "+dir+"/src/:"+dir+"/lib/jogl.jar:"+dir+"/lib/gluegen-rt.jar "+dir+"/RobotCompiled.java";
+			Process proc = rt.exec(command);
+			InputStream stderr = proc.getErrorStream();
+			InputStreamReader isr = new InputStreamReader(stderr);
+			BufferedReader br = new BufferedReader(isr);
+			String line = null;
+			System.out.println("<ERROR>");
+			while ( (line = br.readLine()) != null)
+				System.out.println(line);
+			System.out.println("</ERROR>");
+			int exitVal = proc.waitFor();
+			System.out.println("Process exitValue: " + exitVal);
+
+			System.out.println("Java class created");
+
+		} catch (Throwable t)
+		{
+			t.printStackTrace();
+		}
+        
+		try {
+			reloadClass(dir);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
 	}
 	
 	
