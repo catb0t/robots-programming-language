@@ -2,21 +2,14 @@ package app;
 
 import java_cup.runtime.Symbol;
 
-/*
-   anything is defined as any string not beginning with whitespace 
-   We to define it this way coz otherwise leading whitespace shows up as part of the string
-   which is probably not what the user intended 
-   
-   [0-9]+    { return new Symbol(sym.NUMBER, new Integer(yytext())); }
-*/
-
 %%
 %cup
 %line
 %char
 %column
 %ignorecase
-%state COMMENTS, SAYSTATE
+%pack
+%state COMMENTS, SAYSTATE, SAY_EXPR
 
 %{
     // for error handling : called by parser
@@ -31,10 +24,15 @@ import java_cup.runtime.Symbol;
 	public String lastToken() {
 	    return yytext();
 	}
+	
+	public void lexerError(String errMsg) {
+	    System.err.println("*** Lexical error ***");
+	    System.err.println(errMsg + "\nLine#: " + yyline + "\nColumn#: " + yycolumn);
+        System.exit(0);
+	}
 
 %}
 
-anything=[^ \t\r\f\n].+
 whitespace=[ \t\r\f]
 block={whitespace}*(\||\+---)
 identifier=[a-zA-Z][a-zA-Z0-9_]*
@@ -48,7 +46,7 @@ min_hash=min\#
 
 %%
 
-<YYINITIAL>   {
+<YYINITIAL, SAY_EXPR>   {
 
    ^{block}+
          {
@@ -427,7 +425,6 @@ min_hash=min\#
                   return new Symbol(sym.NUMBER_EXPRESSION, new String(yytext()+"f"));
          }
 
-   ";"   { return new Symbol(sym.SEMI);   }
    "+"   { return new Symbol(sym.PLUS);   }
    "-"   { return new Symbol(sym.MINUS);  }
    "*"   { return new Symbol(sym.TIMES);  }
@@ -443,25 +440,49 @@ min_hash=min\#
             /* ignore white space. */
          }
 
+   \<\<
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched say_expr_end: " + yytext());
+            }
+
+            if(yystate() == SAY_EXPR) {
+           	   yybegin(SAYSTATE);
+           	} else {
+           	   lexerError("Unexpected token: " + yytext());
+           	}
+
+            return new Symbol(sym.SAY_EXPR_END);
+         }
+
 }
 
 <SAYSTATE>   {
 
-   {whitespace}
+   \n
          {
             if (parser.bDebugFlag) {
-               System.out.println("matched whitespace");
-            }
-            /* ignore white space. */
-         }
-
-   {anything}
-         {
-            if (parser.bDebugFlag) {
-               System.out.println("matched saystate anything");
+               System.out.println("matched saystate newline");
             }
             yybegin(YYINITIAL);
-            return new Symbol(sym.ANYTHING, new String(yytext()));
+            return new Symbol(sym.NEWLINE);
+         }
+
+   >>
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched saystate expr sta:" + yytext());
+            }
+            yybegin(SAY_EXPR);
+            return new Symbol(sym.SAY_EXPR_STA);
+         }
+
+   [^(>>)|\n]+
+         {
+            if (parser.bDebugFlag) {
+               System.out.println("matched saystate vtext: " + yytext());
+            }
+            return new Symbol(sym.VERBATIM_OUT_TXT, new String(yytext()));
          }
 }
 
@@ -477,6 +498,7 @@ min_hash=min\#
 }
 
 .   {
-      System.err.println("Illegal character: " + yytext() + "\nLine number: " + yyline + "\nColumn number: " + yycolumn);
-      System.exit(0);
+      lexerError("Unexpected character: " + yytext());
+      /*System.err.println("Illegal character: " + yytext() + "\nLine number: " + yyline + "\nColumn number: " + yycolumn);
+      System.exit(0);*/
 }

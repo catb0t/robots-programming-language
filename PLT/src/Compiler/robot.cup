@@ -54,7 +54,7 @@ parser code {:
   		}
 :}
 /* Terminals (tokens returned by the scanner) */
-terminal         SEMI, PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
+terminal         PLUS, MINUS, TIMES, DIVIDE, LPAREN, RPAREN;
 terminal         THINK, END, SAY, NEWLINE, EQUALS, IS, INSTRUCTION, WITH;
 terminal         GIVES, MEANS, TRUE, FALSE, OR, AND, NOT;
 terminal         MIN_HASH, MAX_HASH, NOTHING_NOT, NOWHERE_AT, OF, SELF;
@@ -65,17 +65,17 @@ terminal         NOTHING_RES;
 terminal Integer NUMBER;
 terminal String  NUMBER_EXPRESSION;
 terminal String  NUMBER_PERCENTAGE;
-terminal String  ANYTHING, INT_IDX;
+terminal String  INT_IDX;
 terminal         IS_LOWER_THAN, IS_STRICTLY_LOWER_THAN, IS_DIFFERENT_FROM;
 terminal         IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_EQUAL_TO;
 terminal String  NUMBER_NAME_IDX;
 terminal String  FUNCTION_NAME;
 terminal RobotVar VARIABLE;
-terminal String  INTEGER;
 terminal         TIMES_REPEAT, WHILE;
+terminal String  VERBATIM_OUT_TXT;
+terminal         SAY_EXPR_STA, SAY_EXPR_END;
 
 /* Non-terminals */
-non terminal         expr_list, expr_part;
 non terminal Integer expr;
 non terminal String  statement, entry, variable_name, program, block;
 non terminal         optnl, assign_op;
@@ -86,11 +86,12 @@ non terminal String  arithmetic_operator, constant_value;
 non terminal String  call, field_access, local_declaration;
 //non terminal String  field_name;
 non terminal String  conditional, else_statement;
-non terminal String  argument, arguments, arguments_act, function_call;
+non terminal String  arguments, arguments_act, function_call;
 non terminal String  comparison_operator, index;
 non terminal String  assignment;
 non terminal String  loop;
 non terminal Expression arithmetic_expression;
+non terminal String  out_text;
 
 /* Precedences: Follow Java conventions */
 
@@ -612,9 +613,9 @@ local_declaration       ::=   /*variable_name_local:vnl*/ VARIABLE:v NEWLINE
                               :}*/
 ;
 
-call                    ::=   SAY ANYTHING:a NEWLINE
+call                    ::=   SAY out_text:ot NEWLINE
                               {:
-                                 RESULT = "System.out.println(\"" + a + "\")";
+                                 RESULT = "System.out.println(" + ot + ")";
                               :}
                         |
                               function_call:fc
@@ -623,19 +624,24 @@ call                    ::=   SAY ANYTHING:a NEWLINE
                               :}
 ;
 
-expr_list               ::=   expr_list expr_part 
-                        |     expr_part
-;
-
-expr_part               ::=   expr:e
+out_text                ::=   VERBATIM_OUT_TXT:txt out_text:ot
                               {:
-                                 System.out.println(" = "+e+";");
+                                 if(ot.compareTo("") != 0) {
+                                   RESULT = "\"" + txt + "\" + " + ot;
+                                 } else {
+                                   RESULT = "\"" + txt + "\"";
+                                 }
                               :}
-                              SEMI
-;
-
-expr                    ::=   NUMBER:n               {: RESULT=n;                                        :}
-                        |     expr:l PLUS expr:r     {: RESULT=new Integer(l.intValue() + r.intValue()); :}
-                        |     expr:l TIMES expr:r    {: RESULT=new Integer(l.intValue() * r.intValue()); :}
-                        |     LPAREN expr:e RPAREN   {: RESULT=e;                                        :}
+                        |
+                              SAY_EXPR_STA boolean_expression:be SAY_EXPR_END out_text:ot
+                              {:
+                                 if(ot.compareTo("") != 0) {
+                                 	RESULT = be + " + " + ot;
+                                 } else {
+                                    RESULT = be;
+                                 }
+                              :}
+                        |
+                              /* empty */
+                              {: RESULT = ""; :}
 ;
