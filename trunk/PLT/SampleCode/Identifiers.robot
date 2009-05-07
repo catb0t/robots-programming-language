@@ -9,8 +9,8 @@ think
    isEnemy?=true
    my_loc@ = location@ of self
    closest_resource$ = NOTHING$
-   closest_enemy! = NOTHING! 
-   enemies!... = get_enemies   //Compile Error !!!
+   closest_enemy! = NOTHING!
+   enemies!... = get_enemies  
    my_loc@ = location@ of self
    x# of 1st of targetLocation@...=10
    y# of 1st of targetLocation@...=y# of my_loc@

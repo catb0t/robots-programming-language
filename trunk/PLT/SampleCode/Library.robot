@@ -1,7 +1,6 @@
-//TODO : List up library and Test it
 think
      //5.1 say
-     say Oh, oh. My health is now >health% of self<
+     say Oh, oh. My health is now >health% of self<   //Compile Error at r241
      
      //5.2 move_to
      x# of targetLocation@=10
@@ -31,8 +30,8 @@ think
      
      //5.9 Sort
      furthest_enemies!... = sort enemy_info!...
-     most_valuable_resources$... = sort resource_info$... > ammo_stash#  //Compile Error !!! -- r232 @ 5/1
-     
+     most_valuable_resources$... = sort resource_info$... > ammo_stash#  
+          
      //5.10 modify_list
      modify_list cliff_locations@ add loc_of_cliff@
      
@@ -59,6 +58,5 @@ think
      result#=tan 125
      
      //5.13.6 rollover
-     result#= testnum# rollover  10      //Compile Error !!! -- r232 @ 5/1
-     
+     result#= testnum# rollover  10           
 end

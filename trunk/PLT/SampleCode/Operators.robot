@@ -46,7 +46,7 @@ think
    //Boolean operator 
    x?=true
    y?=false
-   z?= x? && y?    //-------- grammar error !!!! in testing 5/1
+   z?= x? && y?    
    z?= x? || y?    
    z?= !x?
    z?= x? and y?

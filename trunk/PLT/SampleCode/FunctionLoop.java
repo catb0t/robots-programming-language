@@ -7,10 +7,8 @@ public class RobotCompiled extends Robot {
 	public void think() {
 
 		Enemy closest_enemy = new Enemy();
-		ping_radar();
 		RobotList<Enemy> enemies = get_enemies();
 		closest_enemy = find_closest_enemy(enemies);
-		shoot(closest_enemy);
 
 	}
 
@@ -32,6 +30,22 @@ public class RobotCompiled extends Robot {
 				closest_enemy = enemy;
 			}
 
+
+		}
+
+		Float a = new Float(1f);
+		
+		for(int __temp = 0; __temp < (new Float(5f)).intValue(); __temp++) {
+
+			a = funcset.add(a, new Float(1f));
+
+		}
+
+		Float iteration = new Float(10f);
+		
+		while(a<=iteration()) {
+
+			a = funcset.add(a, new Float(1f));
 
 		}
 

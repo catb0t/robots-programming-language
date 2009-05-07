@@ -31,13 +31,12 @@ instruction find_closest_enemy with enemies!... means
    done
    
    a#=1
-   iteration#=5
-   repeat iteration times      //Compile Error !!!  --- r232 5/1
+   repeat 5 times      
         a#=a#+1
    done
    
    iteration#=10
-   while a# <= iteration        //Compile Error !!!   --- r 232 5/1
+   while a# <= iteration      
         a#=a#+1
    done
    
