@@ -477,7 +477,16 @@ min_hash=min\#
             return new Symbol(sym.SAY_EXPR_STA);
          }
 
-   [^(>>)|\n]+
+   \/\/
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched comments: " + yytext());
+                  }
+                  yybegin(COMMENTS);
+                  /* ignore comments */
+         }
+
+   [^(>>)|\n|(\/\/)]+
          {
             if (parser.bDebugFlag) {
                System.out.println("matched saystate vtext: " + yytext());
