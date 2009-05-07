@@ -1,6 +1,6 @@
 think
      //5.1 say
-     say Oh, oh. My health is now >health% of self<   //Compile Error at r241
+     say Oh, oh. My health is now >>health% of self<<
      
      //5.2 move_to
      x# of targetLocation@=10
