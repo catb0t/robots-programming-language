@@ -69,5 +69,15 @@ public class RobotList<E> extends LinkedList<E> {
 	         other.printStackTrace();
 	      }
    }
+   
+   
+   public void remove (float index) {
+	   
+	   int indexZeroBased = ((int) index) - 1;
+	   if (indexZeroBased < this.size()) {
+		   
+		   this.remove(indexZeroBased);
+	   }
+   }
 
 }

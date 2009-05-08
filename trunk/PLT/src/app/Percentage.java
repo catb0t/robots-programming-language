@@ -30,7 +30,7 @@ public class Percentage {
 	public static Percentage add (Percentage p1, Percentage p2)
 	{
 		Percentage sol = new Percentage(p1.percent+p2.percent); 
-		//sol.cap();
+		sol.cap();
 		return sol;
 	}
 	

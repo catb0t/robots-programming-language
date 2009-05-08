@@ -553,16 +553,16 @@ public class Robot implements RobotInterface {
 		
 		//updateEnememies
 		enemy_list = new RobotList<Enemy>(Enemy.class);
-		for (int i=0; i<Global.enemy_list.size(); i++)
+		for (Enemy e: Global.enemy_list)
 		{
-			enemy_list.add(i, Global.enemy_list.get(i).copy());
+			enemy_list.addLast(e);
 		}
 		
 		//update Ressources
 		resource_list = new RobotList<Resource>(Resource.class);
-		for (int i=0; i<Global.resource_list.size(); i++)
+		for (Resource r: Global.resource_list)
 		{
-			resource_list.add(i, Global.resource_list.get(i).copy());
+			resource_list.addLast(r);
 		}
 	}
 	
@@ -600,19 +600,133 @@ public class Robot implements RobotInterface {
 		//don't use it now
 	}
 	
-	public void sort_enemy_distance ()
+	
+	public RobotList<Float> sort(RobotList<Float> list)
 	{
-		//quicksort
-		Percentage p = new Percentage(3);
+		int length = list.size();
+		Index_value[] distri = new Index_value[length];
+		for (int i=0; i<length; i++)
+		{
+			distri[i] = new Index_value(i, list.get(i));
+		}
+		
+		boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(distri[i].value>distri[i+1].value)
+	    		{
+	    			Index_value a = distri[i];
+	    			distri[i] = distri[i+1];
+	    			distri[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Float> sol = new RobotList<Float>(Float.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	sol.addLast(new Float(distri[i].value));
+	    }
+	    return sol;
 	}
+	
+	
+	public RobotList<Enemy> sort_enemy_distance ()
+	{
+		//bubble sort
+		int length = enemy_list.size();
+		Index_value[] enemy_dist = new Index_value[length];
+		Location cur_loc = this.getLocation();
+		for (int i=0; i<length; i++)
+		{
+			enemy_dist[i] = new Index_value(i,distance(cur_loc, enemy_list.get(i).location));
+		}
+
+		
+	    boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(enemy_dist[i].value>enemy_dist[i+1].value)
+	    		{
+	    			Index_value a = enemy_dist[i];
+	    			enemy_dist[i] = enemy_dist[i+1];
+	    			enemy_dist[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Enemy> new_enemy_list = new RobotList<Enemy>(Enemy.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	new_enemy_list.addLast(enemy_list.get(enemy_dist[i].index));
+	    }
+	    enemy_list = new_enemy_list;
+	    
+	    return enemy_list;
+	}
+	
+	
+	public RobotList<Resource> sort_resource_distance ()
+	{
+		//bubble sort
+		int length = resource_list.size();
+		Index_value[] resource_dist = new Index_value[length];
+		Location cur_loc = this.getLocation();
+		for (int i=0; i<length; i++)
+		{
+			resource_dist[i] = new Index_value(i,distance(cur_loc, resource_list.get(i).location));
+		}
+
+		
+	    boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(resource_dist[i].value>resource_dist[i+1].value)
+	    		{
+	    			Index_value a = resource_dist[i];
+	    			resource_dist[i] = resource_dist[i+1];
+	    			resource_dist[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Resource> new_resource_list = new RobotList<Resource>(Resource.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	new_resource_list.addLast(resource_list.get(resource_dist[i].index));
+	    }
+	    resource_list = new_resource_list;
+	    
+	    return resource_list;
+	}
+	
 	
 	public void revert_Enemy ()
 	{
 		RobotList<Enemy> sol = new RobotList<Enemy>(Enemy.class);
 		for (int i=0; i<enemy_list.size(); i++)
 		{
-			sol.add(enemy_list.removeLast());
+			sol.addLast(enemy_list.removeLast());
 		}
+		enemy_list = sol;
 	}
 	
 	public void revert_Resource ()
@@ -620,9 +734,12 @@ public class Robot implements RobotInterface {
 		RobotList<Resource> sol = new RobotList<Resource>(Resource.class);
 		for (int i=0; i<resource_list.size(); i++)
 		{
-			sol.add(resource_list.removeLast());
+			sol.addLast(resource_list.removeLast());
 		}
+		resource_list = sol;
 	}
+	
+	
 	
 	public void modify_list ()
 	{
