@@ -2,6 +2,7 @@ package app;
 
 
 import java.util.*;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -29,16 +30,17 @@ public class Scene implements GLEventListener {
 	public Terrain terrain = null;
 	public double DOUBLETROUBLEINMYROOM = 69;
 
-	public Robot player = null;
+	public Robot[] player = null;
+	public int numberOfRobots = 1;
 	public Robot playerAvatar = null;
-	OBJ_Model model = null;
+	
+    ArrayList lasers = null;
+	Laser laserAvatar = null;
 	
     private int waterTexture;
 	
 	
 	private int waterDL;
-	private int skyDL;
-	private int robotDL;
 	
 	//light
     private float[] lightAmbient = {0.5f, 0.5f, 0.5f, 1.0f};
@@ -50,8 +52,9 @@ public class Scene implements GLEventListener {
     private int fogfilter = 2;								// Which Fog Mode To Use      ( new )
     private float fogColor[] = {0.5f, 0.5f, 0.5f, 1.0f};		// Fog Color               ( new )
         
-    int numberOfPowerups = 100;
-    private Powerup[] resources = new Powerup[numberOfPowerups];
+    int numberOfPowerups = 30;
+    public Powerup[] resources = null;//new Powerup[numberOfPowerups];
+    public Powerup resourceAvatar = null;
 
     int t = 0;
     long oldTime = 0;
@@ -69,8 +72,8 @@ public class Scene implements GLEventListener {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		
 		//set the camera
-		cam.updatePosition(player.cameraDirection.x, player.cameraDirection.y, player.cameraDirection.z);
-		cam.lookAt(player.position.x, player.position.y, player.position.z);
+		cam.updatePosition(player[0].cameraDirection.x, player[0].cameraDirection.y, player[0].cameraDirection.z);
+		cam.lookAt(player[0].position.x, player[0].position.y, player[0].position.z);
 		cam.updateCamera(gl, t++);
 		lightPosition[0] = 0.5f;//lightDirection.x;
 		lightPosition[1] = -0.5f;//lightDirection.y;
@@ -85,33 +88,51 @@ public class Scene implements GLEventListener {
 		//draw the terrain
 		terrain.renderHeightMap(gl);
 		drawWater(gl);
-
 		
+		//**************************
+		//render power-ups
+		//**************************
+        for(int i = 0; i < numberOfPowerups; i++)
+        {
+        	resourceAvatar.renderPowerup(gl, resources[i].location, resources[i].type, resources[i].active);
+        }   
+        
+        //===========================
+        //render lasers
+        //===========================
+        for(int i = 0; i < lasers.size(); i++)
+        {
+        	laserAvatar.renderLaser(gl, ((Laser)(lasers.listIterator(i))).location  );
+        }
+
+		//---------------------------
 		//render robot
-		
-		//need to figure out if the robot is walking right now, and in what direction
-    	boolean walking = false;
-		if( Math.abs(player.position.x - player.goal.x) > 0.1 || Math.abs(player.position.z - player.goal.z) > 0.1 )
+        //---------------------------
+		for(int i = 0; i < numberOfRobots; i++)
 		{
-			//figure out walking direction
-			player.robotDirection = player.direction(player.position, player.goal);
-			player.robotDirection = player.robotDirection*(180.0f/3.14f) + 90;
-			walking = true;
-		}
-		
-		gl.glPushMatrix();
-			float[] lightAmbient = {1.0f, 1.0f, 1.0f, 1.0f};
-			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient, 0);
-		
-			gl.glTranslatef(player.position.x, player.position.y, player.position.z);
-			//gl.glCallList(robotDL);
-		//		model.render(gl);
-
-			playerAvatar.renderRobot(gl, (float)t/100.0f, walking, player.robotDirection );
+			//need to figure out if the robot is walking right now, and in what direction
+	    	boolean walking = false;
+			if( Math.abs(player[i].position.x - player[i].goal.x) > 0.1 || Math.abs(player[i].position.z - player[i].goal.z) > 0.1 )
+			{
+				//figure out walking direction
+				player[i].robotDirection = player[i].direction(player[i].position, player[i].goal);
+				player[i].robotDirection = -player[i].robotDirection*(180.0f/3.14f ) - 90;
+				walking = true;
+			}
 			
-			gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
-		gl.glPopMatrix();
-					
+			gl.glPushMatrix();
+				float[] lightAmbient = {1.0f, 1.0f, 1.0f, 1.0f};
+				gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightAmbient, 0);
+			
+				gl.glTranslatef(player[i].position.x, player[i].position.y, player[i].position.z);
+				//gl.glCallList(robotDL);
+			//		model.render(gl);
+	
+				playerAvatar.renderRobot(gl, (float)t/100.0f, walking, player[i].robotDirection );
+				
+				gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, this.lightAmbient, 0);
+			gl.glPopMatrix();
+		} //end robot render			
 	}
 	
 	protected void drawWater(GL gl)
@@ -119,6 +140,7 @@ public class Scene implements GLEventListener {
 		
 		gl.glPushMatrix();
         gl.glBindTexture(GL.GL_TEXTURE_2D, waterTexture);
+        gl.glTranslatef(0, 5, 0);
 		gl.glScalef(1000.0f, 0.0f, 1000.0f);
 			gl.glCallList(waterDL);		
 		gl.glPopMatrix();
@@ -211,18 +233,22 @@ public class Scene implements GLEventListener {
 
         
         playerAvatar = new Robot(gl, terrain);
-        player = new Robot(terrain);
+        player = new Robot[numberOfRobots];//(terrain);
+        for(int i = 0; i < numberOfRobots; i++)
+        	player[i] = new Robot(terrain);
         Random generator = new Random();
-        
+        resourceAvatar = new Powerup(gl);
+        resources = new Powerup[numberOfPowerups];
         for(int i = 0; i < numberOfPowerups; i++)
         {
         	//find location
-        	float x = generator.nextFloat()*(terrain.maxx - terrain.minx) + terrain.minx;
-        	float z = generator.nextFloat()*(terrain.maxz - terrain.minz) + terrain.minz;
-        	Vector3 pos = new Vector3(x, z, 0);
-        	float y = terrain.terrainIntersection(pos);
+        //	float x = generator.nextFloat()*(terrain.maxx - terrain.minx) + terrain.minx;
+        //	float z = generator.nextFloat()*(terrain.maxz - terrain.minz) + terrain.minz;
+        //	Vector3 pos = new Vector3(x, z, 0);
+        //	float y = terrain.terrainIntersection(pos);
+        	Vector3 pos = new Vector3(0, 0, 0);
         	resources[i] = new Powerup(pos, generator.nextInt(4));
-        }        
+        }
 
 
 	}

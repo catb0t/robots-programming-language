@@ -27,6 +27,13 @@ public class Terrain {
     
     public Terrain()
     {
+    	
+		minx = -(MAP_SIZE/2)*scaleXZ;
+		maxx =  (MAP_SIZE/2)*scaleXZ;
+		minz = -(MAP_SIZE/2)*scaleXZ;
+		maxz =  (MAP_SIZE/2)*scaleXZ;
+		
+		
     	try {
             loadRawFile("media/terrain3.raw", heightMap);  // (NEW)
         } catch (IOException e) {
@@ -264,8 +271,12 @@ public class Terrain {
     
     public float terrainIntersection(Vector3 pos)
     {
+    	
+    	//1 2	  1  2       2
+    	//0 3	  0        0 3
+    	
     	Vector3 down = new Vector3(0, -1, 0);
-    	Vector3 position = new Vector3(pos.x, pos.y, pos.z);
+    	Vector3 position = new Vector3(pos.x, pos.y, pos.y);
     	//find the triangle which the position is currently over, need to translate and scale the position so it corresponds to the height map
     	position.x /= scaleXZ;
     	position.y /= scaleY;
@@ -274,15 +285,15 @@ public class Terrain {
     	position.z += MAP_SIZE/2;
 
     	
-    	Vector3 position2 = position;
+    	Vector3 position2 = new Vector3();//position;
     	
-    	float interpX = position2.x%STEP_SIZE;
-    	float interpY = position2.z%STEP_SIZE;
+    	float interpX = position.x%STEP_SIZE;
+    	float interpY = position.z%STEP_SIZE;
     	interpX /= STEP_SIZE;
     	interpY /= STEP_SIZE;
     	
-    	position2.x /= STEP_SIZE;
-    	position2.z /= STEP_SIZE;
+    	position2.x = position.x/STEP_SIZE;
+    	position2.y = position.z/STEP_SIZE;
     	position2.x = (float)Math.floor(position2.x);
     	position2.y = (float)Math.floor(position2.y);
     	position2.x *= STEP_SIZE;
@@ -290,11 +301,33 @@ public class Terrain {
     	
     	
     	//get the 4 heights
-    	int h1 = (int)(height(heightMap, (int)position2.x, (int)position2.z));
-    	int h2 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.z));
-    	int h3 = (int)(height(heightMap, (int)position2.x, (int)position2.z + STEP_SIZE));
-    	int h4 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.z + STEP_SIZE));
+    	int h1 = (int)(height(heightMap, (int)position2.x, (int)position2.y));
+    	int h4 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.y));
+    	int h2 = (int)(height(heightMap, (int)position2.x, (int)position2.y + STEP_SIZE));
+    	int h3 = (int)(height(heightMap, (int)position2.x + STEP_SIZE, (int)position2.y + STEP_SIZE));
     	
+    	float x = position.x - position2.x;
+		float y = position.y - position2.y;
+	/*	
+    	if(position2.y/position2.x >= 1.0f) //we are in the first quadrant
+    	{
+    		float slope = ((position2.y + STEP_SIZE) - y) / ((position2.x + STEP_SIZE) - x);
+    		float y_intercept = y - (x*slope);
+    		float interceptH = h1*(1.0f - y_intercept) + h2*y_intercept;
+    		float dist = (float)Math.sqrt( Math.pow(x, 2) + Math.pow(y - y_intercept, 2) );
+    		dist = dist/(float)Math.sqrt(1+(float)Math.pow(1.0f-y_intercept, 2));
+    		return scaleY*(interceptH*(1.0f - dist) + h3*dist);
+    	}
+    	else //second quadrant
+    	{
+    		float slope = (y - position2.y) / (x - position2.x);
+    		float y_intercept = y + ((position2.x - x)*slope);
+    		float interceptH = h4*(1.0f - y_intercept) + h3*y_intercept;
+    		float dist = (float)Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
+    		dist = dist/(float)Math.sqrt(1+ (float)Math.pow(y_intercept, 2));
+    		return scaleY*(h1*(1.0f - dist) + interceptH*dist);
+    	}
+ */   	
     	float newHeightX = (float)h1*(1-interpX) + (float)h2*(interpX);
     	float newHeightY = (float)h3*(1-interpX) + (float)h4*(interpX);
     	float newHeight = newHeightX*(1-interpY) + newHeightY*(interpY);
