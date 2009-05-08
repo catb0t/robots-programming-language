@@ -498,7 +498,9 @@ public class Robot implements RobotInterface {
 		
 		//move_to(position.add(forwardDirection), 0.0000001f);
 		
-		System.out.println("basic think is running");
+		System.out.println("empty process");
+		String l = Global.outputArea.getText();
+		Global.outputArea.setText(l.concat("\n Robot says: ").concat("hello"));
 		
 		
 	}
@@ -507,9 +509,9 @@ public class Robot implements RobotInterface {
 	
 	public void say (String s)
 	{
-		System.out.println(s);
-		//String l = Main.outputArea.getText();
-		//Main.outputArea.setText(l.concat("\n").concat(s));
+		//System.out.println(s);
+		String l = Global.outputArea.getText();
+		Global.outputArea.setText(l.concat("\n").concat(s));
 	}
 	
 	public void move_to (Location location)
@@ -533,7 +535,13 @@ public class Robot implements RobotInterface {
 		move_to (location, new Percentage(my_speed));
 	}
 	
-	public void shoot ()
+	public void shoot (Enemy en)
+	{
+		//decrease energy
+		//shoot
+	}
+	
+	public void shoot (Location loc)
 	{
 		//decrease energy
 		//shoot
@@ -542,6 +550,8 @@ public class Robot implements RobotInterface {
 	public void ping ()
 	{
 		energy = energy - 5;
+		//updateEnememies
+		//update Ressources
 	}
 	
 	public float distance (Location origin, Location goal)
