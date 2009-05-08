@@ -104,8 +104,8 @@ public class Scene implements GLEventListener {
         //===========================
         for(int i = 0; i < lasers.size(); i++)
         {
-        	//laserAvatar.renderLaser(gl, lasers.get(i).location  );
-        	lasers.get(i).renderLaser(gl,lasers.get(i).location);
+        	laserAvatar.renderLaser(gl, lasers.get(i).location  );
+        	//lasers.get(i).renderLaser(gl,lasers.get(i).location);
         }
 
 		//---------------------------
@@ -234,7 +234,7 @@ public class Scene implements GLEventListener {
         createWater(gl);
 
 
-        
+        laserAvatar = new Laser(gl);
         playerAvatar = new Robot(gl, terrain);
         player = new Robot[numberOfRobots];//(terrain);
         for(int i = 0; i < numberOfRobots; i++)
