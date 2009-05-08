@@ -526,8 +526,8 @@ public class Robot implements RobotInterface {
 		//move_to(position.add(forwardDirection), 0.0000001f);
 		
 		System.out.println("empty process");
-		String l = Global.outputArea.getText();
-		Global.outputArea.setText(l.concat("\n Robot says: ").concat("hello"));
+		//String l = Global.outputArea.getText();
+		//Global.outputArea.setText(l.concat("\n Robot says: ").concat("I am not programmed"));
 		
 		
 	}

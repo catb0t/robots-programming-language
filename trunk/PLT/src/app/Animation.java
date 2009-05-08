@@ -45,7 +45,7 @@ public class Animation implements Runnable {
 		
 		animator = null;
 	}
-	
+
 	public void run() {
 		int t = 0;
 		long time = System.currentTimeMillis();
@@ -76,66 +76,62 @@ public class Animation implements Runnable {
 						lasers.add(newLaser);
 					}
 				} //end for all players
-				
-			} //end think if
-		} catch (Exception ex) {
-			animator = null;
-			Global.outputArea.setText(Global.outputArea.getText().concat("\n\n").concat("Error in the main program"));
-			ex.printStackTrace();
-		}
 
-			//***************************************************
-			//update players
-			for(int i = 0; i < numberOfPlayers; i++)
-			{
-				player[i].update( (float)t/100.0f );
-				scene.player[i] = player[i];
-				//System.out.println("position.x " + player.position.x);
-				scene.player[i].setPosition(player[i].position.x, player[i].position.y, player[i].position.z);
-				//System.out.println("avatar.position.x " + scene.player.position.x);
-				scene.player[i].goal = player[i].goal;
-			}
-			
-			//:::::::::::::::::::::::::::::::::::::::::::::::::::::
-			//update the projectiles
-			for(int i = 0; i < lasers.size(); i++)
-			{
-				Laser tempLaser = ((Laser)(lasers.listIterator(i)));
-				tempLaser.update((float)t/100.0f);
-				//check if laser has hit the terrain, if it has then kill it
-				float terrainY = player[0].terrain.terrainIntersection(new Vector3(tempLaser.location.x, tempLaser.location.z, 0));
-				if(tempLaser.location.y < terrainY) //kill it
+				//end think if
+
+
+				//***************************************************
+				//update players
+				for(int i = 0; i < numberOfPlayers; i++)
 				{
-					lasers.remove(i);
+					player[i].update( (float)t/100.0f );
+					scene.player[i] = player[i];
+					//System.out.println("position.x " + player.position.x);
+					scene.player[i].setPosition(player[i].position.x, player[i].position.y, player[i].position.z);
+					//System.out.println("avatar.position.x " + scene.player.position.x);
+					scene.player[i].goal = player[i].goal;
 				}
-				else
+
+				//:::::::::::::::::::::::::::::::::::::::::::::::::::::
+				//update the projectiles
+				for(int i = 0; i < lasers.size(); i++)
 				{
-					for(int j = 0; j < numberOfPlayers; j++)
+					Laser tempLaser = ((Laser)(lasers.listIterator(i)));
+					tempLaser.update((float)t/100.0f);
+					//check if laser has hit the terrain, if it has then kill it
+					float terrainY = player[0].terrain.terrainIntersection(new Vector3(tempLaser.location.x, tempLaser.location.z, 0));
+					if(tempLaser.location.y < terrainY) //kill it
 					{
-						float dist = (float)Math.sqrt(Math.pow(player[j].position.x - tempLaser.location.x, 2) + Math.pow(player[j].position.z - tempLaser.location.z, 2));
-						if(dist < 0.2f) //we hit a robot!, add damage and remove the projectile	
+						lasers.remove(i);
+					}
+					else
+					{
+						for(int j = 0; j < numberOfPlayers; j++)
 						{
-							player[j].health -= tempLaser.strength/player[j].armor;
-							//kill it
-							lasers.remove(i);
-						}
-						
-					} //j
-				} //else
-			} //i
-			
-			//copy the lasers to scene for rendering
-			scene.lasers = lasers;
-			
-			//----------------------------------------------------
-			//now that the players are updated, figure out if anyone got a resource or was hit
+							float dist = (float)Math.sqrt(Math.pow(player[j].position.x - tempLaser.location.x, 2) + Math.pow(player[j].position.z - tempLaser.location.z, 2));
+							if(dist < 0.2f) //we hit a robot!, add damage and remove the projectile	
+							{
+								player[j].health -= tempLaser.strength/player[j].armor;
+								//kill it
+								lasers.remove(i);
+							}
+
+						} //j
+					} //else
+				} //i
+
+				//copy the lasers to scene for rendering
+				scene.lasers = lasers;
+
+				//----------------------------------------------------
+				//now that the players are updated, figure out if anyone got a resource or was hit
 				for(int i = 0; i < numberOfPowerups; i++)
 				{		
 					scene.resources[i] = resources[i];
 					//System.out.println(scene.resources[i].location.x);
 					for(int j = 0; j < numberOfPlayers; j++)
 					{
-						
+
 						float dist = (float)Math.sqrt(Math.pow(player[j].position.x - resources[i].location.x, 2) + Math.pow(player[j].position.z - resources[i].location.z, 2));
 						if(dist < 1.0) //deactiveate the resource and give it to the robot
 						{
@@ -159,15 +155,15 @@ public class Animation implements Runnable {
 							}
 							resources[i].active = false;
 						}
-						
+
 					}
 				}
-				
-			
-			
-			
-			
+			}
+
+		} catch (Exception ex) {
+			animator = null;
+			Global.outputArea.setText(Global.outputArea.getText().concat("\n\n").concat("Error in the main program"));
+			ex.printStackTrace();
 		}
-		
-	
+	}
 }
