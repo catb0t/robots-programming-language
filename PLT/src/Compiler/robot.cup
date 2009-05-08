@@ -616,7 +616,7 @@ local_declaration       ::=   /*variable_name_local:vnl*/ VARIABLE:v NEWLINE
 
 call                    ::=   SAY out_text:ot NEWLINE
                               {:
-                                 RESULT = "System.out.println(" + ot + ")";
+                                 RESULT = "say(" + ot + ")";
                               :}
                         |
                               function_call:fc
