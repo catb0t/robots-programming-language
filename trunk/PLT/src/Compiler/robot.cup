@@ -330,6 +330,11 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                                  RESULT = new Expression("new Float(" + ne + ")");
                               :}
                         |
+                              MINUS NUMBER_EXPRESSION:ne
+                              {:
+                                 RESULT = new Expression("new Float(-" + ne + ")");
+                              :}
+                        |
                               NUMBER_PERCENTAGE:pe
                               {:
                                  RESULT = new Expression("new Percentage(" + pe.substring(0, pe.length() - 1) + ")");
