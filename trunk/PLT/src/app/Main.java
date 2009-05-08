@@ -133,10 +133,10 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		
 		tabbedPane.addTab("java source", javaArea);
 		
-		outputArea = new TextArea("",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
-		outputArea.setEditable(false);
+		//outputArea = new TextArea("",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
+		Global.outputArea.setEditable(false);
 		
-		tabbedPane.addTab("output", outputArea);
+		tabbedPane.addTab("output", Global.outputArea);
 		
 		//editor.add(editArea);
 		editor.add(tabbedPane);
@@ -207,7 +207,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		this.setVisible(true);
 
 		
-		anime = new Animation(player, scene, outputArea);
+		anime = new Animation(player, scene);
 		//start.doClick();
 	  
 	    
@@ -221,6 +221,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 			anime.animator = new Thread(anime);
 		}
 		
+		Global.outputArea.setText("");
 		anime.animator.start();
 		
 	}

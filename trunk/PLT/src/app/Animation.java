@@ -9,13 +9,10 @@ public class Animation implements Runnable {
 	Robot player;
 	Scene scene;
 	
-	private TextArea outputArea;
 	
-	
-	public Animation (Robot p, Scene s, TextArea out) {
+	public Animation (Robot p, Scene s) {
 		player = p;
 		scene = s;
-		outputArea= out;
 		
 		animator = null;
 	}
@@ -49,7 +46,7 @@ public class Animation implements Runnable {
 			}
 		} catch (Exception ex) {
 			animator = null;
-			outputArea.setText(outputArea.getText().concat("\n\n").concat("Error in the main program"));
+			Global.outputArea.setText(Global.outputArea.getText().concat("\n\n").concat("Error in the main program"));
 			ex.printStackTrace();
 		}
 
