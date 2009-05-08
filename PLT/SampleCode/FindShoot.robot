@@ -4,7 +4,7 @@ think
 
    closest_enemy! = NOTHING!
    // 1. Get enemy locations
-   ping_radar  // Decreases energy
+   ping  // Decreases energy
    enemies!... = get_enemies  // alternatively: enemies!... = enemies!... of radar
 
    // 2. Find closest
@@ -19,7 +19,7 @@ instruction find_closest_enemy with enemies!... means
 
    closest_distance# = MAX#
    closest_enemy! = NOTHING!
-   my_loc@ = location@ of self
+   my_loc@ = getLocation of self
 
    repeat with each enemy! in enemies!...
 

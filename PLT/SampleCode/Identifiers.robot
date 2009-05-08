@@ -7,11 +7,11 @@ think
    count1#= 10.5
    energy_level%=90
    isEnemy?=true
-   my_loc@ = location@ of self
+   my_loc@ = getLocation of self
    closest_resource$ = NOTHING$
    closest_enemy! = NOTHING!
    enemies!... = get_enemies  
-   my_loc@ = location@ of self
+   my_loc@ = getLocation of self
    x# of 1st of targetLocation@...=10
    y# of 1st of targetLocation@...=y# of my_loc@
    x# of 2nd of targetLocation@...=10

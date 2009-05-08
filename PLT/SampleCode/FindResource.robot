@@ -4,7 +4,7 @@ think
 
    closest_resource$ = NOTHING$
    // 1. Get resource locations
-   ping_radar // Decreases energy
+   ping // Decreases energy
    resources$... = get_resources
 
    // 2. Find closest
@@ -19,7 +19,7 @@ instruction find_closest_resource with resources$... means
 
    closest_distance# = MAX#
    closest_resource$ = NOTHING$
-   my_loc@ = location@ of self
+   my_loc@ = getLocation of self
 
    repeat with each resource$ in resources$...
 

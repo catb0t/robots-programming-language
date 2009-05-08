@@ -6,7 +6,7 @@ public class RobotCompiled extends Robot {
 
 	public void think() {
 
-		System.out.println(" Oh, oh. My health is now " + this.health);
+		say(" Oh, oh. My health is now " + this.health);
 		Location targetLocation = new Location();
 		targetLocation.x = new Float(10f);
 		targetLocation.y = new Float(10f);
@@ -14,7 +14,7 @@ public class RobotCompiled extends Robot {
 		Enemy closest_enemy = new Enemy();
 		shoot(closest_enemy);
 		ping();
-		Location my_loc = this.location;
+		Location my_loc = this.getLocation();
 		Location enemy_loc = Enemy enemy = new Enemy();
 		enemy.location;
 		Float distance = distance(enemy_loc, my_loc);

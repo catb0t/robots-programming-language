@@ -7,7 +7,7 @@ Float count = new Float(0f);
 
 	public void think() {
 
-		Location my_loc = this.location;
+		Location my_loc = this.getLocation();
 		RobotList<Location> targetLocation = new RobotList<Location>(Location.class);
 		targetLocation.get(1f).x = new Float(10f);
 		targetLocation.get(1f).y = my_loc.y;
