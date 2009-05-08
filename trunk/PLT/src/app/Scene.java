@@ -34,7 +34,7 @@ public class Scene implements GLEventListener {
 	public int numberOfRobots = 1;
 	public Robot playerAvatar = null;
 	
-    ArrayList lasers = null;
+    ArrayList lasers = new ArrayList();
 	Laser laserAvatar = null;
 	
     private int waterTexture;
