@@ -14,6 +14,14 @@ public class Resource {
 		ammostash = 0f;
 	}
 	
+	public Resource (String n, Location l, Float e, Float a)
+	{
+		name = n;
+		location = l;
+		energy= e;
+		ammostash = a;
+	}
+	
 	
 	public void setValue (float f, float a)
 	{
@@ -44,6 +52,11 @@ public class Resource {
 	public String getName()
 	{
 		return name;
+	}
+	
+	
+	public Resource copy() {
+		return new Resource(name, location.copy(), new Float(energy.floatValue()), new Float(ammostash.floatValue()));
 	}
 	
 	public String toString()

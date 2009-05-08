@@ -550,8 +550,20 @@ public class Robot implements RobotInterface {
 	public void ping ()
 	{
 		energy = energy - 5;
+		
 		//updateEnememies
+		enemy_list = new RobotList<Enemy>(Enemy.class);
+		for (int i=0; i<Global.enemy_list.size(); i++)
+		{
+			enemy_list.add(i, Global.enemy_list.get(i).copy());
+		}
+		
 		//update Ressources
+		resource_list = new RobotList<Resource>(Resource.class);
+		for (int i=0; i<Global.resource_list.size(); i++)
+		{
+			resource_list.add(i, Global.resource_list.get(i).copy());
+		}
 	}
 	
 	public float distance (Location origin, Location goal)
@@ -566,6 +578,12 @@ public class Robot implements RobotInterface {
 		forwardDirection.normalize();
 		return (float) Math.atan2((double)(origin.z - goal.z), (double)(origin.y - goal.y));
 	}
+	
+	public Percentage getEnergy()
+	{
+		return new Percentage(this.energy);
+	}
+	
 	
 	public RobotList<Enemy> get_enemies ()
 	{
