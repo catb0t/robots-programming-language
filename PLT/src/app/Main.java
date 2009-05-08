@@ -210,7 +210,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		players[0] = player;
 		
 		anime = new Animation(players, 1, scene);
-		start.doClick();
+		//start.doClick();
 	  
 	    
 		
