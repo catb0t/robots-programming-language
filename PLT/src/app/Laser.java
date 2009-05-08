@@ -63,7 +63,7 @@ public class Laser {
 	
     public void renderLaser(GL gl, Vector3 position)
     {
-    	laserAvatar = new Sphere(gl);
+
     	 gl.glBindTexture(GL.GL_TEXTURE_2D, laserTexture);
     	 
     	gl.glPushMatrix();
