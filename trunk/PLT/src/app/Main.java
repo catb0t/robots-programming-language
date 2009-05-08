@@ -49,7 +49,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	{
 		player = (Robot) r;
 		player.init(terrain);
-		anime.player = player;
+		anime.player[0] = player;
 	}
 
 	
@@ -206,9 +206,11 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		
 		this.setVisible(true);
 
+		Robot[] players = new Robot[1];
+		players[0] = player;
 		
-		anime = new Animation(player, scene);
-		//start.doClick();
+		anime = new Animation(players, 1, scene);
+		start.doClick();
 	  
 	    
 		

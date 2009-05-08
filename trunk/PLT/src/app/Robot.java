@@ -17,11 +17,15 @@ public class Robot implements RobotInterface {
 	
 	float cameraDistance = 30;
 	
-	private int energy;
+	public float energy;
+	public int health;
+	
+	public float armor;
 	
 	float max_speed=1f;
 	float speed = 0.2f;
-	float maxIncline = 1f;
+	float maxIncline = 0.1f;
+
 	int ammo = 0;
 	
 	float verticalVelocity = 0;
@@ -34,6 +38,8 @@ public class Robot implements RobotInterface {
 	public Vector3 position = null;
 	public Vector3 goal = null;
 	
+	public Vector3 gunDirection = null; 
+	
 	RobotList<Enemy> enemy_list;
 	RobotList<Resource> resource_list;
 	
@@ -41,15 +47,28 @@ public class Robot implements RobotInterface {
 	Terrain terrain;
 
 	Sphere sphere = null;
-	
+		
 	private int robotFace;
     private int robotTexture;
-    private int laserTexture;
+
 	
     float oldTime = 0;
     
+
+    float maxEnergy = 100;
+    
+    Vector3 shootDirection = null;
+    public boolean shoot = false;
+    
+    //basic stats
+    float healthArmorStat = 1.0f;
+    float weaponStat = 1.0f;
+    float speedStat = 1.0f;
+    
+
     public FuncSet funcset = new FuncSet();
     
+
 
 	
 	public Robot(Terrain t)
@@ -59,6 +78,11 @@ public class Robot implements RobotInterface {
 		position = new Vector3(0f,0f,0f);
 		goal = new Vector3(0, 0, 0);
 		terrain = t;
+		
+		//initialize all stats!
+		health = (int)(100f*healthArmorStat);
+		max_speed = 1.0f*speedStat;
+		maxIncline = 1.0f*speedStat;
 	}
 	
 	public Robot(GL g, Terrain t)
@@ -74,6 +98,8 @@ public class Robot implements RobotInterface {
 		cameraDirection = new Vector3(0, 10, -1);
 		position = new Vector3(0f,0f,0f);
 		goal = new Vector3(0, 0, 0);
+		
+		gunDirection = new Vector3(1, 0, 0);
 		
 		sphere = new Sphere(gl);
 		
@@ -113,20 +139,7 @@ public class Robot implements RobotInterface {
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
 
 
-		laserTexture = genTexture(gl);
-        gl.glBindTexture(GL.GL_TEXTURE_2D, laserTexture);
-        texture = null;
-        //TextureReader.Texture waterTexture = null;
-        try {
-        	texture = TextureReader.readTexture("media/robot/red.png");
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        makeRGBTexture(gl, glu, texture, GL.GL_TEXTURE_2D, false);
-        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
-        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-
+	
         
 	}
 	
@@ -161,9 +174,16 @@ public class Robot implements RobotInterface {
         gl.glGenTextures(1, tmp, 0);
         return tmp[0];
     }
+    
+    boolean firstRun = true;
 
     public void update(float time)
     {	
+    	if(firstRun == true)
+    	{
+    		firstRun = false;
+    		position.y = terrain.terrainIntersection(new Vector3(position.x, position.z, 0));
+    	}
   //  	System.out.println(time);
     	//update the robots position
     	forwardDirection = new Vector3(goal.x - position.x, 0, goal.z - position.z);
@@ -178,9 +198,9 @@ public class Robot implements RobotInterface {
     	float directionRadians = this.direction(position, goal);
     	Vector3 newPosition = new Vector3((float)(position.x + distance*forwardDirection.x), (float)(position.z + distance*forwardDirection.z), (float)0);
     	//now that I have a new position, need to find out my distance from the ground
-    	float newY = terrain.terrainIntersection(newPosition);
-    	float nextY = terrain.terrainIntersection(new Vector3(newPosition.x + forwardDirection.x*0.001f, newPosition.z + forwardDirection.z*0.001f, 0));
-    	float incline = (nextY - newY)/0.001f;
+    	float newY = terrain.terrainIntersection(new Vector3(newPosition.x, newPosition.y, 0));
+    	float nextY = terrain.terrainIntersection(new Vector3(newPosition.x + forwardDirection.x*0.01f, newPosition.y + forwardDirection.z*0.01f, 0));
+    	float incline = (nextY - newY)/0.01f;
  //   	System.out.println(newY);
     	//if we've hit an incline higher than we can traverse then keep old position
     	//...
@@ -188,12 +208,16 @@ public class Robot implements RobotInterface {
     	if(goal.x != position.x || goal.z != position.z) //if we haven't moved then don't do anything
     	{
 
-    	//	System.out.println(incline);
+    		
 	    	if( incline < maxIncline)
 	    	{
+	  //  		System.out.println(incline + " : " + maxIncline);
+	    		
 	    		//update the position along the terrain
 	    		position.x = newPosition.x;
 	    		position.z = newPosition.y;
+	    		position.y = newY;
+	    		
 	    		//now figure out what's going on with falling and physics
 	    // 		if(newY < position.y)//we're falling
 	    //		{
@@ -203,9 +227,10 @@ public class Robot implements RobotInterface {
 	    		
 	    	}
     	}
-    	position.y = newY;
- //   	goal.x = position.x + 10;
-   // 	goal.z = position.z + 10;
+    	
+    	
+    //	goal.x = position.x - 10;
+    //	goal.z = position.z - 10;
     	
     	//update the camera
     	float tempx = position.x + cameraDistance*(float)Math.cos((double)time/100.0);
@@ -227,9 +252,9 @@ public class Robot implements RobotInterface {
     	if(walking)
     	{
     		gl.glPushMatrix();
-    			//point our robot in the right direction
+			//point our robot in the right direction
     			renderRobotWalking(gl, time);
-    		gl.glPopMatrix();
+			gl.glPopMatrix();
     	}
     	else //our robot is at its goal, play idle animation
     	{
@@ -241,6 +266,8 @@ public class Robot implements RobotInterface {
     	
     	
     }
+    
+
     
 	private void renderRobotIdle(GL gl, float time)
 	{
@@ -576,7 +603,7 @@ public class Robot implements RobotInterface {
 		
 		forwardDirection = new Vector3(goal.x - origin.x, 0, goal.z - origin.z);
 		forwardDirection.normalize();
-		return (float) Math.atan2((double)(origin.z - goal.z), (double)(origin.y - goal.y));
+		return (float) Math.atan2((double)(origin.z - goal.z), (double)(origin.x - goal.x));
 	}
 	
 	public Percentage getEnergy()
