@@ -34,8 +34,10 @@ public class Scene implements GLEventListener {
 	public int numberOfRobots = 1;
 	public Robot playerAvatar = null;
 	
-    ArrayList lasers = new ArrayList();
-	Laser laserAvatar = null;
+    //ArrayList<Laser> lasers = new ArrayList<Laser>();
+	LinkedList<Laser> lasers = new LinkedList<Laser>();
+	
+	Laser laserAvatar = new Laser();
 	
     private int waterTexture;
 	
@@ -102,7 +104,8 @@ public class Scene implements GLEventListener {
         //===========================
         for(int i = 0; i < lasers.size(); i++)
         {
-        	laserAvatar.renderLaser(gl, ((Laser)(lasers.listIterator(i))).location  );
+        	//laserAvatar.renderLaser(gl, lasers.get(i).location  );
+        	lasers.get(i).renderLaser(gl,lasers.get(i).location);
         }
 
 		//---------------------------

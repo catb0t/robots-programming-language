@@ -46,7 +46,11 @@ public class Location {
 		return new Location(x,y);
 	}
 	
-	
+	public String toString()
+	{
+		String s = "x= "+x+", y= "+y;
+		return s;
+	}
 	
 	
 	public boolean equals(Object o) {

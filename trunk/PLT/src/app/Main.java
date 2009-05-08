@@ -300,7 +300,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 					this.actionPerformed(new ActionEvent(this, 0, "save"));
 				}
 				else if (choice==1) {
-					editArea.setText("");
+					editArea.setText("think\n|\n+---end");
 					filename = null; 
 				}
 				else if (choice==2) {
