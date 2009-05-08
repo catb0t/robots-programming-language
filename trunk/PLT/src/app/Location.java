@@ -41,11 +41,14 @@ public class Location {
 		return new Vector3(x,0f,y);
 	}
 	
-	 /*
-	   public int hashCode() {
-	      return (name != null ? name.hashCode() : 0);
-	   }
-*/
+	public Location copy()
+	{
+		return new Location(x,y);
+	}
+	
+	
+	
+	
 	public boolean equals(Object o) {
 
 		if (this == o) return true;

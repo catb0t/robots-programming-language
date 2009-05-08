@@ -12,6 +12,12 @@ public class Enemy {
 		energy = new Float(0f);
 	}
 	
+	public Enemy(String n, Location l, Float e) {
+		name = n;
+		location = l;
+		energy = e;
+	}
+	
 	public String toString()
 	{
 		String sol = "enemy name: "+name+" at ("+Float.toString(location.getX())+","+Float.toString(location.getY())+","+"), energy="+Float.toString(energy);
@@ -20,6 +26,10 @@ public class Enemy {
 	
 	public float getEnergy() {
 		return energy;
+	}
+	
+	public Enemy copy() {
+		return new Enemy(name, location.copy(), new Float(energy.floatValue()));
 	}
 	
 	
