@@ -64,10 +64,11 @@ public class Laser {
     public void renderLaser(GL gl, Vector3 position)
     {
     	laserAvatar = new Sphere(gl);
-    	
+    	 gl.glBindTexture(GL.GL_TEXTURE_2D, laserTexture);
+    	 
     	gl.glPushMatrix();
-    		gl.glTranslatef(position.x, position.y, position.z);
-			laserAvatar.renderSphere(0, 0, 0, 0.3f, 15);
+    		gl.glTranslatef(position.x, position.y+3.5f, position.z);
+			laserAvatar.renderSphere(0, 0, 0, 0.1f, 15);
 			
 		gl.glPopMatrix();
     }

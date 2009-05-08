@@ -99,7 +99,7 @@ public class Robot implements RobotInterface {
 		position = new Vector3(0f,0f,0f);
 		goal = new Vector3(0, 0, 0);
 		
-		gunDirection = new Vector3(1, 0, 0);
+		gunDirection = new Vector3(1, -1, 0);
 		
 		sphere = new Sphere(gl);
 		
