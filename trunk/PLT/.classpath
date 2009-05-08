@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="GUI/|ProofOfConcept/|plt/|Compiler/" kind="src" path="src"/>
+	<classpathentry excluding="GUI/|ProofOfConcept/|plt/|Compiler/|app/RobBool.java|app/RobNumber.java|app/AppTests.java" kind="src" path="src"/>
 	<classpathentry kind="lib" path="lib/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="lib/jogl.jar" sourcepath="lib/jogl-1.1.1-macosx-universal.zip"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

@@ -23,6 +23,7 @@ public class Laser {
 	float speed = 1;
 	float power = 1;
 	float oldTime;
+	Sphere laserAvatar = null;
 	
 	public Laser(Vector3 pos, Vector3 dir, float time)
 	{
@@ -35,6 +36,7 @@ public class Laser {
 	public Laser(GL gl)
 	{
 		
+		laserAvatar = new Sphere(gl);
 		
 		laserTexture = genTexture(gl);
         gl.glBindTexture(GL.GL_TEXTURE_2D, laserTexture);
@@ -50,17 +52,14 @@ public class Laser {
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
 
-        laser = new OBJ_Model(gl, "robot/laser.obj");
 	}
 	
 	
     public void renderLaser(GL gl, Vector3 position)
     {
     	gl.glPushMatrix();
-    	
-    		gl.glRotatef(1, 0.0f, 1.0f, 0.0f);
-    		gl.glTranslatef(0, 0, 0);
-			laser.render(gl);
+    		gl.glTranslatef(position.x, position.y, position.z);
+			laserAvatar.renderSphere(0, 0, 0, 1, 15);
 		gl.glPopMatrix();
     }
     
