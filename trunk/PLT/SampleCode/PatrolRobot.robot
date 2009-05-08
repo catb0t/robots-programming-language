@@ -2,7 +2,7 @@
 //Expected Result : PatrolRobot.java
 count# = 0
 think
-   my_loc@ = location@ of self
+   my_loc@ = getLocation of self
    x# of 1th of targetLocation@...=10
    y# of 1th of targetLocation@...=y# of my_loc@
    x# of 2th of targetLocation@...=10

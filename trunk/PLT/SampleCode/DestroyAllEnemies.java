@@ -8,7 +8,7 @@ public class RobotCompiled extends Robot {
 
 		
 		if (this.energy_level>=new Percentage(10)) {
-			ping_radar();
+			ping();
 			RobotList<Enemy> enemies = get_enemies();
 			
 			if (!enemies.equals(new Enemy())) {
@@ -20,7 +20,7 @@ public class RobotCompiled extends Robot {
 				if (this.energy_level<=new Percentage(30)) {
 					move_to(closest_resource.location, new Percentage(80));
 				} else {
-					Float dist = distance(closest_enemy.location, this.location);
+					Float dist = distance(closest_enemy.location, this.getLocation());
 					
 					if (dist>=new Float(10f)) {
 						shoot(closest_enemy);
@@ -31,7 +31,7 @@ public class RobotCompiled extends Robot {
 				}
 
 			} else {
-				System.out.println(" I'm bored!!               ");
+				say(" I'm bored!!               ");
 			}
 
 		}

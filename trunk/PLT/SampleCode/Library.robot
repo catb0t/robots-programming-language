@@ -15,7 +15,7 @@ think
 	 ping
 	 
 	 //5.5 distance
-	 my_loc@ = location@ of self
+	 my_loc@ = getLocation of self
      enemy_loc@ = location@ of enemy!
      distance# = distance enemy_loc@ my_loc@
      

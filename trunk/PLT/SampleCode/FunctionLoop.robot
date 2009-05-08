@@ -14,7 +14,7 @@ instruction find_closest_enemy with enemies!... means
 
    closest_distance# = MAX#
    closest_enemy! = NOTHING!
-   my_loc@ = location@ of self
+   my_loc@ = getLocation of self
 
    repeat with each enemy! in enemies!...
 

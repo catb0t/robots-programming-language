@@ -17,12 +17,11 @@ public class RobotCompiled extends Robot {
 
 		Float closest_distance = Float.MAX_VALUE;
 		Enemy closest_enemy = new Enemy();
-		Location my_loc = this.location;
+		Location my_loc = this.getLocation();
 		
 		for (Enemy enemy : enemies) {
 
-			Location enemy_loc = Enemy enemy = new Enemy();
-			enemy.location;
+			Location enemy_loc = enemy.location;
 			Float distance = distance(enemy_loc, my_loc);
 			
 			if (distance<=closest_distance) {
