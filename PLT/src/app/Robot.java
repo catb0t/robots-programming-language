@@ -636,7 +636,71 @@ public class Robot implements RobotInterface {
 	}
 	
 	
-	public RobotList<Float> sort(RobotList<Float> list)
+	//Possible listTypes: Float, Enemy, Resource, Percentage, Location
+	public RobotList sort_incr (RobotList list, String field)
+	{
+		if (list.clazz.equals(Float.class))
+		{
+			return sort_incr_Float(list, field);
+		}
+		else if (list.clazz.equals(Resource.class))
+		{
+			return sort_incr_Resource(list, field);
+		}
+		else if (list.clazz.equals(Enemy.class))
+		{
+			return sort_incr_Enemy(list, field);
+		}
+		else if (list.clazz.equals(Percentage.class))
+		{
+			return sort_incr_Percentage(list, field);
+		}
+		else if (list.clazz.equals(Location.class))
+		{
+			return sort_incr_Location(list, field);
+		}
+		else
+		{
+			say("impossible to sort list - nothing modified");
+		}
+		
+		return list;
+	}
+	
+	//Possible listTypes: Float, Enemy, Resource, Percentage, Location
+	public RobotList sort_decr (RobotList list, String field)
+	{
+		if (list.clazz.equals(Float.class))
+		{
+			return sort_decr_Float(list, field);
+		}
+		else if (list.clazz.equals(Resource.class))
+		{
+			return sort_decr_Resource(list, field);
+		}
+		else if (list.clazz.equals(Enemy.class))
+		{
+			return sort_decr_Enemy(list, field);
+		}
+		else if (list.clazz.equals(Percentage.class))
+		{
+			return sort_decr_Percentage(list, field);
+		}
+		else if (list.clazz.equals(Location.class))
+		{
+			return sort_decr_Location(list, field);
+		}
+		else
+		{
+			say("impossible to sort list - nothing modified");
+		}
+		
+		return list;
+	}
+	
+	
+	//FLOAT
+	public RobotList<Float> sort_incr_Float(RobotList<Float> list, String field)
 	{
 		int length = list.size();
 		Index_value[] distri = new Index_value[length];
@@ -672,17 +736,70 @@ public class Robot implements RobotInterface {
 	}
 	
 	
-	public RobotList<Enemy> sort_enemy_distance ()
+	public RobotList<Float> sort_decr_Float(RobotList<Float> list, String field)
 	{
-		//bubble sort
-		int length = enemy_list.size();
-		Index_value[] enemy_dist = new Index_value[length];
-		Location cur_loc = this.getLocation();
+		int length = list.size();
+		Index_value[] distri = new Index_value[length];
 		for (int i=0; i<length; i++)
 		{
-			enemy_dist[i] = new Index_value(i,distance(cur_loc, enemy_list.get(i).location));
+			distri[i] = new Index_value(i, list.get(i));
 		}
+		
+		boolean permut;
 
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(distri[i].value<distri[i+1].value)
+	    		{
+	    			Index_value a = distri[i];
+	    			distri[i] = distri[i+1];
+	    			distri[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Float> sol = new RobotList<Float>(Float.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	sol.addLast(new Float(distri[i].value));
+	    }
+	    return sol;
+	}
+	
+	
+	//ENEMY
+	public RobotList<Enemy> sort_incr_Enemy(RobotList<Enemy> list, String field)
+	{
+		//bubble sort
+		int length = list.size();
+		Index_value[] enemy_dist = new Index_value[length];
+		
+		if (field.equals("")||field.equals("location"))
+		{
+			Location cur_loc = this.getLocation();
+			for (int i=0; i<length; i++)
+			{
+				enemy_dist[i] = new Index_value(i,distance(cur_loc, list.get(i).location));
+			}
+		}
+		else if (field.equals("energy"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				enemy_dist[i] = new Index_value(i,list.get(i).energy);
+			}
+		}
+		else
+		{
+			say("impossible to sort list - nothing modified");
+			return list;
+		}
+		
 		
 	    boolean permut;
 
@@ -705,23 +822,102 @@ public class Robot implements RobotInterface {
 	    RobotList<Enemy> new_enemy_list = new RobotList<Enemy>(Enemy.class); 
 	    for (int i=0; i<length; i++)
 	    {
-	    	new_enemy_list.addLast(enemy_list.get(enemy_dist[i].index));
+	    	new_enemy_list.addLast(list.get(enemy_dist[i].index));
 	    }
-	    enemy_list = new_enemy_list;
+	    //list = new_enemy_list;
 	    
-	    return enemy_list;
+	    return new_enemy_list;
 	}
 	
-	
-	public RobotList<Resource> sort_resource_distance ()
+	public RobotList<Enemy> sort_decr_Enemy(RobotList<Enemy> list, String field)
 	{
 		//bubble sort
-		int length = resource_list.size();
-		Index_value[] resource_dist = new Index_value[length];
-		Location cur_loc = this.getLocation();
-		for (int i=0; i<length; i++)
+		int length = list.size();
+		Index_value[] enemy_dist = new Index_value[length];
+		
+		if (field.equals("")||field.equals("location"))
 		{
-			resource_dist[i] = new Index_value(i,distance(cur_loc, resource_list.get(i).location));
+			Location cur_loc = this.getLocation();
+			for (int i=0; i<length; i++)
+			{
+				enemy_dist[i] = new Index_value(i,distance(cur_loc, list.get(i).location));
+			}
+		}
+		else if (field.equals("energy"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				enemy_dist[i] = new Index_value(i,list.get(i).energy);
+			}
+		}
+		else
+		{
+			say("impossible to sort list - nothing modified");
+			return list;
+		}
+
+		
+	    boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(enemy_dist[i].value<enemy_dist[i+1].value)
+	    		{
+	    			Index_value a = enemy_dist[i];
+	    			enemy_dist[i] = enemy_dist[i+1];
+	    			enemy_dist[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Enemy> new_enemy_list = new RobotList<Enemy>(Enemy.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	new_enemy_list.addLast(list.get(enemy_dist[i].index));
+	    }
+	    //list = new_enemy_list;
+	    
+	    return new_enemy_list;
+	}
+	
+	//RESOURCE
+	public RobotList<Resource> sort_incr_Resource (RobotList<Resource> list, String field)
+	{
+		//bubble sort
+		int length = list.size();
+		Index_value[] resource_dist = new Index_value[length];
+		
+		if (field.equals("")||field.equals("location"))
+		{
+			Location cur_loc = this.getLocation();
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,distance(cur_loc, list.get(i).location));
+			}
+		}
+		else if (field.equals("energy"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).energy);
+			}
+		}
+		else if (field.equals("ammostash"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).energy);
+			}
+		}
+		else
+		{
+			say("impossible to sort list - nothing modified");
+			return list;
 		}
 
 		
@@ -748,11 +944,253 @@ public class Robot implements RobotInterface {
 	    {
 	    	new_resource_list.addLast(resource_list.get(resource_dist[i].index));
 	    }
-	    resource_list = new_resource_list;
+	    //list = new_resource_list;
 	    
-	    return resource_list;
+	    return new_resource_list;
 	}
 	
+	
+	public RobotList<Resource> sort_decr_Resource (RobotList<Resource> list, String field)
+	{
+		//bubble sort
+		int length = list.size();
+		Index_value[] resource_dist = new Index_value[length];
+		
+		if (field.equals("")||field.equals("location"))
+		{
+			Location cur_loc = this.getLocation();
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,distance(cur_loc, list.get(i).location));
+			}
+		}
+		else if (field.equals("energy"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).energy);
+			}
+		}
+		else if (field.equals("ammostash"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).energy);
+			}
+		}
+		else
+		{
+			say("impossible to sort list - nothing modified");
+			return list;
+		}
+
+		
+	    boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(resource_dist[i].value<resource_dist[i+1].value)
+	    		{
+	    			Index_value a = resource_dist[i];
+	    			resource_dist[i] = resource_dist[i+1];
+	    			resource_dist[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Resource> new_resource_list = new RobotList<Resource>(Resource.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	new_resource_list.addLast(resource_list.get(resource_dist[i].index));
+	    }
+	    //list = new_resource_list;
+	    
+	    return new_resource_list;
+	}
+	
+	
+	//Percentage
+	public RobotList<Percentage> sort_incr_Percentage(RobotList<Percentage> list, String field)
+	{
+		int length = list.size();
+		Index_value[] distri = new Index_value[length];
+		for (int i=0; i<length; i++)
+		{
+			distri[i] = new Index_value(i, list.get(i).percent);
+		}
+		
+		boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(distri[i].value>distri[i+1].value)
+	    		{
+	    			Index_value a = distri[i];
+	    			distri[i] = distri[i+1];
+	    			distri[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Percentage> sol = new RobotList<Percentage>(Percentage.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	sol.addLast(new Percentage(distri[i].value));
+	    }
+	    return sol;
+	}
+	
+	
+	public RobotList<Percentage> sort_decr_Percentage(RobotList<Percentage> list, String field)
+	{
+		int length = list.size();
+		Index_value[] distri = new Index_value[length];
+		for (int i=0; i<length; i++)
+		{
+			distri[i] = new Index_value(i, list.get(i).percent);
+		}
+		
+		boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(distri[i].value<distri[i+1].value)
+	    		{
+	    			Index_value a = distri[i];
+	    			distri[i] = distri[i+1];
+	    			distri[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Percentage> sol = new RobotList<Percentage>(Percentage.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	sol.addLast(new Percentage(distri[i].value));
+	    }
+	    return sol;
+	}
+	
+	
+	//Location
+	public RobotList<Location> sort_incr_Location(RobotList<Location> list, String field)
+	{
+		//bubble sort
+		int length = list.size();
+		Index_value[] enemy_dist = new Index_value[length];
+		Location cur_loc = this.getLocation();
+		for (int i=0; i<length; i++)
+		{
+			enemy_dist[i] = new Index_value(i,distance(cur_loc, list.get(i)));
+		}
+
+		
+	    boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(enemy_dist[i].value>enemy_dist[i+1].value)
+	    		{
+	    			Index_value a = enemy_dist[i];
+	    			enemy_dist[i] = enemy_dist[i+1];
+	    			enemy_dist[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Location> new_location_list = new RobotList<Location>(Location.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	new_location_list.addLast(list.get(enemy_dist[i].index));
+	    }
+	    //list = new_enemy_list;
+	    
+	    return new_location_list;
+	}
+	
+	public RobotList<Location> sort_decr_Location(RobotList<Location> list, String field)
+	{
+		//bubble sort
+		int length = list.size();
+		Index_value[] enemy_dist = new Index_value[length];
+
+		if (field.equals("")||field.equals("location"))
+		{
+			Location cur_loc = this.getLocation();
+			for (int i=0; i<length; i++)
+			{
+				enemy_dist[i] = new Index_value(i,distance(cur_loc, list.get(i)));
+			}
+		}
+		else if (field.equals("x"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				enemy_dist[i] = new Index_value(i,list.get(i).x);
+			}
+		}
+		else if (field.equals("y"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				enemy_dist[i] = new Index_value(i,list.get(i).y);
+			}
+		}
+		else
+		{
+			say("impossible to sort list - nothing modified");
+			return list;
+		}
+		
+	    boolean permut;
+
+	    do
+	    {
+	    	permut=false;
+	    	for(int i=0;i<length-1;i++)
+	    	{
+	    		if(enemy_dist[i].value<enemy_dist[i+1].value)
+	    		{
+	    			Index_value a = enemy_dist[i];
+	    			enemy_dist[i] = enemy_dist[i+1];
+	    			enemy_dist[i+1] = a;
+	    			permut=true;
+	    		}
+	    	}
+	    }
+	    while(permut);
+	    
+	    RobotList<Location> new_location_list = new RobotList<Location>(Location.class); 
+	    for (int i=0; i<length; i++)
+	    {
+	    	new_location_list.addLast(list.get(enemy_dist[i].index));
+	    }
+	    //list = new_enemy_list;
+	    
+	    return new_location_list;
+	}
+	
+
 	
 	public void revert_Enemy ()
 	{

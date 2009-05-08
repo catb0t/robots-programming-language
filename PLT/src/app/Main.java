@@ -283,7 +283,6 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 			}
 		}
 		else if ("new".equals(event.getActionCommand())) {
-			System.out.println("new File");
 			
 			if (fileChanged) {
 				Object[] options = {"Yes", "No", "Cancel"};
@@ -300,6 +299,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 					this.actionPerformed(new ActionEvent(this, 0, "save"));
 				}
 				else if (choice==1) {
+					System.out.println("new File");
 					editArea.setText("think\n|\n+---end");
 					filename = null; 
 				}
@@ -308,7 +308,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				}
 			}
 			else {
-				editArea.setText("");
+				editArea.setText("think\n|\n+---end");
 				filename = null;
 			}
 			fileChanged = false;
@@ -558,11 +558,11 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	}
 	
 	public void keyPressed (KeyEvent e) {
-		
+		//e.consume();
 	}
 	
 	public void keyReleased (KeyEvent e) {
-		
+		//e.consume();
 	}
 
 	public void keyTyped (KeyEvent e) {
