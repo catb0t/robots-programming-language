@@ -64,4 +64,13 @@ public class RobotScopeManager {
       return indent;
    }
 
+   public static void addToCurrentScope(RobotVar v) {
+      
+      RobotVarScope rvs = new RobotVarScope(v, level);
+      System.out.println("RSM: Adding " + v.name() + " to the current scope now...");
+      vars.push(new RobotVarScope(v, level));
+      System.out.println("RSM: " + vars);
+
+   }
+
 }

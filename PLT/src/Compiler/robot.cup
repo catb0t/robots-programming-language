@@ -522,6 +522,7 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                               {:
                                  RESULT = "\n" + parser.sm.indent() + "for (" + item.javaType() + " " + item.name() + " : " + list.name() + ") {\n\n";
                                  parser.sm.increaseLevel();
+                                 parser.sm.addToCurrentScope(item);
                               :} NEWLINE
                               optnl
                               block:b
