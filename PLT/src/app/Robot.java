@@ -17,14 +17,14 @@ public class Robot implements RobotInterface {
 	
 	float cameraDistance = 30;
 	
-	public float energy;
-	public int health;
+	public float energy = 100f;
+	public float health = 100f;
 	
 	public float armor;
 	
 	float max_speed=1f;
 	float speed = 0.2f;
-	float maxIncline = 0.1f;
+	float maxIncline = 5f;
 
 	int ammo = 0;
 	
@@ -208,8 +208,8 @@ public class Robot implements RobotInterface {
     	if(goal.x != position.x || goal.z != position.z) //if we haven't moved then don't do anything
     	{
 
-    		
-	    	if( incline < maxIncline)
+    	
+	    	//if( incline < maxIncline)
 	    	{
 	  //  		System.out.println(incline + " : " + maxIncline);
 	    		
@@ -227,6 +227,8 @@ public class Robot implements RobotInterface {
 	    		
 	    	}
     	}
+    	
+    	//say(this.getLocation().toString());
     	
     	
     //	goal.x = position.x - 10;
@@ -522,10 +524,12 @@ public class Robot implements RobotInterface {
 	{		
 		//goal = new Vector3(0, 0, 0);
 		
+		shoot(new Location (10,10));
+		
 		
 		//move_to(position.add(forwardDirection), 0.0000001f);
 		
-		System.out.println("empty process");
+		//System.out.println("empty process");
 		//String l = Global.outputArea.getText();
 		//Global.outputArea.setText(l.concat("\n Robot says: ").concat("I am not programmed"));
 		
@@ -538,7 +542,7 @@ public class Robot implements RobotInterface {
 	{
 		//System.out.println(s);
 		String l = Global.outputArea.getText();
-		Global.outputArea.setText(l.concat("\n").concat(s));
+		Global.outputArea.setText(s.concat("\n").concat(l));
 	}
 	
 	public void move_to (Location location)
@@ -572,6 +576,10 @@ public class Robot implements RobotInterface {
 	{
 		//decrease energy
 		//shoot
+		Vector3 las_loc = this.getLocation().getVector3();
+		shoot = true;
+		shootDirection = loc.getVector3().add(las_loc.multiply(-1));
+
 	}
 	
 	public void ping ()

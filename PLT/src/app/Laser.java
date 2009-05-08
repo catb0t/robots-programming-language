@@ -16,14 +16,20 @@ public class Laser {
 
 	Vector3 location;
 	Vector3 direction;
-	OBJ_Model laser = null;
+	OBJ_Model laser;
     private int laserTexture;
 	private GLU glu = new GLU();
 	float strength = 1;
 	float speed = 1;
 	float power = 1;
 	float oldTime;
-	Sphere laserAvatar = null;
+	Sphere laserAvatar;
+	
+	
+	public Laser()
+	{
+		
+	}
 	
 	public Laser(Vector3 pos, Vector3 dir, float time)
 	{
@@ -57,9 +63,12 @@ public class Laser {
 	
     public void renderLaser(GL gl, Vector3 position)
     {
+    	laserAvatar = new Sphere(gl);
+    	
     	gl.glPushMatrix();
     		gl.glTranslatef(position.x, position.y, position.z);
-			laserAvatar.renderSphere(0, 0, 0, 1, 15);
+			laserAvatar.renderSphere(0, 0, 0, 0.3f, 15);
+			
 		gl.glPopMatrix();
     }
     

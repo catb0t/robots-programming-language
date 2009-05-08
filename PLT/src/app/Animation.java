@@ -7,42 +7,44 @@ import java.awt.TextArea;
 public class Animation implements Runnable {
 
 	Thread animator;
-	
+
 	Robot[] player = null;
 	Scene scene;
-	
+
 	int numberOfPlayers = 1;
-	
-    int numberOfPowerups = 30;
-    public Powerup[] resources = null;//new Powerup[numberOfPowerups];
-    
-    ArrayList lasers = null;
+
+	int numberOfPowerups = 30;
+	public Powerup[] resources = null;//new Powerup[numberOfPowerups];
+
+	//ArrayList<Laser> lasers = null;
+	LinkedList<Laser> lasers;
 	
 	public Animation (Robot[] p, int numPlayers, Scene s) {
 		player = p;
 		numberOfPlayers = numPlayers;
 		scene = s;
 		scene.player = new Robot[numPlayers];
-		
-		lasers = new ArrayList();
+
+		//lasers = new ArrayList<Laser>();
+		lasers = new LinkedList<Laser>();
 		
 		resources = new Powerup[numberOfPowerups];
 		scene.numberOfPowerups = numberOfPowerups;
 		scene.resources = new Powerup[numberOfPowerups];
-		
+
 		Random generator = new Random();
-        for(int i = 0; i < numberOfPowerups; i++)
-        {
-        	//find location
-        	float x = generator.nextFloat()*(player[0].terrain.maxx - player[0].terrain.minx) + player[0].terrain.minx;
-        	float z = generator.nextFloat()*(player[0].terrain.maxz - player[0].terrain.minz) + player[0].terrain.minz;
-        	Vector3 pos = new Vector3(x, z, 0);
-        	float y = player[0].terrain.terrainIntersection(pos);
-        	pos = new Vector3(x, y, z);
-        	resources[i] = new Powerup(pos, generator.nextInt(4));
-        }        
-		
-		
+		for(int i = 0; i < numberOfPowerups; i++)
+		{
+			//find location
+			float x = generator.nextFloat()*(player[0].terrain.maxx - player[0].terrain.minx) + player[0].terrain.minx;
+			float z = generator.nextFloat()*(player[0].terrain.maxz - player[0].terrain.minz) + player[0].terrain.minz;
+			Vector3 pos = new Vector3(x, z, 0);
+			float y = player[0].terrain.terrainIntersection(pos);
+			pos = new Vector3(x, y, z);
+			resources[i] = new Powerup(pos, generator.nextInt(4));
+		}        
+
+
 		animator = null;
 	}
 
@@ -54,12 +56,22 @@ public class Animation implements Runnable {
 		try {
 			while (Thread.currentThread() == animator)
 			{
-				for(int i = 0; i < numberOfPlayers; i++)
+				if( System.currentTimeMillis() - time > 500) //updates every second
 				{
-					if(player[i].health > 0)
-						player[i].think();
+					for(int i = 0; i < numberOfPlayers; i++)
+					{
+						if(player[i].health > 0)
+							player[i].think();
+					}
+					time = System.currentTimeMillis();
 				}
-				time = System.currentTimeMillis();
+
+				if(System.currentTimeMillis() > timeUpdater)
+				{
+					t++;
+					timeUpdater = System.currentTimeMillis();
+				}
+				
 				//if the player has chosen to fire, go ahead and spawn a laser and set the players desire to fire to false
 				for(int i = 0; i < numberOfPlayers; i++)
 				{
@@ -96,7 +108,8 @@ public class Animation implements Runnable {
 				//update the projectiles
 				for(int i = 0; i < lasers.size(); i++)
 				{
-					Laser tempLaser = ((Laser)(lasers.listIterator(i)));
+					//Laser tempLaser = ((Laser)(lasers.listIterator(i)));
+					Laser tempLaser = lasers.get(i);
 					tempLaser.update((float)t/100.0f);
 					//check if laser has hit the terrain, if it has then kill it
 					float terrainY = player[0].terrain.terrainIntersection(new Vector3(tempLaser.location.x, tempLaser.location.z, 0));
@@ -162,7 +175,7 @@ public class Animation implements Runnable {
 
 		} catch (Exception ex) {
 			animator = null;
-			Global.outputArea.setText(Global.outputArea.getText().concat("\n\n").concat("Error in the main program"));
+			Global.outputArea.setText("Error in the main program".concat("\n\n").concat(Global.outputArea.getText()));
 			ex.printStackTrace();
 		}
 	}
