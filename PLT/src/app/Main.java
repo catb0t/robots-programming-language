@@ -53,7 +53,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	}
 
 	
-	public void init () {
+	public void init (int enemies_numb) {
 		
 		this.setName("ROBOT");
 		
@@ -269,6 +269,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	    Level level = new Level("level1.lvl");
 	    
 	    scene = new Scene();
+
 	    terrain = new Terrain();
 	    //create the player object
 	    player = new Robot(terrain);
@@ -294,10 +295,17 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		
 		this.setVisible(true);
 
-		Robot[] players = new Robot[1];
+		
+		
+		Robot[] players = new Robot[enemies_numb+1];
 		players[0] = player;
 		
-		anime = new Animation(players, 1, scene);
+		for (int i=0; i<enemies_numb; i++)
+		{
+			players[i+1] = new RobotEnemy(terrain);
+		}
+		
+		anime = new Animation(players, players.length, scene);
 	//	start.doClick();
 	  
 	    
@@ -719,6 +727,6 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	public static void main (String[] args) {
 
 		Main display = new Main();
-		display.init();
+		display.init(0);
 	}
 }

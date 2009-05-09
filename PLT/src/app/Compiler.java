@@ -38,6 +38,19 @@ public class Compiler {
 		System.out.println(System.getProperty("user.dir"));
 		String dir = System.getProperty("user.dir");
 		
+		File javaFile = new File("./RobotCompiled.java");
+		File classFile = new File("./RobotCompiled.class");
+		
+		if (javaFile.exists())
+		{
+			javaFile.delete();
+		}
+		if (classFile.exists())
+		{
+			classFile.delete();
+		}
+		
+		
 		try
 		{            
 			Runtime rt = Runtime.getRuntime();
@@ -60,6 +73,8 @@ public class Compiler {
 		} catch (Throwable t)
 		{
 			t.printStackTrace();
+			Global.outputArea.setText(t.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
+			//Global.outputArea.setText("could not load program\n\n".concat(Global.outputArea.getText()));
 		}
 		
 		try
@@ -84,12 +99,14 @@ public class Compiler {
 		} catch (Throwable t)
 		{
 			t.printStackTrace();
+			Global.outputArea.setText(t.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
 		}
         
 		try {
 			reloadClass(dir);
 		} catch (IOException ex) {
 			ex.printStackTrace();
+			Global.outputArea.setText(ex.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
 		}
 		
 	}
@@ -123,6 +140,7 @@ public class Compiler {
             
         } catch (Exception e) {
         	e.printStackTrace();
+        	Global.outputArea.setText(e.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
         }
     }
 }

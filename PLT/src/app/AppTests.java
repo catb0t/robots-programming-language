@@ -63,49 +63,7 @@ public class AppTests {
 	}
 
 
-	//@Test
-	public void test_funcset_add() {
-		
-		System.out.println("test funcset.add...");
-		
-		System.out.println("    Number...");
-		
-		RobNumber n1 = new RobNumber(2f);
-		RobNumber n2 = new RobNumber(1.5f);
-
-		assertTrue(funcset.add(n1,n2).equals(new RobNumber(3.5f)));
-		assertTrue(!funcset.add(n1,n2).equals(new RobNumber(3f)));
-
-		System.out.println("    Percentage...");
-		
-		Percentage p1 = new Percentage(50f);
-		Percentage p2 = new Percentage(60f);
-
-		assertTrue(funcset.add(p1,p2).equals(new Percentage(100f)));
-		assertTrue(funcset.add(p1,p2).equals(new Percentage(110f)));
-		assertTrue(!funcset.add(p1,p2).equals(new Percentage(90f)));
-		
-		System.out.println("    Location...");
-		
-		Location l1 = new Location(1f,2f);
-		Location l2 = new Location(2f,3f);
-
-		assertTrue(!funcset.add(l1,l2).equals(new Location()));
-		assertTrue(funcset.add(l1,l2).equals(new Location(3f,5f)));
-		
-		System.out.println("    RobBool...");
-		
-		RobBool b1 = new RobBool(true);
-		RobBool b2 = new RobBool(false);
-
-		assertTrue(funcset.add(b1,b2).equals(new RobBool(true)));
-		assertTrue(!funcset.add(b1,b2).equals(new RobBool(false)));
-		
-		System.out.println("    errors handling...");
-		
-		//assertTrue(test_add_generic());
-	}
-	
+/*
 	public boolean test_add_generic() {
 		try {
 			funcset.add(new Location(), new RobNumber(0f));
@@ -114,7 +72,7 @@ public class AppTests {
 			return true;
 		}
 	}
-	
+
 	//@Test
 	public void test_funcset_times() {
 		
@@ -170,6 +128,7 @@ public class AppTests {
 		
 		//assertTrue(test_times_generic());
 	}
+	*/
 	
 	public boolean test_times_generic () {
 		try {
@@ -315,4 +274,7 @@ public class AppTests {
 		
 		//assertTrue(test_add_generic());
 	}
+	
+	
+	
 }
