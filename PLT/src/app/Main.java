@@ -149,23 +149,31 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
                          {
                              e.consume();
 
-                             int i;
+                             int i,j;
 
                              if (e.isAltDown()) {
                                  String t = editArea.getText();
                                  i = t.lastIndexOf(" ",editArea.getCaretPosition());
-                                 if (i == -1) i = editArea.getCaretPosition();
-                                 else if (i == editArea.getCaretPosition() && editArea.getCaretPosition() > 0) {
-                                    i = t.lastIndexOf(" ",editArea.getCaretPosition()-1);
+                                 if (i == -1) {
+                                    i = t.lastIndexOf("\n",editArea.getCaretPosition());
+                                    if (i == -1) i = 0;
                                  }
-                                 if (i == -1) i = editArea.getCaretPosition();
-                             } else if (editArea.getCaretPosition() != 0) {
-                                 i = editArea.getCaretPosition()-1;
+                                 if (i == editArea.getCaretPosition()) i--;
+
+                                 System.out.println(i + " " + editArea.getCaretPosition()); 
                              } else {
-                                 i = editArea.getCaretPosition();
+                                 i = editArea.getCaretPosition()-1;
                              }
 
-                             editArea.setCaretPosition(i);
+                             if (i <= editArea.getText().length()) {
+
+                                try {
+                                   editArea.setCaretPosition(i);
+                                } catch (Exception ex) {
+                                   // Do nothing
+                                }
+
+                             }
                          }
           
                          if (e.getKeyCode() == KeyEvent.VK_RIGHT)
@@ -177,20 +185,26 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
                              if (e.isAltDown()) {
                                  String t = editArea.getText();
                                  i = t.indexOf(" ",editArea.getCaretPosition());
-                                 //System.out.println(editArea.getCaretPosition() + " " + i);
-                                 if (i == -1) i = editArea.getCaretPosition();
-                                 else if (i == editArea.getCaretPosition() && editArea.getCaretPosition() < editArea.getText().length()) {
-                                    i = t.indexOf(" ",editArea.getCaretPosition()+1);
+                                 if (i == -1) {
+                                    i = t.indexOf("\n",editArea.getCaretPosition());
+                                    if (i == -1) i = editArea.getText().length();
                                  }
-                                 if (i == -1) i = editArea.getCaretPosition();
-                             } else if (editArea.getCaretPosition() != editArea.getText().length()) {
-                                 i = editArea.getCaretPosition()+1;
+                                 if (i == editArea.getCaretPosition()) i++;
+                                 System.out.println(i + " " + editArea.getCaretPosition()); 
                              } else {
-                                 i = editArea.getCaretPosition();
+                                 i = editArea.getCaretPosition()+1;
                              }
 
-                             editArea.setCaretPosition(i);
-                             
+                             if (i <= editArea.getText().length()) {
+
+                                try {
+                                   editArea.setCaretPosition(i);
+                                } catch (Exception ex) {
+                                   // Do nothing
+                                }
+
+                             }
+
                          }
 
                          if (e.getKeyCode() == KeyEvent.VK_UP)
@@ -198,8 +212,17 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
                              e.consume();
                              String t = editArea.getText();
                              int i = t.lastIndexOf("\n",editArea.getCaretPosition());
-                             if (i != -1)
-                                editArea.setCaretPosition(i-1);
+                             if (i == editArea.getCaretPosition()) i--;
+                             
+                             if (i <= editArea.getText().length()) {
+
+                                try {
+                                   editArea.setCaretPosition(i);
+                                } catch (Exception ex) {
+                                   // Do nothing
+                                }
+
+                             }
                          }
 
                          if (e.getKeyCode() == KeyEvent.VK_DOWN)
@@ -207,9 +230,17 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
                              e.consume();
                              String t = editArea.getText();
                              int i = t.indexOf("\n",editArea.getCaretPosition());
-                             if (i != -1)
-                                editArea.setCaretPosition(i+1);
+                             if (i == editArea.getCaretPosition()) i++;
+                             
+                             if (i <= editArea.getText().length()) {
 
+                                try {
+                                   editArea.setCaretPosition(i);
+                                } catch (Exception ex) {
+                                   // Do nothing
+                                }
+
+                             }
                          }
 
                      }
