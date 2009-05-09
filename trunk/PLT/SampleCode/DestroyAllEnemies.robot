@@ -1,6 +1,5 @@
 //This code baseline for compiler test
 //Expected Result : DestroyAllEnemies.java
-//There is an error in line 20
 think
     if energy_level% of self is_greater_than 10% then //if energy is less than 10% then wait to recharge
         ping // Decreases energy

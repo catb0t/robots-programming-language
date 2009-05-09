@@ -1,5 +1,3 @@
-//This code baseline for compiler test
-//Expected Result : FindShoot.java
 think
 
    closest_enemy! = NOTHING!
