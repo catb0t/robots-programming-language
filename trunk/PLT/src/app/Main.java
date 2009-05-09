@@ -727,6 +727,6 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	public static void main (String[] args) {
 
 		Main display = new Main();
-		display.init(0);
+		display.init(2);
 	}
 }
