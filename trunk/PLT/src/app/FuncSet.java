@@ -32,6 +32,30 @@ public class FuncSet extends BasicFuncSet {
 
 	}
 	
+	
+	//subtract functions which do not return errors
+	
+	public Float subtract (Float a, Float b) {
+		
+		return new Float(a-b);
+		
+	}
+	
+	public Percentage subtract (Percentage a, Percentage b) {
+
+		Percentage p = new Percentage(a.percent-b.percent);
+		p.cap();
+		return p;
+
+	}
+	
+	public Location subtract (Location a, Location b) {
+		
+		return new Location(a.x-b.x, a.y-b.y);
+		
+	}
+
+	
 	//times functions which do not return errors
 	
 	public Float times (Float a, Float b) {
@@ -40,12 +64,12 @@ public class FuncSet extends BasicFuncSet {
 	
 	public Float times (Float a, Percentage b)
 	{
-		return new Float(a*b.percent/100f);
+		return new Float(a*(b.percent/100f));
 	}
 	
 	public Float times (Percentage a, Float b)
 	{
-		return new Float(a.percent/100f*b);
+		return new Float(b*(a.percent/100f));
 	}
 	
 	public Location times (Float a, Location b)
@@ -76,6 +100,62 @@ public class FuncSet extends BasicFuncSet {
 	{
 		return new Boolean(a&&b);
 	}
+	
+	
+	//divided functions which do not return errors
+	
+	public Float divided (Float a, Float b) {
+		return new Float(a/b);
+	}
+
+	public Float divided (Float a, Percentage b)
+	{
+		return new Float(a/(b.percent/100f));
+	}
+
+	public Float divided (Percentage a, Float b)
+	{
+		return new Float((a.percent/100f)/b);
+	}
+
+	public Location divided (Float a, Location b)
+	{
+		return new Location(b.x/a, b.y/a);
+	}
+
+	public Location divided (Location b, Float a)
+	{
+		return new Location(b.x/a, b.y/a);
+	}
+
+	public Percentage divided (Percentage a, Percentage b) {
+		if (b.percent==0) {
+			Exception e = new Exception();
+			try {
+				throw e;
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+
+			return new Percentage(0f);
+		}
+		else {
+			Percentage p = new Percentage(a.percent/b.percent);
+			p.cap();
+			return p;
+		}
+	}
+
+	public Location divided (Percentage a, Location b)
+	{
+		return new Location(b.x/(a.percent/100f), b.y/(a.percent/100f));
+	}
+
+	public Location divided (Location b, Percentage a)
+	{
+		return new Location(b.x/(a.percent/100f), b.y/(a.percent/100f));
+	}
+
 
 	//rollover functions which do not return errors
 
@@ -100,6 +180,69 @@ public class FuncSet extends BasicFuncSet {
 
 		return new Float(retVal);
 
+	}
+	
+	
+	//cosinus functions which do not return errors
+	
+	public Float cos (Float a) {
+		return new Float(Math.cos(a));
+	}
+	
+	public Float cos (Percentage a) {
+		return new Float(Math.cos(a.percent/100f));
+	}
+	
+	
+	//sinus functions which do not return errors
+	
+	public Float sin (Float a) {
+		return new Float(Math.sin(a));
+	}
+	
+	public Float sin (Percentage a) {
+		return new Float(Math.sin(a.percent/100f));
+	}
+	
+	
+	//tangent functions which do not return errors
+	
+	public Float tan (Float a) {
+		return new Float(Math.tan(a));
+	}
+	
+	public Float tan (Percentage a) {
+		return new Float(Math.tan(a.percent/100f));
+	}
+	
+	
+	//pow functions which do not return errors
+	
+	public Float pow (Float a, Float b) {
+		return new Float(Math.pow(a,b));
+	}
+	
+	public Float pow (Percentage a, Float b) {
+		return new Float(Math.pow(a.percent/100f, b));
+	}
+	
+	public Float pow (Float a, Percentage b) {
+		return new Float(Math.pow(a, b.percent/100f));
+	}
+	
+	public Float pow (Percentage a, Percentage b) {
+		return new Float(Math.pow(a.percent/100f, b.percent/100f));
+	}
+	
+	
+	//sqrt functions which do not return errors
+	
+	public Float sqrt (Float a) {
+		return new Float(Math.sqrt(a));
+	}
+	
+	public Percentage sqrt (Percentage a) {
+		return new Percentage((float) Math.sqrt(a.percent/100f)*100f);
 	}
 
 }
