@@ -308,31 +308,37 @@ public class Terrain {
     	
     	float x = position.x - position2.x;
 		float y = position.y - position2.y;
-	/*	
+		
     	if(position2.y/position2.x >= 1.0f) //we are in the first quadrant
     	{
-    		float slope = ((position2.y + STEP_SIZE) - y) / ((position2.x + STEP_SIZE) - x);
+    		float newHeightY = (float)h1*(1-interpY) + (float)h2*(interpY);
+    		float newHeightX = newHeightY*(1-interpX) + (float)h3*(interpX);
+    		return scaleY*newHeightX;
+   /* 		float slope = ((STEP_SIZE) - y) / ((STEP_SIZE) - x);
     		float y_intercept = y - (x*slope);
     		float interceptH = h1*(1.0f - y_intercept) + h2*y_intercept;
     		float dist = (float)Math.sqrt( Math.pow(x, 2) + Math.pow(y - y_intercept, 2) );
     		dist = dist/(float)Math.sqrt(1+(float)Math.pow(1.0f-y_intercept, 2));
     		return scaleY*(interceptH*(1.0f - dist) + h3*dist);
-    	}
+    */	}
     	else //second quadrant
     	{
-    		float slope = (y - position2.y) / (x - position2.x);
-    		float y_intercept = y + ((position2.x - x)*slope);
+    		float newHeightY = (float)h4*(1 - interpY) + (float)h3*(interpY);
+    		float newHeightX = newHeightY*interpX + (float)h1*(1-interpX);
+    		return scaleY*newHeightX;
+    /*		float slope = (y) / (x);
+    		float y_intercept = y + ((x)*slope);
     		float interceptH = h4*(1.0f - y_intercept) + h3*y_intercept;
     		float dist = (float)Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
     		dist = dist/(float)Math.sqrt(1+ (float)Math.pow(y_intercept, 2));
     		return scaleY*(h1*(1.0f - dist) + interceptH*dist);
-    	}
- */   	
-    	float newHeightX = (float)h1*(1-interpX) + (float)h2*(interpX);
-    	float newHeightY = (float)h3*(1-interpX) + (float)h4*(interpX);
-    	float newHeight = newHeightX*(1-interpY) + newHeightY*(interpY);
+    */	}
+   	
+ //   	float newHeightX = (float)h1*(1-interpX) + (float)h2*(interpX);
+   // 	float newHeightY = (float)h3*(1-interpX) + (float)h4*(interpX);
+    //	float newHeight = newHeightX*(1-interpY) + newHeightY*(interpY);
     	   	 	
-    	return newHeight*scaleY;
+    //	return newHeight*scaleY;
     }
     
     private void setVertexColor(GL gl, byte[] pHeightMap, int x, int y) {                 // Sets The Color Value For A Particular Index, Depending On The Height Index

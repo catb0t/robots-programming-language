@@ -231,8 +231,8 @@ public class Robot implements RobotInterface {
     	//say(this.getLocation().toString());
     	
     	
-    //	goal.x = position.x - 10;
-    //	goal.z = position.z - 10;
+   // 	goal.x = position.x - 10;
+   // 	goal.z = position.z - 10;
     	
     	//update the camera
     	float tempx = position.x + cameraDistance*(float)Math.cos((double)time/100.0);
