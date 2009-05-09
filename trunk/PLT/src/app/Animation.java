@@ -24,6 +24,7 @@ public class Animation implements Runnable {
 		numberOfPlayers = numPlayers;
 		scene = s;
 		scene.player = new Robot[numPlayers];
+		scene.numberOfRobots = numPlayers;
 
 		//lasers = new ArrayList<Laser>();
 		lasers = new LinkedList<Laser>();
