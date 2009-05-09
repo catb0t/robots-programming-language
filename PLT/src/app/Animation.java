@@ -97,7 +97,10 @@ public class Animation implements Runnable {
 				//update players
 				for(int i = 0; i < numberOfPlayers; i++)
 				{
-					player[i].update( (float)t/100.0f );
+					if(numberOfPlayers > 1)
+						player[i].update( (float)t/100.0f, player[1].position );
+					else
+						player[i].update( (float)t/100.0f, null );
 					scene.player[i] = player[i];
 					//System.out.println("position.x " + player.position.x);
 					scene.player[i].setPosition(player[i].position.x, player[i].position.y, player[i].position.z);

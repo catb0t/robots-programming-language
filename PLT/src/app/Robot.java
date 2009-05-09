@@ -177,7 +177,7 @@ public class Robot implements RobotInterface {
     
     boolean firstRun = true;
 
-    public void update(float time)
+    public void update(float time, Vector3 lookat)
     {	
     	if(firstRun == true)
     	{
@@ -237,7 +237,14 @@ public class Robot implements RobotInterface {
     	//update the camera
     	float tempx = position.x + cameraDistance*(float)Math.cos((double)time/100.0);
 		float tempy = position.z + cameraDistance*(float)Math.sin((double)time/100.0);
-		
+    	if(lookat != null)
+    	{
+    		Vector3 lookFrom = new Vector3(lookat.x - position.x, lookat.y - position.y, lookat.z - position.z);
+    		lookFrom.normalize();
+    		tempx = position.x + cameraDistance*(lookFrom.x);
+    		tempy = position.z + cameraDistance*(lookFrom.z);
+    	}
+
 		
 		//figure out the camera direction... camera should probably look at the robot but be pointed in the direction of the closest object of interest
 		cameraDirection = new Vector3(tempx, position.y + cameraDistance/2.0f, tempy);
