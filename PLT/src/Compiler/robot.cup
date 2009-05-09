@@ -154,11 +154,16 @@ program         ::= optnl declaration:dcls
 
 declaration     ::= declaration:dcl optnl VARIABLE:v NEWLINE
                     {:
-                       parser.temp = parser.sm.declareIfNecessary(v);
+                       parser.temp = parser.sm.initializeIfNecessary(v);
                        
-                       if(parser.temp.compareTo("") != 0) {
-                         RESULT = dcl + parser.sm.indent() + parser.temp + v.name() + ";\n";
-                       } /*else {
+                       if(!parser.temp.equals("")) {
+                          RESULT = dcl + parser.sm.indent() + v.javaType() + " " + v.name() + ";\n";
+                          if(v.isList()) {
+                             parser.globalAssignments += "\t\t" + parser.temp;
+                          }
+                       }
+                       
+                       /*else {
                          // It is an error to declare the same name twice in global scope
                          System.err.println("Duplicate declaration: " + v.name() + "\n");
                          System.exit(0);
@@ -359,15 +364,8 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               {:
                                  RESULT = new Expression(v.name());
                                  
-                                 parser.temp = parser.sm.declareIfNecessary(v);
-                                 if(!parser.temp.equals("")) {
-                                 	 parser.temp += v.name() + " = new " + v.javaType() + "(";
-                                         //TODO: put this logic into RobotVar
-                                         if (v.isList()) parser.temp += v.type().javaType() + ".class";
-                                         parser.temp += ");\n" + parser.sm.indent();
-                                         RESULT.declarations.append(parser.temp);
-                                 }
-                                 
+                                 parser.temp = parser.sm.initializeIfNecessary(v);
+                                 RESULT.declarations.append(parser.temp);
                               :}
                         |
                               function_call:fc
@@ -651,10 +649,9 @@ special_args            ::=   ADD      {: RESULT = "\"add\"";     :}
 local_declaration       ::=   /*variable_name_local:vnl*/ VARIABLE:v NEWLINE 
                               {:
                                  //RESULT = vnl /* + dcl*/;
-                                 parser.temp = parser.sm.declareIfNecessary(v);
-                                 RESULT = parser.temp + v.name();
-                                 if(!parser.temp.equals("")) {
-                                 	 RESULT += " = new " + v.javaType() + "()";
+                                 RESULT = parser.sm.initializeIfNecessary(v);
+                                 if(RESULT.equals("")) {
+                                    RESULT = v.name();
                                  }
                               :}
                         /*|
