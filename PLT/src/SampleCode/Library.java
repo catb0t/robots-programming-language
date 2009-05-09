@@ -24,7 +24,7 @@ public class RobotCompiled extends Robot {
 		RobotList<Enemy> furthest_enemies = sort(enemy_info);
 		RobotList<Resource> most_valuable_resources = sort(resource_info>ammo_stash);
 		modify_list(cliff_locations, add(loc_of_cliff));
-		Percent randomNumber = gen_random_num();
+		Percentage randomNumber = gen_random_num();
 		Boolean should_attack = flipCoin(this.health);
 		Float testnum = new Float(100f);
 		Float result = sqrt(testnum);

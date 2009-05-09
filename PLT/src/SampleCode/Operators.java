@@ -12,12 +12,12 @@ public class RobotCompiled extends Robot {
 		Float d = a - b;
 		Float e = funcset.times(a, b);
 		Float f = a / b;
-		Percent health_boost = new Float(70f);
-		Percent health = new Float(40f);
+		Percentage health_boost = new Float(70f);
+		Percentage health = new Float(40f);
 		health = funcset.add(health, health_boost);
 		Float multiplier = new Float(2f);
 		health = new Float(60f);
-		Percent healthNew = funcset.times(health, multiplier);
+		Percentage healthNew = funcset.times(health, multiplier);
 		Float healthNum = funcset.times(health, multiplier);
 		
 		if (a<b) {
