@@ -93,7 +93,7 @@ non terminal String  assignment;
 non terminal String  loop;
 non terminal Expression arithmetic_expression;
 non terminal String  out_text;
-non terminal String  sort_type, optional_sort_arg;
+non terminal String  sort_type, optional_sort_arg, sort_function;
 
 /* Precedences: Follow Java conventions */
 
@@ -192,6 +192,11 @@ field_access    ::= VARIABLE:v OF arithmetic_expression:ae
                     function_call:fc OF arithmetic_expression:ae
                     {:
                        RESULT = ae.declarations.toString() + ae.javaCode.toString() + "." + fc;
+                    :}
+                |
+                    sort_function:sf OF arithmetic_expression:ae
+                    {:
+                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + "." + sf;
                     :}
                 |   
                     index:idx OF arithmetic_expression:ae
@@ -360,6 +365,11 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               function_call:fc
                               {:
                                  RESULT = new Expression(fc);
+                              :}
+                        |
+                              sort_function:sf
+                              {:
+                                 RESULT = new Expression(sf);
                               :}
                         |
                               constant_value:cv        {:   RESULT = new Expression(cv);     :}
@@ -626,7 +636,18 @@ call                    ::=   SAY out_text:ot NEWLINE
                                  RESULT = "say(" + ot + ")";
                               :}
                         |
-                              SORT VARIABLE:vlist sort_type:st optional_sort_arg:osa NEWLINE
+                              sort_function:sf
+                              {:
+                                 RESULT = sf;
+                              :}
+                        |
+                              function_call:fc
+                              {:
+                                 RESULT = fc;
+                              :}
+;
+
+sort_function           ::=   SORT VARIABLE:vlist sort_type:st optional_sort_arg:osa
                               {:
                                  if(!vlist.isList()) {
                                     parser.custom_error("Argument #1 to sort must be a list");
@@ -644,11 +665,6 @@ call                    ::=   SAY out_text:ot NEWLINE
                                  }
 
                                  RESULT += vlist.name() + ", " + osa + ")";
-                              :}
-                        |
-                              function_call:fc
-                              {:
-                                 RESULT = fc;
                               :}
 ;
 
