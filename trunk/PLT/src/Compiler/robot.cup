@@ -126,7 +126,7 @@ program         ::= optnl declaration:dcls
 
                        if(parser.globalAssignments.compareTo("") != 0) {
                           //Constructor, if you please
-                       	  RESULT += "\n\n\tpublic RobotCompiled() {\n\t";
+                       	  RESULT += "\n\n\tpublic RobotCompiled() {\n";
                        	  RESULT += parser.globalAssignments + "\t}\n";
                        }
                        RESULT += "\n}\n";
@@ -135,44 +135,35 @@ program         ::= optnl declaration:dcls
                     :}
 ;
 
-declaration     ::= /*variable_name:vn*/ VARIABLE:v NEWLINE 
-                    optnl declaration:dcl
+declaration     ::= declaration:dcl optnl VARIABLE:v NEWLINE
                     {:
-                       //RESULT = vn + ";\n" + dcl;
                        parser.temp = parser.sm.declareIfNecessary(v);
+                       
                        if(parser.temp.compareTo("") != 0) {
-                         RESULT = parser.temp + v.name();
-                       } else {
+                         RESULT = dcl + parser.sm.indent() + parser.temp + v.name() + ";\n";
+                       } /*else {
                          // It is an error to declare the same name twice in global scope
                          System.err.println("Duplicate declaration: " + v.name() + "\n");
                          System.exit(0);
-                       }
+                       }*/
                     :}
-                 /*|
-                    variable_name:vn assign_op value:val NEWLINE 
-                    optnl declaration:dcl
-                    {: 
-                       RESULT = vn + " = " + val + ";\n" + dcl;
-                    :}*/
                  |
-                    /*variable_name:vn*/ VARIABLE:v assign_op any_expr:ex NEWLINE
-                    optnl declaration:dcl
+                    declaration:dcl optnl VARIABLE:v assign_op any_expr:ex NEWLINE
                     {:
-                       //RESULT = parser.sm.declareIfNecessary(v) + v.name();
                        parser.temp = parser.sm.declareIfNecessary(v);
                        String t = parser.temp + v.name() + " = " + ex + ";\n";
+                       
                        if(parser.temp.compareTo("") != 0) {
-                          RESULT = t + dcl;
+                          RESULT = dcl + parser.sm.indent() + parser.temp + v.name() + ";\n";
+                          parser.globalAssignments += "\t\tthis." + v.name() + " = " + ex + ";\n";
                        } else {
                           RESULT = dcl;
                           parser.globalAssignments += "\t\tthis." + t;
                        }
                     :}
                  |
-                    field_access:fa assign_op any_expr:ex NEWLINE
-                    optnl declaration:dcl
+                    declaration:dcl optnl field_access:fa assign_op any_expr:ex NEWLINE
                     {:
-                       //RESULT = fa + " = " + ex + ";\n" + dcl;
                        RESULT = dcl;
                        parser.globalAssignments += fa + " = " + ex + ";\n";
                     :}
@@ -458,11 +449,11 @@ entry                   ::=   THINK {: parser.sm.increaseLevel(); :} NEWLINE
                               :}
 ;
 
-constant_value          ::=   MAX_HASH          {: RESULT = "Float.MAX_VALUE";  :}
+constant_value          ::=   MAX_HASH      {: RESULT = "Float.MAX_VALUE";  :}
                         |     MIN_HASH		{: RESULT = "Float.MIN_VALUE";  :}
                         |     NOTHING_NOT	{: RESULT = "new Enemy()";      :}
                         |     NOWHERE_AT	{: RESULT = "new Location()";   :}
-                        |     NOTHING_RES       {: RESULT = "new Resource()";   :}
+                        |     NOTHING_RES   {: RESULT = "new Resource()";   :}
 ;
 
 optnl                   ::=   optnl NEWLINE
@@ -537,6 +528,27 @@ else_statement          ::=   ELSE
 
 loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list 
                               {:
+                                 // VARIABLE:list must be a list type
+                                 if(!list.isList()) {
+                                    parser.temp = list.toString() + " is not a list type.\n";
+                                    parser.temp += "Argument 2 of <Repeat with each> statement must be a list type.";
+                                    parser.custom_error(parser.temp);
+                                 }
+                                 
+                                 // VARIABLE:item mustn't be a list type
+                                 if(item.isList()) {
+                                    parser.temp = item.toString() + " is a list type.\n";
+                                    parser.temp += "Argument 1 of <Repeat with each> statement must not be a list type.";
+                                    parser.custom_error(parser.temp);
+                                 }
+                                 
+                                 // VARIABLE:list must be declared. 
+                                 // This is just to try and make sure that the list isn't empty
+                                 parser.temp = parser.sm.declareIfNecessary(list);
+                                 if(parser.temp.compareTo("") != 0) {
+                                    parser.custom_error(list.toString() + " must be declared.");
+                                 }
+                                 
                                  RESULT = "\n" + parser.sm.indent() + "for (" + item.javaType() + " " + item.name() + " : " + list.name() + ") {\n\n";
                                  parser.sm.increaseLevel();
                                  parser.sm.addToCurrentScope(item);
@@ -554,7 +566,7 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                               REPEAT arithmetic_expression:ae TIMES_REPEAT NEWLINE
                               {:
                                  if((new String(ae.declarations)).compareTo(new String("")) != 0) {
-                                 	parser.custom_error(new String("Undeclared variables found in arithemtic expression"));
+                                 	parser.custom_error(new String("Undeclared variables found in arithemtic expression: " + ae));
                                  }
 
                                  RESULT = "\n" + parser.sm.indent() + "for(int __temp = 0; __temp < (" + (new String(ae.javaCode)) + ").intValue(); __temp++) {\n\n";
@@ -584,7 +596,6 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                                  RESULT += b;
                                  RESULT += "\n" + parser.sm.indent() + "}\n";
                               :}
-                              
 ;
 
 function_call           ::=   FUNCTION_NAME:fn arguments_act:args
