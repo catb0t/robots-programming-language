@@ -74,7 +74,7 @@ terminal RobotVar VARIABLE;
 terminal         TIMES_REPEAT, WHILE;
 terminal String  VERBATIM_OUT_TXT;
 terminal         SAY_EXPR_STA, SAY_EXPR_END;
-terminal         SORT;
+terminal         SORT, ADD, REMOVE, ITEM_AT;
 
 /* Non-terminals */
 non terminal Integer expr;
@@ -94,6 +94,7 @@ non terminal String  loop;
 non terminal Expression arithmetic_expression;
 non terminal String  out_text;
 non terminal String  sort_type, optional_sort_arg, sort_function;
+non terminal String  special_args;
 
 /* Precedences: Follow Java conventions */
 
@@ -609,16 +610,25 @@ function_call           ::=   FUNCTION_NAME:fn arguments_act:args
                               :}
 ;
 
-arguments_act           ::=   any_expr:arg arguments_act:args
+arguments_act           ::=   special_args:sargs arguments_act:args
+                              {:
+                                 RESULT = sargs + ", " + args;
+                              :}
+                        |
+                              any_expr:arg arguments_act:args
                               {:
                                  RESULT = arg + ", " + args;
                               :}
-
-                        |     
+                        |
                               /* empty */
                               {:
                                  RESULT = "";
                               :}
+;
+
+special_args            ::=   ADD      {: RESULT = "\"add\"";    :}
+                        |     REMOVE   {: RESULT = "\"remove\""; :}
+                        |     ITEM_AT  {: RESULT = "\"item_at\""; :}
 ;
 
 local_declaration       ::=   /*variable_name_local:vnl*/ VARIABLE:v NEWLINE 
