@@ -15,7 +15,8 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	
 	private static final long serialVersionUID = 7633042051769682994L;
 	
-	protected GLCanvas canvas;
+	//protected GLCanvas canvas;
+	GLCanvas view3D;
 	protected Animator animator;
 	Robot player;
 	Level level;
@@ -40,6 +41,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	
 	boolean animation = false;
 	
+	int enemies_numb=0;
 	
 	public Main () {
 		super();
@@ -54,7 +56,9 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	}
 
 	
-	public void init (int enemies_numb) {
+	public void init (int enemies_number) {
+		
+		enemies_numb=enemies_number;
 
                 Global.initialize();
 		
@@ -248,10 +252,17 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		indent.setActionCommand("indent");
 		indent.addActionListener(this);
 		
+		JButton reset = new JButton("Reset");
+		reset.setActionCommand("reset");
+		reset.addActionListener(this);
+		reset.setEnabled(false);
+		
 		
 		runparse.add(start);
 		runparse.add(parse);
 		runparse.add(indent);
+		runparse.add(reset);
+		
 		
 		editor.add(runparse);
 		
@@ -266,7 +277,8 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		compiler = new Compiler(this);
 		
 		//set the 3d viewer
-		GLCanvas view3D = new GLCanvas();
+		//GLCanvas
+		view3D = new GLCanvas();
 	    
 	    //create level object
 	    Level level = new Level("level1.lvl");
@@ -313,6 +325,40 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	  
 	    
 		
+	}
+	
+	
+	
+	
+	public void reset () {
+		System.out.println("Reseting the simulation");
+		
+		view3D = new GLCanvas();
+	    
+	    //create level object
+	    Level level = new Level("level1.lvl");
+	    
+	    scene = new Scene();
+
+	    terrain = new Terrain();
+	    //create the player object
+	    player = new Robot(terrain);
+	    
+	    view3D.addGLEventListener(scene);
+	   
+	    final Animator animator = new Animator(view3D);
+	   
+	    animator.start();
+	    
+	    Robot[] players = new Robot[enemies_numb+1];
+		players[0] = player;
+		
+		for (int i=0; i<enemies_numb; i++)
+		{
+			players[i+1] = new RobotEnemy(terrain);
+		}
+		
+		anime = new Animation(players, players.length, scene);
 	}
 	
 	
@@ -386,6 +432,10 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				start.validate();
 				stopAnimate();
 			}
+		}
+		else if ("reset".equals(event.getActionCommand())) {
+			
+			reset();
 		}
 		else if ("new".equals(event.getActionCommand())) {
 			
@@ -740,6 +790,14 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 
 	public static void main (String[] args) {
 
+		RobotList<Boolean> la = new RobotList<Boolean>(Boolean.class);
+		la.set(1f, new Boolean(true));
+		la.set(4f, new Boolean(true));
+		
+		RobotList<Float> l = new RobotList<Float>(Float.class);
+		l.set(1f, new Float(1f));
+		l.set(4f, new Float(5f));
+		
 		Main display = new Main();
 		display.init(2);
 	}
