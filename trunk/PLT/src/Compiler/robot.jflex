@@ -395,9 +395,17 @@ min_hash=min\#
    item\_at
          {
                   if (parser.bDebugFlag) {
-                     System.out.println("matched remove: " + yytext());
+                     System.out.println("matched item_at: " + yytext());
                   }
                   return new Symbol(sym.ITEM_AT);
+         }
+
+   change
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched change: " + yytext());
+                  }
+                  return new Symbol(sym.CHANGE);
          }
 
    {identifier}

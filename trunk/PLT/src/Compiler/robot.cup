@@ -90,7 +90,7 @@ terminal RobotVar VARIABLE;
 terminal         TIMES_REPEAT, WHILE;
 terminal String  VERBATIM_OUT_TXT;
 terminal         SAY_EXPR_STA, SAY_EXPR_END;
-terminal         SORT, ADD, REMOVE, ITEM_AT;
+terminal         SORT, ADD, REMOVE, CHANGE, ITEM_AT;
 
 /* Non-terminals */
 non terminal Integer expr;
@@ -642,9 +642,10 @@ arguments_act           ::=   special_args:sargs arguments_act:args
                               :}
 ;
 
-special_args            ::=   ADD      {: RESULT = "\"add\"";    :}
-                        |     REMOVE   {: RESULT = "\"remove\""; :}
+special_args            ::=   ADD      {: RESULT = "\"add\"";     :}
+                        |     REMOVE   {: RESULT = "\"remove\"";  :}
                         |     ITEM_AT  {: RESULT = "\"item_at\""; :}
+                        |     CHANGE   {: RESULT = "\"change\"";  :}
 ;
 
 local_declaration       ::=   /*variable_name_local:vnl*/ VARIABLE:v NEWLINE 
