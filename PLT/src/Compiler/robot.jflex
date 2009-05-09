@@ -377,6 +377,29 @@ min_hash=min\#
                   return new Symbol(sym.NOT);
          }
 
+   add
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched add: " + yytext());
+                  }
+                  return new Symbol(sym.ADD);
+         }
+   remove
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched remove: " + yytext());
+                  }
+                  return new Symbol(sym.REMOVE);
+         }
+
+   item\_at
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched remove: " + yytext());
+                  }
+                  return new Symbol(sym.ITEM_AT);
+         }
+
    {identifier}
          {
                   if (parser.bDebugFlag) {
@@ -477,7 +500,7 @@ min_hash=min\#
             return new Symbol(sym.NEWLINE);
          }
 
-   >>
+   \>\>
          {
             if (parser.bDebugFlag) {
                System.out.println("matched saystate expr sta:" + yytext());
@@ -495,7 +518,7 @@ min_hash=min\#
                   /* ignore comments */
          }
 
-   [^(>>)|\n|(\/\/)]+
+   [^(\>\>)|\n|(\/\/)]+
          {
             if (parser.bDebugFlag) {
                System.out.println("matched saystate vtext: " + yytext());
