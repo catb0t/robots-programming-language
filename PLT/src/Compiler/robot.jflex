@@ -27,7 +27,7 @@ import java_cup.runtime.Symbol;
 	
 	public void lexerError(String errMsg) {
 	    System.err.println("*** Lexical error ***");
-	    System.err.println(errMsg + "\nLine#: " + yyline + "\nColumn#: " + yycolumn);
+	    System.err.println(errMsg + "\nLine#: " + (yyline + 1) + "\nColumn#: " + (yycolumn + 1));
         System.exit(0);
 	}
 

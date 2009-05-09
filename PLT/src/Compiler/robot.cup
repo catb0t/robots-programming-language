@@ -56,7 +56,7 @@ parser code {:
         public void syntax_error(java_cup.runtime.Symbol current) {
     		System.err.println("*** Syntax error ***");
     		System.err.println("Line#: " + (scanner.getLineNumber() + 1));
-    		System.err.println("Column#: " + scanner.getColumnNumber());
+    		System.err.println("Column#: " + scanner.getColumnNumber() + 1);
     		System.err.println("Near token: " + scanner.lastToken());
     		System.err.println("Terminal/Non-terminal #: " + current + "\n");
     		System.exit(1);
@@ -618,7 +618,17 @@ function_call           ::=   FUNCTION_NAME:fn arguments_act:args
                                  // remove the final ,<space> : (arg1, arg2,<space>)
                                  args = args.trim();
                                  if (args.endsWith(",")) {
-                         	    args = args.substring(0, args.length() - 1);
+                         	       args = args.substring(0, args.length() - 1);
+                                 }
+                                 
+                                 // special handling for in-built math functions
+                                 if(fn.compareToIgnoreCase("sin") == 0
+                                    ||
+                                    fn.compareToIgnoreCase("cos") == 0
+                                    ||
+                                    fn.compareToIgnoreCase("tan") == 0) {
+
+                                    fn = "funcset." + fn;
                                  }
                                  RESULT = fn + "(" + args + ")";
                               :}
