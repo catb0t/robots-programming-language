@@ -417,11 +417,11 @@ public class AppTests {
 		RobotList<Resource> list = new RobotList<Resource>(Resource.class);
 		RobotList<Resource> result = new RobotList<Resource>(Resource.class);
 		RobotList<Resource> expectedResult = new RobotList<Resource>(Resource.class);
-		Resource e1=new Resource("1",new Location(50,50),100f, 60f);
-		Resource e2=new Resource("2",new Location(20,20),10f,30f);
-		Resource e3=new Resource("3",new Location(10,10),80f,200f);
-		Resource e4=new Resource("4",new Location(160,160),50f,100f);
-		Resource e5=new Resource("5",new Location(100,100),90f,150f);
+		Resource e1=new Resource("1",new Location(50,50),100f, 60f, 0f, 0f);
+		Resource e2=new Resource("2",new Location(20,20),10f,30f, 0f, 0f);
+		Resource e3=new Resource("3",new Location(10,10),80f,200f, 0f, 0f);
+		Resource e4=new Resource("4",new Location(160,160),50f,100f, 0f, 0f);
+		Resource e5=new Resource("5",new Location(100,100),90f,150f, 0f, 0f);
 		
 		list.add(e1);
 		list.add(e2);
