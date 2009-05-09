@@ -80,6 +80,15 @@ min_hash=min\#
                   yybegin(SAYSTATE);
                   return new Symbol(sym.SAY);
          }
+
+   sort
+         {
+                  if (parser.bDebugFlag) {
+                     System.out.println("matched sort");
+                  }
+                  return new Symbol(sym.SORT);
+         }
+
 /*   "move_to"
          {
                   if (parser.bDebugFlag) {
