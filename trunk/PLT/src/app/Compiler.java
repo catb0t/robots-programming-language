@@ -34,7 +34,7 @@ public class Compiler {
 		inputFile = s;
 	}
 	
-	public void run () {
+	public int run () {
 
 		System.out.println(System.getProperty("user.dir"));
 		String dir = System.getProperty("user.dir");
@@ -79,10 +79,10 @@ public class Compiler {
 		{
 			t.printStackTrace();
 			Global.WriteLineToOutput(t.getMessage());
-                        return;
+                        return 1;
 		}
 		
-                if (exitVal != 0) return;
+                if (exitVal != 0) return 1;
 
 		try
 		{            
@@ -109,18 +109,20 @@ public class Compiler {
 		{
 			t.printStackTrace();
                         Global.WriteLineToOutput(t.getMessage());
-                        return;
+                        return 2;
 		}
 
-                if (exitVal != 0) return;
+                if (exitVal != 0) return 2;
         
 		try {
 			reloadClass(dir);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 			Global.WriteLineToOutput(ex.getMessage());
-                        return;
+                        return 3;
 		}
+
+                return 0;
 		
 	}
 	

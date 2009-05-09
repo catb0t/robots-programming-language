@@ -31,6 +31,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	TextArea outputArea;
 	JButton start;
 	JMenuBar menu;
+        JTabbedPane tabbedPane;
 	
 	String filename;
 	boolean fileChanged = false;
@@ -121,7 +122,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		editor.setLayout(new BoxLayout(editor, BoxLayout.Y_AXIS));
 		editor.setMinimumSize(new Dimension(300,100));
 		
-		JTabbedPane tabbedPane = new JTabbedPane();
+		tabbedPane = new JTabbedPane();
 		
 		editArea = new TextArea("think\n|\n+---end",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		//editArea = new JEditorPane("text/html" , "<font color=\"font color\">think</font>\n|\n+---done");
@@ -349,15 +350,21 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				out.print(editArea.getText());
 				out.close();
 				
-				
+				javaArea.setText("");
+                                Global.outputArea.setText("");
 				
 				compiler.setFileName("tempcode.robot");
-				compiler.run();
+				int retCode = compiler.run();
 				
 				if (file.exists()) file.delete();
 				
 				displayJava();
 				
+                                if (retCode == 0)
+                                   tabbedPane.setSelectedIndex(1);
+                                else
+                                   tabbedPane.setSelectedIndex(2);
+
 				//load class
 				
 				
