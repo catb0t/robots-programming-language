@@ -646,11 +646,11 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	}
 	
 	public void keyPressed (KeyEvent e) {
-		//e.consume();
+		
 	}
 	
 	public void keyReleased (KeyEvent e) {
-		//e.consume();
+		
 	}
 
 	public void keyTyped (KeyEvent e) {
@@ -661,6 +661,9 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 			indent();
 			//editArea.setCaretPosition(pos+2);
 			setCaretPosition(line);
+		}
+		if (e.getKeyChar()==KeyEvent.VK_RIGHT) {
+			System.out.println("right");
 		}
 		
 	}

@@ -569,12 +569,17 @@ public class Robot implements RobotInterface {
 	public void shoot (Enemy en)
 	{
 		//decrease energy
+		energy = energy - 10;
 		//shoot
+		Vector3 las_loc = this.getLocation().getVector3();
+		shoot = true;
+		shootDirection = en.location.getVector3().add(las_loc.multiply(-1));
 	}
 	
 	public void shoot (Location loc)
 	{
 		//decrease energy
+		energy = energy - 10;
 		//shoot
 		Vector3 las_loc = this.getLocation().getVector3();
 		shoot = true;
