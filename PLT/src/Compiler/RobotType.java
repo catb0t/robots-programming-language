@@ -3,7 +3,7 @@ package app;
 public enum RobotType {
 
    NUMBER     ("#"  , "Float"     ),
-   PERCENTAGE ("%"  , "Percentage"   ),
+   PERCENTAGE ("%"  , "Percentage"),
    BOOLEAN    ("?"  , "Boolean"   ),
    LOCATION   ("@"  , "Location"  ),
    ENEMY      ("!"  , "Enemy"     ),
