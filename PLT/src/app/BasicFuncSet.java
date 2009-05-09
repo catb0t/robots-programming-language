@@ -69,6 +69,17 @@ public class BasicFuncSet {
 		return new Float(0f);
 	}
 	
+	public Float subtract (Object a, Object b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
 	public Float times (Object a, Object b) {
 		Exception e = new Exception();
 		try {
@@ -80,7 +91,73 @@ public class BasicFuncSet {
 		return new Float(0f);
 	}
 	
-	public Float Rollover (Object a, Object b) {
+	public Float divided (Object a, Object b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
+	public Float rollover (Object a, Object b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
+	public Float cos (Object a) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
+	public Float sin (Object a) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
+	public Float tan (Object a) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
+	public Float pow (Object a, Object b) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
+	public Float sqrt (Object a, Object b) {
 		Exception e = new Exception();
 		try {
 			throw e;
