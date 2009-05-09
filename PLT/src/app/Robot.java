@@ -1231,9 +1231,9 @@ public class Robot implements RobotInterface {
 		
 	}
 	
-	public double get_random_num ()
+	public float get_random_numb ()
 	{
-		return Math.random();
+		return (float) Math.random();
 	}
 	
 	public boolean flip_coin (double s)
