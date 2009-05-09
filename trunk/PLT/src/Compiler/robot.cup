@@ -17,40 +17,56 @@ parser code {:
 
         public static void main(String args[]) throws Exception {
            bDebugFlag = true;
-           try {
+              
               robotProgram = "import app.*;\nimport java.util.*;\n";
               globalAssignments = "";
               sm = new RobotScopeManager();
-			  scanner = new Yylex(new BufferedReader(new FileReader(args[0])));
-              new parser(scanner).debug_parse();
 
+              scanner = new Yylex(new BufferedReader(new FileReader(args[0])));
+
+              /* create a parsing object */
+              parser parser_obj = new parser(scanner);
+
+              /* open input files, etc. here */
+              Symbol parse_tree = null;
+
+              try {
+                    
+                    parse_tree = parser_obj.debug_parse();
+                    //parse_tree = parser_obj.parse();
+
+              } catch (Exception e) {
+                    /* do cleanup here - - possibly rethrow e */
+                    e.printStackTrace();
+              } finally {
+                    /* do close out here */
+              }
+              
               // dump generated java code to file
-              FileWriter fwTranslatedCode = new FileWriter(args[1], false);
               BufferedWriter bwTranslatedCode = new BufferedWriter(new FileWriter(args[1], false));
               robotProgram.replaceAll("\n", System.getProperty("line.separator"));
               bwTranslatedCode.write(robotProgram);
               bwTranslatedCode.close();
 
               //System.out.println("Translated Java code:\n" + robotProgram);
-           } catch (Exception e) {
-              System.out.println(e.getMessage());
-           }
+              System.exit(0);
+
         }
         
         public void syntax_error(java_cup.runtime.Symbol current) {
-    		System.out.println("*** Syntax error ***");
-    		System.out.println("Line#: " + (scanner.getLineNumber() + 1));
-    		System.out.println("Column#: " + scanner.getColumnNumber());
-    		System.out.println("Near token: " + scanner.lastToken());
-    		System.out.println("Terminal/Non-terminal #: " + current + "\n");
-    		System.exit(0);
+    		System.err.println("*** Syntax error ***");
+    		System.err.println("Line#: " + (scanner.getLineNumber() + 1));
+    		System.err.println("Column#: " + scanner.getColumnNumber());
+    		System.err.println("Near token: " + scanner.lastToken());
+    		System.err.println("Terminal/Non-terminal #: " + current + "\n");
+    		System.exit(1);
   		}
   		
   		public void custom_error(String errMsg) {
-            System.out.println("*** Syntax error ***\n" + errMsg);
-            System.out.println("Line#: " + (scanner.getLineNumber() + 1));
-    		System.out.println("Column#: " + scanner.getColumnNumber());
-    		System.exit(0);
+            System.err.println("*** Syntax error ***\n" + errMsg);
+            System.err.println("Line#: " + (scanner.getLineNumber() + 1));
+    		System.err.println("Column#: " + scanner.getColumnNumber());
+    		System.exit(2);
   		}
 :}
 /* Terminals (tokens returned by the scanner) */

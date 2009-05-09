@@ -54,6 +54,8 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 
 	
 	public void init (int enemies_numb) {
+
+                Global.initialize();
 		
 		this.setName("ROBOT");
 		
@@ -352,7 +354,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				compiler.setFileName("tempcode.robot");
 				compiler.run();
 				
-				file.delete();
+				if (file.exists()) file.delete();
 				
 				displayJava();
 				
@@ -534,7 +536,12 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	
 	public void displayJava () {
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("RobotCompiled.java"));
+
+                   File file = new File("RobotCompiled.java");
+
+                   if (!file.exists()) return;
+
+			BufferedReader in = new BufferedReader(new FileReader(file));
 			String str;
 			String sol = "";
 			while ((str = in.readLine()) != null) {

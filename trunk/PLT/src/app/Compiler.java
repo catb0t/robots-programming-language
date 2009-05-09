@@ -35,8 +35,11 @@ public class Compiler {
 	}
 	
 	public void run () {
+
 		System.out.println(System.getProperty("user.dir"));
 		String dir = System.getProperty("user.dir");
+
+                int exitVal = -99;
 		
 		File javaFile = new File("./RobotCompiled.java");
 		File classFile = new File("./RobotCompiled.class");
@@ -57,56 +60,66 @@ public class Compiler {
 			String command = "java -jar ./robot_parser.jar ./tempcode.robot ./RobotCompiled.java";
 			System.out.println(command);
                         Process proc = rt.exec(command);
-			InputStream stderr = proc.getErrorStream();
-			InputStreamReader isr = new InputStreamReader(stderr);
-			BufferedReader br = new BufferedReader(isr);
+			
+                        BufferedReader br = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 			String line = null;
-			System.out.println("<ERROR>");
 			while ( (line = br.readLine()) != null)
-				System.out.println(line);
-			System.out.println("</ERROR>");
-			int exitVal = proc.waitFor();
-			System.out.println("Process exitValue: " + exitVal);
+				Global.WriteLineToOutput(line);
+			
+                        exitVal = proc.waitFor();
+			Global.WriteLineToOutput("Translation exit code: " + exitVal);
 
-			System.out.println("Java file created");
+                        if (exitVal == 0) 
+			   Global.WriteLineToOutput("SUCCESS in translating from ROBOT to Java");
+                        else
+                           Global.WriteLineToOutput("ERROR in translating from ROBOT to Java");
+
 
 		} catch (Throwable t)
 		{
 			t.printStackTrace();
-			Global.outputArea.setText(t.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
-			//Global.outputArea.setText("could not load program\n\n".concat(Global.outputArea.getText()));
+			Global.WriteLineToOutput(t.getMessage());
+                        return;
 		}
 		
+                if (exitVal != 0) return;
+
 		try
 		{            
 			Runtime rt = Runtime.getRuntime();
 			String command = "javac -cp .:../lib/jogl.jar:../lib/gluegen-rt.jar ./RobotCompiled.java";
 			System.out.println(command);
 			Process proc = rt.exec(command);
-			InputStream stderr = proc.getErrorStream();
-			InputStreamReader isr = new InputStreamReader(stderr);
-			BufferedReader br = new BufferedReader(isr);
+			
+                        BufferedReader br = new BufferedReader(new InputStreamReader(proc.getErrorStream()));
 			String line = null;
-			System.out.println("<ERROR>");
 			while ( (line = br.readLine()) != null)
-				System.out.println(line);
-			System.out.println("</ERROR>");
-			int exitVal = proc.waitFor();
-			System.out.println("Process exitValue: " + exitVal);
+				Global.WriteLineToOutput(line);
+			
+                        exitVal = proc.waitFor();
+                        Global.WriteLineToOutput("Compilation exit code: " + exitVal);
 
-			System.out.println("Java class created");
+			if (exitVal == 0)
+                           Global.WriteLineToOutput("SUCCESS compiled generated Java code into a Java class");
+                        else
+                           Global.WriteLineToOutput("ERROR in compiling generated Java code into a Java class");
+
 
 		} catch (Throwable t)
 		{
 			t.printStackTrace();
-			Global.outputArea.setText(t.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
+                        Global.WriteLineToOutput(t.getMessage());
+                        return;
 		}
+
+                if (exitVal != 0) return;
         
 		try {
 			reloadClass(dir);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			Global.outputArea.setText(ex.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
+			Global.WriteLineToOutput(ex.getMessage());
+                        return;
 		}
 		
 	}
@@ -122,12 +135,14 @@ public class Compiler {
             URL url = dir.toURI().toURL();
             urls = new URL[]{url};
         } catch (Exception e) {
-        	System.out.println(e.getMessage());
+        	Global.WriteLineToOutput(e.getMessage());
+                return;
         }
         
         try {
             // Create a new class loader with the directory
-        	System.out.println("loading class");
+            Global.WriteLineToOutput("Loading new Java class into Runtime environment");
+            
             ClassLoader cl = new URLClassLoader(urls);
         
             // Load in the class
@@ -140,7 +155,8 @@ public class Compiler {
             
         } catch (Exception e) {
         	e.printStackTrace();
-        	Global.outputArea.setText(e.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
+        	Global.WriteLineToOutput(e.getMessage());
+                return;
         }
     }
 }

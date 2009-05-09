@@ -2,7 +2,7 @@
 CLASSPATH = .:..:../lib/jogl.jar:../lib/gluegen-rt.jar:./Compiler/robot_parser.jar:../lib/junit-4.6.jar
 
 default:
-	javac -cp "$(CLASSPATH)" -d . app/*.java
+	javac -cp "$(CLASSPATH)" -Xlint:unchecked -d . app/*.java
 
 run:
 	java -cp "$(CLASSPATH)" app.Main
