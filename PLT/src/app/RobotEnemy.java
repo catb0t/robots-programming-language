@@ -4,7 +4,7 @@ import javax.media.opengl.GL;
 
 public class RobotEnemy extends Robot {
 
-	Enemy Enemyfield;
+	//Enemy Enemyfield;
 	Vector3 initialPosition;
 	
 	
@@ -30,6 +30,10 @@ public class RobotEnemy extends Robot {
 	public void think()
 	{
 		move_to(funcset.times(new Location(10f *((float) Math.random()),10f), (float) Math.random()));
+	}
+	
+	public Enemy projectOnEnemyClass() {
+		return new Enemy("", new Location(position.x, position.y), energy);
 	}
 	
 }

@@ -4,81 +4,130 @@ import java.util.*;
 
 public class RobotList<E> extends LinkedList<E> {
 
-   Class<E> clazz;
+	Class<E> clazz;
 
-   public RobotList(Class<E> cls) {
-      super();
-      clazz = cls;
-   }
+	public RobotList(Class<E> cls) {
+		super();
+		clazz = cls;
+	}
 
-   public E get(float index) {
+	public E get(float index) {
 
-      E item = null;
-      int indexZeroBased = ((int) index) - 1;
+		E item = null;
+		int indexZeroBased = ((int) index) - 1;
 
-      try {
-         
-         item = super.get(indexZeroBased);
+		try {
 
-      } catch (IndexOutOfBoundsException e) {
-         
-         try {
+			item = super.get(indexZeroBased);
 
-            for (int i = this.size(); i <= indexZeroBased; i++) {
-               item = clazz.newInstance();
-               this.add(item);
-            }
+		} catch (IndexOutOfBoundsException e) {
 
-         } catch (InstantiationException e2) {
-            e2.printStackTrace();
-         } catch (IllegalAccessException e2) {
-            e2.printStackTrace();
-         }
+			try {
 
-      } catch (Exception other) {
-         other.printStackTrace();
-      }
+				if (clazz.equals(Float.class))
+				{
+					for (int i = this.size(); i <= indexZeroBased; i++) {
+						
+						item = (E) new Float(0f);
+						this.add(item);
+					}
+				}
+				else if (clazz.equals(Boolean.class)) {
+					for (int i = this.size(); i <= indexZeroBased; i++) {
 
-      return item;
-   }
-   
-   
-   public void add (float index, E item) {
-	   int indexZeroBased = ((int) index) - 1;
-	   
-	   try {
-	         
-	         super.add(indexZeroBased, item);
+						item = (E) new Boolean(false);
+						this.add(item);
+					}
+				}
+				else {
+					for (int i = this.size(); i <= indexZeroBased; i++) {
 
-	      } catch (IndexOutOfBoundsException e) {
-	         
-	         try {
+						item = clazz.newInstance();
+						this.add(item);
+					}
+				}
 
-	            for (int i = this.size(); i <= indexZeroBased; i++) {
-	               item = clazz.newInstance();
-	               this.add(item);
-	            }
+			} catch (InstantiationException e2) {
+				e2.printStackTrace();
+			} catch (IllegalAccessException e2) {
+				e2.printStackTrace();
+			}
 
-	         } catch (InstantiationException e2) {
-	            e2.printStackTrace();
-	         } catch (IllegalAccessException e2) {
-	            e2.printStackTrace();
-	         }
+		} catch (Exception other) {
+			other.printStackTrace();
+		}
 
-	      } catch (Exception other) {
-	         other.printStackTrace();
-	      }
-   }
-   
-   
-   public void remove (float index) {
-	   
-	   int indexZeroBased = ((int) index) - 1;
-	   if (indexZeroBased < this.size()) {
-		   
-		   this.remove(indexZeroBased);
-	   }
-   }
+		return item;
+	}
 
-   
+
+	public void add (float index, E item) {
+		int indexZeroBased = ((int) index) - 1;
+
+		try {
+
+			super.add(indexZeroBased, item);
+
+		} catch (IndexOutOfBoundsException e) {
+
+			try {
+
+				if (clazz.equals(Float.class))
+				{
+					for (int i = this.size(); i < indexZeroBased; i++) {
+						
+						E itemT = (E) new Float(0f);
+						this.add(itemT);
+					}
+				}
+				else if (clazz.equals(Boolean.class)) {
+					for (int i = this.size(); i < indexZeroBased; i++) {
+
+						E itemT = (E) new Boolean(false);
+						this.add(itemT);
+					}
+				}
+				else {
+					for (int i = this.size(); i < indexZeroBased; i++) {
+
+						E itemT = clazz.newInstance();
+						this.add(itemT);
+					}
+				}
+				
+				this.addLast(item);
+
+			} catch (InstantiationException e2) {
+				e2.printStackTrace();
+			} catch (IllegalAccessException e2) {
+				e2.printStackTrace();
+			}
+
+		} catch (Exception other) {
+			other.printStackTrace();
+		}
+	}
+
+
+	public void remove (float index) {
+
+		int indexZeroBased = ((int) index) - 1;
+		if (indexZeroBased < this.size()) {
+
+			this.remove(indexZeroBased);
+		}
+	}
+
+
+	public void set (float index, E e) {
+		int indexZeroBased = ((int) index) - 1;
+		if (indexZeroBased < this.size()) {
+			this.set(indexZeroBased, e);
+		}
+		else {
+			this.add(index,e);
+		}
+	}
+
+
 }

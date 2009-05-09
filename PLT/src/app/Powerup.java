@@ -163,6 +163,24 @@ public class Powerup {
 	    }
 	    
 	  
-	    
+	    public Resource projectOnResourceClass()
+	    {
+	    	if (type==0)
+	    	{
+	    		return new Resource("", new Location(location.x, location.z), 100f, 0f, 0f, 0f);
+	    	}
+	    	else if (type==1)
+	    	{
+	    		return new Resource("", new Location(location.x, location.z), 0f, 0f, 100f, 0f);
+	    	}
+	    	else if (type==2)
+	    	{
+	    		return new Resource("", new Location(location.x, location.z), 0f, 100f, 0f, 0f);
+	    	}
+	    	else //if (type==3)
+	    	{
+	    		return new Resource("", new Location(location.x, location.z), 0f, 0f, 0f, 100f);
+	    	}
+	    }
 
 }

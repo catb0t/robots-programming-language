@@ -5,21 +5,27 @@ public class Resource {
 	public String name;
 	public Location location;
 	public Float energy = 0f;
-	public Float ammostash;
+	public Float ammostash = 0f;
+	public Float speed = 0f;
+	public Float armor = 0f;
 	
 	public Resource ()
 	{
 		name = "";
 		energy=0f;
 		ammostash = 0f;
+		speed = 0f;
+		armor = 0f;
 	}
 	
-	public Resource (String n, Location l, Float e, Float a)
+	public Resource (String n, Location l, Float e, Float a, Float s, Float ar)
 	{
 		name = n;
 		location = l;
 		energy= e;
 		ammostash = a;
+		speed = s;
+		armor = ar;
 	}
 	
 	
@@ -56,7 +62,7 @@ public class Resource {
 	
 	
 	public Resource copy() {
-		return new Resource(name, location.copy(), new Float(energy.floatValue()), new Float(ammostash.floatValue()));
+		return new Resource(name, location.copy(), new Float(energy.floatValue()), new Float(ammostash.floatValue()), new Float(speed), new Float(armor));
 	}
 	
 	public String toString()

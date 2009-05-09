@@ -34,6 +34,9 @@ public class Animation implements Runnable {
 		scene.resources = new Powerup[numberOfPowerups];
 
 		Random generator = new Random();
+		
+		Global.resource_list.clear();
+		
 		for(int i = 0; i < numberOfPowerups; i++)
 		{
 			//find location
@@ -43,8 +46,15 @@ public class Animation implements Runnable {
 			float y = player[0].terrain.terrainIntersection(pos);
 			pos = new Vector3(x, y, z);
 			resources[i] = new Powerup(pos, generator.nextInt(4));
-		}        
+			
+			Global.resource_list.add(resources[i].projectOnResourceClass());
+		}
 
+		Global.enemy_list.clear();
+		for (int i = 1; i < numberOfPlayers; i++)
+		{
+			Global.enemy_list.add(player[i].projectOnEnemyClass());
+		}
 
 		animator = null;
 	}
@@ -59,6 +69,7 @@ public class Animation implements Runnable {
 			{
 				if( System.currentTimeMillis() - time > 500) //updates every second
 				{
+					updateGlobal();
 					for(int i = 0; i < numberOfPlayers; i++)
 					{
 						if(player[i].health > 0)
@@ -183,4 +194,22 @@ public class Animation implements Runnable {
 			ex.printStackTrace();
 		}
 	}
+
+
+	public void updateGlobal ()
+	{
+		Global.resource_list.clear();
+		
+		for(int i = 0; i < numberOfPowerups; i++)
+		{
+			Global.resource_list.add(resources[i].projectOnResourceClass());
+		}
+
+		Global.enemy_list.clear();
+		for (int i = 1; i < numberOfPlayers; i++)
+		{
+			Global.enemy_list.add(player[i].projectOnEnemyClass());
+		}
+	}
+
 }

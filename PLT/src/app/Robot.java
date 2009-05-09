@@ -40,8 +40,8 @@ public class Robot implements RobotInterface {
 	
 	public Vector3 gunDirection = null; 
 	
-	RobotList<Enemy> enemy_list;
-	RobotList<Resource> resource_list;
+	RobotList<Enemy> enemy_list = new RobotList<Enemy>(Enemy.class);
+	RobotList<Resource> resource_list = new RobotList<Resource>(Resource.class);
 	
 	Vector3 direction = null;
 	Terrain terrain;
@@ -146,7 +146,7 @@ public class Robot implements RobotInterface {
 	//This is for only UnitTest.
 	public Robot() {
 		// TODO Auto-generated constructor stub
-		position = new Vector3(0f, 0f,0f);
+		position = new Vector3(0f, 0f, 0f);
 	}
 	
 	
@@ -600,17 +600,17 @@ public class Robot implements RobotInterface {
 		energy = energy - 5;
 		
 		//updateEnememies
-		enemy_list = new RobotList<Enemy>(Enemy.class);
+		enemy_list.clear();
 		for (Enemy e: Global.enemy_list)
 		{
-			enemy_list.addLast(e);
+			enemy_list.addLast(e.copy());
 		}
 		
 		//update Ressources
-		resource_list = new RobotList<Resource>(Resource.class);
+		resource_list.clear();
 		for (Resource r: Global.resource_list)
 		{
-			resource_list.addLast(r);
+			resource_list.addLast(r.copy());
 		}
 	}
 	
@@ -958,7 +958,7 @@ public class Robot implements RobotInterface {
 	    	new_resource_list.addLast(list.get(resource_dist[i].index));
 	    }
 	    //list = new_resource_list;
-	    
+	   
 	    return new_resource_list;
 	}
 	
@@ -1227,14 +1227,46 @@ public class Robot implements RobotInterface {
 	
 	
 	
-	public void modify_list ()
-	{
-		
+	
+	public Enemy projectOnEnemyClass() {
+		return new Enemy();
 	}
 	
-	public float get_random_numb ()
+	public void modify_list (RobotList list, String action, Object e, float pos)
 	{
-		return (float) Math.random();
+		if (action.equals("add"))
+		{
+			list.add(pos, e);
+		}
+		else if (action.equals("change"))
+		{
+			list.set(pos, e);
+		}
+	}
+	
+	public void modify_list (RobotList list, String action, Object e)
+	{
+		if (action.equals("add"))
+		{
+			list.add(e);
+		}
+		else if (action.equals("remove"))
+		{
+			list.removeFirstOccurrence(e);
+		}
+	}
+	
+	public void modify_list (RobotList list, String action, String action2, Float pos)
+	{
+		if (action.equals("remove") && action2.equals("item_at"))
+		{
+			list.remove(pos);
+		}
+	}
+	
+	public Percentage get_random_numb ()
+	{
+		return new Percentage((float) Math.random()*100);
 	}
 	
 	public boolean flip_coin (double s)
@@ -1242,6 +1274,7 @@ public class Robot implements RobotInterface {
 		return (Math.random()>s);
 	}
 	
+	/*
 	public float rollover (float a, float b)
 	{
 		if (b == 0)
@@ -1254,6 +1287,7 @@ public class Robot implements RobotInterface {
 		}
 		
 	}
+	*/
 	
 	public void setPosition(float x, float y, float z)
 	{
