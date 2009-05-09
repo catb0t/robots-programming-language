@@ -74,6 +74,7 @@ terminal RobotVar VARIABLE;
 terminal         TIMES_REPEAT, WHILE;
 terminal String  VERBATIM_OUT_TXT;
 terminal         SAY_EXPR_STA, SAY_EXPR_END;
+terminal         SORT;
 
 /* Non-terminals */
 non terminal Integer expr;
@@ -92,6 +93,7 @@ non terminal String  assignment;
 non terminal String  loop;
 non terminal Expression arithmetic_expression;
 non terminal String  out_text;
+non terminal String  sort_type, optional_sort_arg;
 
 /* Precedences: Follow Java conventions */
 
@@ -624,10 +626,56 @@ call                    ::=   SAY out_text:ot NEWLINE
                                  RESULT = "say(" + ot + ")";
                               :}
                         |
+                              SORT VARIABLE:vlist sort_type:st optional_sort_arg:osa NEWLINE
+                              {:
+                                 if(!vlist.isList()) {
+                                    parser.custom_error("Argument #1 to sort must be a list");
+                                 }
+                                 
+                                 parser.temp = parser.sm.declareIfNecessary(vlist);
+                                 if(parser.temp.compareTo("") != 0) {
+                                    parser.custom_error("Undeclared list variable: " + vlist.toString());
+                                 }
+                                 
+                                 if(st.compareTo("<") == 0) {
+                                    RESULT = "sort_incr(";
+                                 } else {
+                                    RESULT = "sort_decr(";
+                                 }
+
+                                 RESULT += vlist.name() + ", " + osa + ")";
+                              :}
+                        |
                               function_call:fc
                               {:
                                  RESULT = fc;
                               :}
+;
+
+sort_type               ::=   IS_STRICTLY_LOWER_THAN    {: RESULT = "<"; :}
+                        |     IS_STRICTLY_GREATER_THAN  {: RESULT = ">"; :}
+;
+
+optional_sort_arg       ::=   VARIABLE:vnolist
+                              {:
+                                 if(vnolist.isList()) {
+                                    parser.custom_error("Argument #3 to sort mustn't be a list");
+                                 }
+                                 
+                                 for (RobotType t : RobotType.values()) {
+                                     if (vnolist.toString().endsWith(t.postFix())) {
+                                         if(t.postFix() == "!" || t.postFix() == "$" || t.postFix() == "?") {
+                                            parser.custom_error("Argument #3 can't be of type !/$/?");
+                                         }
+                                         break;
+                                     }
+                                 }
+
+                                 RESULT = "\"" + vnolist.name() + "\"";
+                              :}
+                        |
+                              /* empty */
+                              {: RESULT = "\"\""; :}
 ;
 
 out_text                ::=   VERBATIM_OUT_TXT:txt out_text:ot
