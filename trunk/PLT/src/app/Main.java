@@ -790,6 +790,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 
 	public static void main (String[] args) {
 
+		/*
 		RobotList<Boolean> la = new RobotList<Boolean>(Boolean.class);
 		la.set(1f, new Boolean(true));
 		la.set(4f, new Boolean(true));
@@ -797,6 +798,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		RobotList<Float> l = new RobotList<Float>(Float.class);
 		l.set(1f, new Float(1f));
 		l.set(4f, new Float(5f));
+		*/
 		
 		Main display = new Main();
 		display.init(2);
