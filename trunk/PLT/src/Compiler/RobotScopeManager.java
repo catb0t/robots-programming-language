@@ -32,6 +32,17 @@ public class RobotScopeManager {
  
    }
 
+   public static String initializeIfNecessary(RobotVar v) {
+      String s = declareIfNecessary(v);
+      String s2 = new String();
+      if (!s.equals("")) {
+         s2 = v.javaType() + " " + v.name() + " = new " + v.javaType() + "(";
+         if (v.isList()) s2 += v.type().javaType() + ".class";
+         s2 += ");\n" + indent();
+      }
+      return s2;
+   }
+
    public static void  increaseLevel() {
       System.out.println("RSM: Increasing level...");
       level++;
