@@ -41,8 +41,9 @@ public class Compiler {
 		try
 		{            
 			Runtime rt = Runtime.getRuntime();
-			String command = "java -jar "+dir+"/robot_parser.jar "+dir+"/tempcode.robot "+dir+"/RobotCompiled.java"+" &> /dev/null";
-			Process proc = rt.exec(command);
+			String command = "java -jar ./robot_parser.jar ./tempcode.robot ./RobotCompiled.java";
+			System.out.println(command);
+                        Process proc = rt.exec(command);
 			InputStream stderr = proc.getErrorStream();
 			InputStreamReader isr = new InputStreamReader(stderr);
 			BufferedReader br = new BufferedReader(isr);
@@ -64,7 +65,8 @@ public class Compiler {
 		try
 		{            
 			Runtime rt = Runtime.getRuntime();
-			String command = "javac -cp "+dir+"/src/:"+dir+"/lib/jogl.jar:"+dir+"/lib/gluegen-rt.jar "+dir+"/RobotCompiled.java";
+			String command = "javac -cp .:../lib/jogl.jar:../lib/gluegen-rt.jar ./RobotCompiled.java";
+			System.out.println(command);
 			Process proc = rt.exec(command);
 			InputStream stderr = proc.getErrorStream();
 			InputStreamReader isr = new InputStreamReader(stderr);

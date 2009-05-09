@@ -125,12 +125,100 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		//editArea = new JEditorPane("text/html" , "<font color=\"font color\">think</font>\n|\n+---done");
 		editArea.addTextListener(this);
 		//editArea.addKeyListener(this);
+
+                //editArea.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, null);
+                //editArea.setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, null);
+                //editArea.enableInputMethods(true);
+               editArea.setFont(new Font("Monaco", Font.BOLD, 12));
+               editArea.setBackground(Color.DARK_GRAY);
+               editArea.setForeground(Color.green);
+               //editArea.setCaretColor(Color.white);
+
+               editArea.addKeyListener(new KeyAdapter()
+                 {
+                     public void keyPressed(KeyEvent e)
+                     {
+                         if (e.getKeyCode() == KeyEvent.VK_LEFT)
+                         {
+                             e.consume();
+
+                             int i;
+
+                             if (e.isAltDown()) {
+                                 String t = editArea.getText();
+                                 i = t.lastIndexOf(" ",editArea.getCaretPosition());
+                                 if (i == -1) i = editArea.getCaretPosition();
+                                 else if (i == editArea.getCaretPosition() && editArea.getCaretPosition() > 0) {
+                                    i = t.lastIndexOf(" ",editArea.getCaretPosition()-1);
+                                 }
+                                 if (i == -1) i = editArea.getCaretPosition();
+                             } else if (editArea.getCaretPosition() != 0) {
+                                 i = editArea.getCaretPosition()-1;
+                             } else {
+                                 i = editArea.getCaretPosition();
+                             }
+
+                             editArea.setCaretPosition(i);
+                         }
+          
+                         if (e.getKeyCode() == KeyEvent.VK_RIGHT)
+                         {
+                             e.consume();
+
+                             int i;
+
+                             if (e.isAltDown()) {
+                                 String t = editArea.getText();
+                                 i = t.indexOf(" ",editArea.getCaretPosition());
+                                 //System.out.println(editArea.getCaretPosition() + " " + i);
+                                 if (i == -1) i = editArea.getCaretPosition();
+                                 else if (i == editArea.getCaretPosition() && editArea.getCaretPosition() < editArea.getText().length()) {
+                                    i = t.indexOf(" ",editArea.getCaretPosition()+1);
+                                 }
+                                 if (i == -1) i = editArea.getCaretPosition();
+                             } else if (editArea.getCaretPosition() != editArea.getText().length()) {
+                                 i = editArea.getCaretPosition()+1;
+                             } else {
+                                 i = editArea.getCaretPosition();
+                             }
+
+                             editArea.setCaretPosition(i);
+                             
+                         }
+
+                         if (e.getKeyCode() == KeyEvent.VK_UP)
+                         {
+                             e.consume();
+                             String t = editArea.getText();
+                             int i = t.lastIndexOf("\n",editArea.getCaretPosition());
+                             if (i != -1)
+                                editArea.setCaretPosition(i-1);
+                         }
+
+                         if (e.getKeyCode() == KeyEvent.VK_DOWN)
+                         {
+                             e.consume();
+                             String t = editArea.getText();
+                             int i = t.indexOf("\n",editArea.getCaretPosition());
+                             if (i != -1)
+                                editArea.setCaretPosition(i+1);
+
+                         }
+
+                     }
+                 });
+                 
 		
 		tabbedPane.addTab("robot source", editArea);
 		
 		javaArea = new TextArea("",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
 		javaArea.setEditable(false);
 		
+                javaArea.setFont(new Font("Monaco", Font.BOLD, 12));
+                javaArea.setBackground(Color.DARK_GRAY);
+                javaArea.setForeground(Color.green);
+
+
 		tabbedPane.addTab("java source", javaArea);
 		
 		//outputArea = new TextArea("",20,20, TextArea.SCROLLBARS_VERTICAL_ONLY);
