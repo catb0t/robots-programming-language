@@ -1,6 +1,16 @@
 package app;
 
 import org.junit.* ;
+
+import app.Enemy;
+import app.FuncSet;
+import app.Location;
+import app.Percentage;
+import app.Resource;
+import app.RobBool;
+import app.RobNumber;
+import app.Robot;
+import app.RobotList;
 import static org.junit.Assert.* ;
 
 public class AppTests {
@@ -275,6 +285,330 @@ public class AppTests {
 		//assertTrue(test_add_generic());
 	}
 	
+	@Test
+	public void test_sort_float() {
+		//Possible listTypes: Float, Enemy, Resource, Percentage, Location
+		Robot robot = new Robot();
+		RobotList<Float> list = new RobotList<Float>(Float.class);
+		RobotList<Float> result = new RobotList<Float>(Float.class);
+		RobotList<Float> expectedResult = new RobotList<Float>(Float.class);
+		list.add(new Float(10f));
+		list.add(new Float(2f));
+		list.add(new Float(20f));
+		list.add(new Float(40f));
+		list.add(new Float(15f));
+		expectedResult.add(new Float(2f));
+		expectedResult.add(new Float(10f));
+		expectedResult.add(new Float(15f));
+		expectedResult.add(new Float(20f));
+		expectedResult.add(new Float(40f));
+		
+		//test sort_incr
+		result=robot.sort_incr(list,"Float");
+		for(int i=0;i<list.size();i++){
+			assertEquals("Result",result.get(i),expectedResult.get(i));
+		}
+		
+		//Test sort_decr
+		result=robot.sort_decr(list,"Float");
+		expectedResult.clear();
+		expectedResult.add(new Float(40f));
+		expectedResult.add(new Float(20f));
+		expectedResult.add(new Float(15f));
+		expectedResult.add(new Float(10f));
+		expectedResult.add(new Float(2f));
+		
+		for(int i=0;i<list.size();i++){
+			assertEquals("Result",result.get(i),expectedResult.get(i));
+		}
+	}
+	
+	@Test
+	public void test_sort_Enemy() {
+		//Possible listTypes: Float, Enemy, Resource, Percentage, Location
+		Robot robot = new Robot();
+		
+		RobotList<Enemy> list = new RobotList<Enemy>(Enemy.class);
+		RobotList<Enemy> result = new RobotList<Enemy>(Enemy.class);
+		RobotList<Enemy> expectedResult = new RobotList<Enemy>(Enemy.class);
+		Enemy e1=new Enemy("1",new Location(50,50),100f);
+		Enemy e2=new Enemy("2",new Location(20,20),10f);
+		Enemy e3=new Enemy("3",new Location(10,10),80f);
+		Enemy e4=new Enemy("4",new Location(160,160),50f);
+		Enemy e5=new Enemy("5",new Location(100,100),90f);
+		
+		list.add(e1);
+		list.add(e2);
+		list.add(e3);
+		list.add(e4);
+		list.add(e5);
+		
+		//test sort_incr by location
+		expectedResult.add(e3);
+		expectedResult.add(e2);
+		expectedResult.add(e1);
+		expectedResult.add(e5);
+		expectedResult.add(e4);
+		result=robot.sort_incr(list,"location");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		//test sort_decr by location
+		expectedResult.clear();
+		expectedResult.add(e4);
+		expectedResult.add(e5);
+		expectedResult.add(e1);
+		expectedResult.add(e2);
+		expectedResult.add(e3);
+		
+		result=robot.sort_decr(list,"location");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		
+		//test sort_incr by energy
+		expectedResult.clear();
+		expectedResult.add(e2);
+		expectedResult.add(e4);
+		expectedResult.add(e3);
+		expectedResult.add(e5);
+		expectedResult.add(e1);
+		result=robot.sort_incr(list,"energy");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		//test sort_decr by energy
+		expectedResult.clear();
+		expectedResult.add(e1);
+		expectedResult.add(e5);
+		expectedResult.add(e3);
+		expectedResult.add(e4);
+		expectedResult.add(e2);
+		
+		result=robot.sort_decr(list,"energy");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+	}
 	
 	
+	@Test
+	public void test_sort_Resource() {
+		//Possible listTypes: Float, Enemy, Resource, Percentage, Location
+		//field : location,energy, ammostash
+		//Resource (String n, Location l, Float e, Float a)
+		Robot robot = new Robot();
+		
+		RobotList<Resource> list = new RobotList<Resource>(Resource.class);
+		RobotList<Resource> result = new RobotList<Resource>(Resource.class);
+		RobotList<Resource> expectedResult = new RobotList<Resource>(Resource.class);
+		Resource e1=new Resource("1",new Location(50,50),100f, 60f);
+		Resource e2=new Resource("2",new Location(20,20),10f,30f);
+		Resource e3=new Resource("3",new Location(10,10),80f,200f);
+		Resource e4=new Resource("4",new Location(160,160),50f,100f);
+		Resource e5=new Resource("5",new Location(100,100),90f,150f);
+		
+		list.add(e1);
+		list.add(e2);
+		list.add(e3);
+		list.add(e4);
+		list.add(e5);
+		
+		//test sort_incr by location
+		expectedResult.add(e3);
+		expectedResult.add(e2);
+		expectedResult.add(e1);
+		expectedResult.add(e5);
+		expectedResult.add(e4);
+		result=robot.sort_incr(list,"location");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		//test sort_decr by location
+		expectedResult.clear();
+		expectedResult.add(e4);
+		expectedResult.add(e5);
+		expectedResult.add(e1);
+		expectedResult.add(e2);
+		expectedResult.add(e3);
+		
+		result=robot.sort_decr(list,"location");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		
+		//test sort_incr by energy
+		expectedResult.clear();
+		expectedResult.add(e2);
+		expectedResult.add(e4);
+		expectedResult.add(e3);
+		expectedResult.add(e5);
+		expectedResult.add(e1);
+		result=robot.sort_incr(list,"energy");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		//test sort_decr by energy
+		expectedResult.clear();
+		expectedResult.add(e1);
+		expectedResult.add(e5);
+		expectedResult.add(e3);
+		expectedResult.add(e4);
+		expectedResult.add(e2);
+		
+		result=robot.sort_decr(list,"energy");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		//test sort_incr by ammostash
+		expectedResult.clear();
+		expectedResult.add(e2);
+		expectedResult.add(e1);
+		expectedResult.add(e4);
+		expectedResult.add(e5);
+		expectedResult.add(e3);
+		result=robot.sort_incr(list,"ammostash");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+		
+		//test sort_decr by ammostash
+		expectedResult.clear();
+		expectedResult.add(e3);
+		expectedResult.add(e5);
+		expectedResult.add(e4);
+		expectedResult.add(e1);
+		expectedResult.add(e2);
+		
+		result=robot.sort_decr(list,"ammostash");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+		}
+	}
+	
+	@Test
+	public void test_sort_Percentage() {
+		//Possible listTypes: Float, Enemy, Resource, Percentage, Location
+		Robot robot = new Robot();
+		RobotList<Percentage> list = new RobotList<Percentage>(Percentage.class);
+		RobotList<Percentage> result = new RobotList<Percentage>(Percentage.class);
+		RobotList<Percentage> expectedResult = new RobotList<Percentage>(Percentage.class);
+		list.add(new Percentage(10f));
+		list.add(new Percentage(2f));
+		list.add(new Percentage(20f));
+		list.add(new Percentage(40f));
+		list.add(new Percentage(15f));
+		expectedResult.add(new Percentage(2f));
+		expectedResult.add(new Percentage(10f));
+		expectedResult.add(new Percentage(15f));
+		expectedResult.add(new Percentage(20f));
+		expectedResult.add(new Percentage(40f));
+		
+		//test sort_incr
+		result=robot.sort_incr(list,"Percentage");
+		for(int i=0;i<list.size();i++){
+			assertEquals("Result",result.get(i),expectedResult.get(i));
+		}
+		
+		//Test sort_decr
+		result=robot.sort_decr(list,"Percentage");
+		expectedResult.clear();
+		expectedResult.add(new Percentage(40f));
+		expectedResult.add(new Percentage(20f));
+		expectedResult.add(new Percentage(15f));
+		expectedResult.add(new Percentage(10f));
+		expectedResult.add(new Percentage(2f));
+		
+		for(int i=0;i<list.size();i++){
+			assertEquals("Result",result.get(i),expectedResult.get(i));
+		}
+	}
+	
+	@Test
+	public void test_sort_Location(){
+		//Possible listTypes: Float, Enemy, Resource, Percentage, Location
+		Robot robot = new Robot();
+		
+		RobotList<Location> list = new RobotList<Location>(Location.class);
+		RobotList<Location> result = new RobotList<Location>(Location.class);
+		RobotList<Location> expectedResult = new RobotList<Location>(Location.class);
+		Location e1=new Location(50,50);
+		Location e2=new Location(20,20);
+		Location e3=new Location(10,10);
+		Location e4=new Location(160,160);
+		Location e5=new Location(100,100);
+		
+		list.add(e1);
+		list.add(e2);
+		list.add(e3);
+		list.add(e4);
+		list.add(e5);
+		
+		//test sort_incr by location
+		expectedResult.add(e3);
+		expectedResult.add(e2);
+		expectedResult.add(e1);
+		expectedResult.add(e5);
+		expectedResult.add(e4);
+		result=robot.sort_incr(list,"location");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).equals(expectedResult.get(i)));
+		}
+		
+		//test sort_decr by location
+		expectedResult.clear();
+		expectedResult.add(e4);
+		expectedResult.add(e5);
+		expectedResult.add(e1);
+		expectedResult.add(e2);
+		expectedResult.add(e3);
+		
+		result=robot.sort_decr(list,"location");
+		//System.out.println(list.size());
+		for(int i=0;i<list.size();i++){
+			//System.out.println(result.get(i).location.toString());
+			//System.out.println(expectedResult.get(i).location.toString());
+			assertTrue(result.get(i).equals(expectedResult.get(i)));
+		}
+	}
 }

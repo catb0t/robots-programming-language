@@ -146,6 +146,7 @@ public class Robot implements RobotInterface {
 	//This is for only UnitTest.
 	public Robot() {
 		// TODO Auto-generated constructor stub
+		position = new Vector3(0f, 0f,0f);
 	}
 	
 	
@@ -923,7 +924,7 @@ public class Robot implements RobotInterface {
 		{
 			for (int i=0; i<length; i++)
 			{
-				resource_dist[i] = new Index_value(i,list.get(i).energy);
+				resource_dist[i] = new Index_value(i,list.get(i).ammostash);
 			}
 		}
 		else
@@ -954,7 +955,7 @@ public class Robot implements RobotInterface {
 	    RobotList<Resource> new_resource_list = new RobotList<Resource>(Resource.class); 
 	    for (int i=0; i<length; i++)
 	    {
-	    	new_resource_list.addLast(resource_list.get(resource_dist[i].index));
+	    	new_resource_list.addLast(list.get(resource_dist[i].index));
 	    }
 	    //list = new_resource_list;
 	    
@@ -987,7 +988,7 @@ public class Robot implements RobotInterface {
 		{
 			for (int i=0; i<length; i++)
 			{
-				resource_dist[i] = new Index_value(i,list.get(i).energy);
+				resource_dist[i] = new Index_value(i,list.get(i).ammostash);
 			}
 		}
 		else
@@ -1018,7 +1019,7 @@ public class Robot implements RobotInterface {
 	    RobotList<Resource> new_resource_list = new RobotList<Resource>(Resource.class); 
 	    for (int i=0; i<length; i++)
 	    {
-	    	new_resource_list.addLast(resource_list.get(resource_dist[i].index));
+	    	new_resource_list.addLast(list.get(resource_dist[i].index));
 	    }
 	    //list = new_resource_list;
 	    
