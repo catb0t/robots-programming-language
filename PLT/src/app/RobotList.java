@@ -16,6 +16,9 @@ public class RobotList<E> extends LinkedList<E> {
 		E item = null;
 		int indexZeroBased = ((int) index) - 1;
 
+		if (indexZeroBased < 0) {
+			Global.outputArea.setText("You cannot access the oth or below element of a list\n\n".concat(Global.outputArea.getText()));
+		}
 		try {
 
 			item = super.get(indexZeroBased);
@@ -48,12 +51,15 @@ public class RobotList<E> extends LinkedList<E> {
 				}
 
 			} catch (InstantiationException e2) {
+				Global.outputArea.setText(e2.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
 				e2.printStackTrace();
 			} catch (IllegalAccessException e2) {
+				Global.outputArea.setText(e2.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
 				e2.printStackTrace();
 			}
 
 		} catch (Exception other) {
+			Global.outputArea.setText(other.getMessage().concat("\n\n").concat(Global.outputArea.getText()));
 			other.printStackTrace();
 		}
 
