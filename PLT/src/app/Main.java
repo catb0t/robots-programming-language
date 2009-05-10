@@ -32,8 +32,10 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	TextArea outputArea;
 	JButton start;
 	JMenuBar menu;
-        JTabbedPane tabbedPane;
+    JTabbedPane tabbedPane;
 	
+    JPanel control_view;
+    
 	String filename;
 	boolean fileChanged = false;
 	
@@ -286,7 +288,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		JButton reset = new JButton("Reset");
 		reset.setActionCommand("reset");
 		reset.addActionListener(this);
-		reset.setEnabled(false);
+		//reset.setEnabled(false);
 		
 		
 		runparse.add(start);
@@ -326,7 +328,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	   
 	    animator.start();
 	   
-		JPanel control_view = new JPanel();
+		control_view = new JPanel();
 		control_view.setLayout(new GridLayout(1,2));
 		//control_view.add(tools_write);
 		control_view.add(editor);
@@ -348,7 +350,8 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		
 		for (int i=0; i<enemies_numb; i++)
 		{
-			players[i+1] = new RobotEnemy(terrain);
+			Vector3 initP = new Vector3((float) Math.random()* 30f, 0f, (float) Math.random()* 30f);
+			players[i+1] = new RobotEnemy(terrain, initP);
 		}
 		
 		anime = new Animation(players, players.length, scene);
@@ -363,6 +366,8 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 	
 	public void reset () {
 		System.out.println("Reseting the simulation");
+		
+		control_view.remove(1);
 		
 		view3D = new GLCanvas();
 	    
@@ -386,10 +391,13 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		
 		for (int i=0; i<enemies_numb; i++)
 		{
-			players[i+1] = new RobotEnemy(terrain);
+			Vector3 initP = new Vector3((float) Math.random()* 30f, 0f, (float) Math.random()* 30f);
+			players[i+1] = new RobotEnemy(terrain, initP);
 		}
 		
 		anime = new Animation(players, players.length, scene);
+		
+		control_view.add(view3D);
 	}
 	
 	
@@ -832,6 +840,6 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 		*/
 		
 		Main display = new Main();
-		display.init(2);
+		display.init(1);
 	}
 }
