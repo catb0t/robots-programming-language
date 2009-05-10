@@ -441,7 +441,7 @@ min_hash=min\#
                   return new Symbol(sym.NUMBER_PERCENTAGE, new String(yytext()));
          }
 
-   {digits}(st|th|nd)
+   {digits}(st|th|nd|rd)
          {
                   if (parser.bDebugFlag) {
                      System.out.println("matched integer_index: " + yytext());
