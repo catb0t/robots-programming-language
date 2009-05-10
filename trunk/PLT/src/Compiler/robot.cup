@@ -90,7 +90,7 @@ terminal RobotVar VARIABLE;
 terminal         TIMES_REPEAT, WHILE;
 terminal String  VERBATIM_OUT_TXT;
 terminal         SAY_EXPR_STA, SAY_EXPR_END;
-terminal         SORT, ADD, REMOVE, CHANGE, ITEM_AT;
+terminal         SORT, ADD, REMOVE, CHANGE, ITEM_AT, UMINUS;
 
 /* Non-terminals */
 non terminal Integer expr;
@@ -98,7 +98,7 @@ non terminal String  statement, entry, variable_name, program, block;
 non terminal         optnl, assign_op;
 non terminal String  function, functions, variable_name_local;
 non terminal String  boolean_final, declaration;
-non terminal String  arithmetic_operator, constant_value;
+non terminal String  constant_value;
 non terminal String  call, local_declaration;
 //non terminal String  field_name;
 non terminal String  conditional, else_statement;
@@ -123,6 +123,7 @@ precedence nonassoc IS_STRICTLY_GREATER_THAN, IS_GREATER_THAN, IS_LOWER_THAN, IS
 
 precedence left PLUS, MINUS, ROLLOVER;
 precedence left TIMES, DIVIDE;
+precedence left UMINUS;
 
 precedence right OF;
 
@@ -319,27 +320,54 @@ base_value      ::=   field_name:fn            {:   RESULT = fn;     :}
 ;
 */
 
-arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2
+arithmetic_expression   ::=   arithmetic_expression:ae1 ROLLOVER arithmetic_expression:ae2
+                              {:
+                                 RESULT = new Expression();
+                                 // Call the appropriate Java function
+                                 RESULT.declarations.append(ae1.declarations);
+                                 RESULT.declarations.append(ae2.declarations);
+                                 
+                                 RESULT.javaCode.append("funcset.rollover(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                              :}
+                        |
+                              arithmetic_expression:ae1 TIMES arithmetic_expression:ae2
                               {:
                                  RESULT = new Expression();
                                  // Call the appropriate Java function
                                  RESULT.declarations.append(ae1.declarations);
                                  RESULT.declarations.append(ae2.declarations);
 
-                                 if(ao == "%") { //ROLLOVER
-                                     RESULT.javaCode.append("funcset.rollover(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
-                                 } else if(ao == "+") {
-                                     RESULT.javaCode.append("funcset.add(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
-                                 } else if(ao == "*") {
-                                     RESULT.javaCode.append("funcset.times(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
-                                 } else if(ao == "/") {
-                                     RESULT.javaCode.append("funcset.divided(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");                                     
-                                 } else if(ao == "-") {
-                                     RESULT.javaCode.append("funcset.subtract(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
-                                 } else {
-                                     //RESULT.javaCode.append(ae1.javaCode).append(ao).append(ae2.javaCode);
-                                     parser.custom_error("Unsupported operator: " + ao);
-                                 }
+                                 RESULT.javaCode.append("funcset.times(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                              :}
+                        |
+                              arithmetic_expression:ae1 PLUS arithmetic_expression:ae2
+                              {:
+                                 RESULT = new Expression();
+                                 // Call the appropriate Java function
+                                 RESULT.declarations.append(ae1.declarations);
+                                 RESULT.declarations.append(ae2.declarations);
+
+                                 RESULT.javaCode.append("funcset.add(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                              :}
+                        |
+                              arithmetic_expression:ae1 MINUS arithmetic_expression:ae2
+                              {:
+                                 RESULT = new Expression();
+                                 // Call the appropriate Java function
+                                 RESULT.declarations.append(ae1.declarations);
+                                 RESULT.declarations.append(ae2.declarations);
+
+                                 RESULT.javaCode.append("funcset.subtract(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                              :}
+                        |
+                              arithmetic_expression:ae1 DIVIDE arithmetic_expression:ae2
+                              {:
+                                 RESULT = new Expression();
+                                 // Call the appropriate Java function
+                                 RESULT.declarations.append(ae1.declarations);
+                                 RESULT.declarations.append(ae2.declarations);
+
+                                 RESULT.javaCode.append("funcset.divided(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                               :}
                         |
                               LPAREN arithmetic_expression:ae RPAREN
@@ -358,6 +386,7 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               {:
                                  RESULT = new Expression("new Float(-" + ne + ")");
                               :}
+                              %prec UMINUS
                         |
                               NUMBER_PERCENTAGE:pe
                               {:
@@ -387,13 +416,6 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               field_access:fa          {:   RESULT = new Expression(fa);     :}
                         |
                               SELF                     {:   RESULT = new Expression("this"); :}
-;
-
-arithmetic_operator     ::=   PLUS     {: RESULT = "+"; :}
-                        |     MINUS    {: RESULT = "-"; :}
-                        |     TIMES    {: RESULT = "*"; :}
-                        |     DIVIDE   {: RESULT = "/"; :}
-                        |     ROLLOVER {: RESULT = "%"; :}
 ;
 
 boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
