@@ -24,4 +24,21 @@ class Expression {
 
    }
 
+   public Expression(StringBuffer code) {
+      
+      this();
+
+      javaCode.append(code);
+
+   }
+
+   public Expression(Expression e) {
+      
+      this();
+
+      javaCode.append(e.javaCode);
+      declarations.append(e.declarations);
+
+   }
+
 }
