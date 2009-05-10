@@ -7,7 +7,7 @@ public class Resource {
 	public Float energy = 0f;
 	public Float ammostash = 0f;
 	public Float speed = 0f;
-	public Float armor = 0f;
+	public Float health = 0f;
 	
 	public Resource ()
 	{
@@ -15,7 +15,7 @@ public class Resource {
 		energy=0f;
 		ammostash = 0f;
 		speed = 0f;
-		armor = 0f;
+		health = 0f;
 	}
 	
 	public Resource (String n, Location l, Float e, Float a, Float s, Float ar)
@@ -25,7 +25,7 @@ public class Resource {
 		energy= e;
 		ammostash = a;
 		speed = s;
-		armor = ar;
+		health = ar;
 	}
 	
 	
@@ -62,12 +62,12 @@ public class Resource {
 	
 	
 	public Resource copy() {
-		return new Resource(name, location.copy(), new Float(energy.floatValue()), new Float(ammostash.floatValue()), new Float(speed), new Float(armor));
+		return new Resource(name, location.copy(), new Float(energy.floatValue()), new Float(ammostash.floatValue()), new Float(speed), new Float(health));
 	}
 	
 	public String toString()
 	{
-		String sol = "resource name: "+name+", energy="+Float.toString(energy)+", ammostash="+Float.toString(ammostash);
+		String sol = "resource "+name+" @"+location.toString()+", energy="+Float.toString(energy)+", ammostash="+Float.toString(ammostash)+", speed="+Float.toString(speed)+", health="+Float.toString(health) ;
 		return sol;
 	}
 	
@@ -81,7 +81,9 @@ public class Resource {
 
 		return (this.name.equals(equalTest.name)
 				&&(this.location.equals(equalTest.location))
-				&&(this.energy==equalTest.energy))
-				&&(this.ammostash==equalTest.ammostash);
+				&&(this.energy==equalTest.energy)
+				&&(this.ammostash==equalTest.ammostash)
+				&&(this.speed==equalTest.speed)
+				&&(this.health==equalTest.health));
 	}
 }

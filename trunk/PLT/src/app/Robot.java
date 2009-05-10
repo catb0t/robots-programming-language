@@ -543,12 +543,16 @@ public class Robot implements RobotInterface {
 		
 		ping();
 		
-		RobotList<Enemy>enemies = sort_incr_Enemy(get_enemies(),"");
+		RobotList<Enemy> enemies = sort_incr_Enemy(get_enemies(),"");
+		RobotList<Resource> res = sort_incr_Resource(get_resources(),"");
 		
 		if (energy>5)
 		{
 			move_to(funcset.minus(enemies.get(1f).location));
-			say(enemies.get(1f).toString());
+			for (Resource e : res)
+			{
+				say(e.toString());
+			}
 		}
 		else
 		{
@@ -677,7 +681,7 @@ public class Robot implements RobotInterface {
 		return enemy_list;
 	}
 	
-	public RobotList<Resource> get_ressources ()
+	public RobotList<Resource> get_resources ()
 	{
 		return resource_list;
 	}
@@ -839,11 +843,11 @@ public class Robot implements RobotInterface {
 				enemy_dist[i] = new Index_value(i,distance(cur_loc, list.get(i).location));
 			}
 		}
-		else if (field.equals("energy"))
+		else if (field.equals("health"))
 		{
 			for (int i=0; i<length; i++)
 			{
-				enemy_dist[i] = new Index_value(i,list.get(i).energy);
+				enemy_dist[i] = new Index_value(i,list.get(i).health);
 			}
 		}
 		else
@@ -895,11 +899,11 @@ public class Robot implements RobotInterface {
 				enemy_dist[i] = new Index_value(i,distance(cur_loc, list.get(i).location));
 			}
 		}
-		else if (field.equals("energy"))
+		else if (field.equals("health"))
 		{
 			for (int i=0; i<length; i++)
 			{
-				enemy_dist[i] = new Index_value(i,list.get(i).energy);
+				enemy_dist[i] = new Index_value(i,list.get(i).health);
 			}
 		}
 		else
@@ -966,6 +970,20 @@ public class Robot implements RobotInterface {
 				resource_dist[i] = new Index_value(i,list.get(i).ammostash);
 			}
 		}
+		else if (field.equals("speed"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).speed);
+			}
+		}
+		else if (field.equals("health"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).health);
+			}
+		}
 		else
 		{
 			say("impossible to sort list - nothing modified");
@@ -1028,6 +1046,20 @@ public class Robot implements RobotInterface {
 			for (int i=0; i<length; i++)
 			{
 				resource_dist[i] = new Index_value(i,list.get(i).ammostash);
+			}
+		}
+		else if (field.equals("speed"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).speed);
+			}
+		}
+		else if (field.equals("health"))
+		{
+			for (int i=0; i<length; i++)
+			{
+				resource_dist[i] = new Index_value(i,list.get(i).health);
 			}
 		}
 		else

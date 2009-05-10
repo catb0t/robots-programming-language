@@ -32,13 +32,13 @@ public class RobotEnemy extends Robot {
 		
 		ping();
 		
-		RobotList<Resource> resource_list_perso = sort_incr_Resource(get_ressources(),"");
+		RobotList<Resource> resource_list_perso = sort_incr_Resource(get_resources(),"");
 		
 		move_to(resource_list_perso.get(1f).location);
 	}
 	
 	public Enemy projectOnEnemyClass() {
-		return new Enemy("", new Location(position.x, position.y), energy);
+		return new Enemy("", new Location(position.x, position.y), health);
 	}
 	
 	public void say (String s)
