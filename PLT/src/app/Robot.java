@@ -593,11 +593,11 @@ public class Robot implements RobotInterface {
 	
 	public void shoot (Enemy en)
 	{
-		if (ammo <= 0)
-		{
-			say("I don't have ammunition");
-			return;
-		}
+		//if (ammo <= 0)
+		//{
+			//say("I don't have ammunition");
+			//return;
+		//}
 		if (energy >9)
 		{
 			//decrease energy
@@ -615,11 +615,11 @@ public class Robot implements RobotInterface {
 	
 	public void shoot (Location loc)
 	{
-		if (ammo <= 0)
-		{
-			say("I don't have ammunition");
-			return;
-		}
+		//if (ammo <= 0)
+		//{
+			//say("I don't have ammunition");
+			//return;
+		//}
 		if (energy >9)
 		{
 			//decrease energy

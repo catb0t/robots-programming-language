@@ -20,7 +20,7 @@ public class Enemy {
 	
 	public String toString()
 	{
-		String sol = "enemy "+name+" @("+Float.toString(location.getX())+","+Float.toString(location.getY())+"), health="+Float.toString(health);
+		String sol = "enemy "+name+" @"+location.toString()+", health="+Float.toString(health);
 		return sol;
 	}
 	
