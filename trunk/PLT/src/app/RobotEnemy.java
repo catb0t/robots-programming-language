@@ -3,19 +3,18 @@ package app;
 import javax.media.opengl.GL;
 
 public class RobotEnemy extends Robot {
-
-	//Enemy Enemyfield;
-	Vector3 initialPosition;
 	
 	
-	public RobotEnemy (Terrain t)
+	public RobotEnemy (Terrain t, Vector3 initialP)
 	{
 		super(t);
+		position = initialP;
 	}
 	
-	public RobotEnemy (GL gl, Terrain t)
+	public RobotEnemy (GL gl, Terrain t, Vector3 initialP)
 	{
 		super(gl, t);
+		position = initialP;
 	}
 	
 	public void init(Terrain t) {
@@ -29,11 +28,22 @@ public class RobotEnemy extends Robot {
 	
 	public void think()
 	{
-		move_to(funcset.times(new Location(10f *((float) Math.random()),10f), (float) Math.random()));
+		move_to(funcset.times(new Location(30f *((float) Math.random()),30f), (float) Math.random()));
+		
+		ping();
+		
+		RobotList<Resource> resource_list_perso = sort_incr_Resource(get_ressources(),"");
+		
+		move_to(resource_list_perso.get(1f).location);
 	}
 	
 	public Enemy projectOnEnemyClass() {
 		return new Enemy("", new Location(position.x, position.y), energy);
+	}
+	
+	public void say (String s)
+	{
+		
 	}
 	
 }

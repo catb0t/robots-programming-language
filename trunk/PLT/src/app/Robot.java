@@ -532,7 +532,7 @@ public class Robot implements RobotInterface {
 	{		
 		//goal = new Vector3(0, 0, 0);
 		
-		shoot(new Location (10,10));
+		//shoot(new Location (10,10));
 		
 		
 		//move_to(position.add(forwardDirection), 0.0000001f);
@@ -541,6 +541,19 @@ public class Robot implements RobotInterface {
 		//String l = Global.outputArea.getText();
 		//Global.outputArea.setText(l.concat("\n Robot says: ").concat("I am not programmed"));
 		
+		ping();
+		
+		RobotList<Enemy>enemies = sort_incr_Enemy(get_enemies(),"");
+		
+		if (energy>5)
+		{
+			move_to(funcset.minus(enemies.get(1f).location));
+			say(enemies.get(1f).toString());
+		}
+		else
+		{
+			move_to(new Location(15f, 15f));
+		}
 		
 	}
 	//******************************************************************************************************
@@ -1290,7 +1303,7 @@ public class Robot implements RobotInterface {
 		}
 	}
 	
-	public Percentage get_random_numb ()
+	public Percentage get_random_num ()
 	{
 		return new Percentage((float) Math.random()*100);
 	}
