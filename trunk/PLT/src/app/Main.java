@@ -688,13 +688,13 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
 				line = line.concat(elements[elements.length-1]);
 				
 				
-				if (elements[start].equals("means")||elements[start].equals("done")||elements[start].equals("end")) {
+				if (elements[start].equals("means")||elements[start].equals("done")||elements[start].equals("end")||elements[start].equals("gives")) {
 					firstL.removeLast();
 					first = createFirst(firstL);
 					
 					line = first.concat("+---").concat(line);
 				}
-				else if (elements[start].equals("+---means")||elements[start].equals("+---done")||elements[start].equals("+---end")) {
+				else if (elements[start].equals("+---means")||elements[start].equals("+---done")||elements[start].equals("+---end")||elements[start].equals("+---gives")) {
 					firstL.removeLast();
 					first = createFirst(firstL);
 					

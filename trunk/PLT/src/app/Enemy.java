@@ -32,6 +32,14 @@ public class Enemy {
 		return new Enemy(name, location.copy(), new Float(health.floatValue()));
 	}
 	
+	public Location getLocation() {
+		return location;
+	}
+	
+	public Location getlocation() {
+		return location;
+	}
+	
 	
 	public boolean equals(Object o) {
 
