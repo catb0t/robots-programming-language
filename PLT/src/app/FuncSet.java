@@ -216,21 +216,40 @@ public class FuncSet extends BasicFuncSet {
 	}
 	
 	
+	//minus functions which do not return errors
+	
+	public Float minus (Float a) {
+		return new Float(-a);
+	}
+	
+	public Percentage minus (Percentage a) {
+		return new Percentage(0f);
+	}
+	
+	public Location minus (Location a) {
+		return new Location(-a.x, -a.y);
+	}
+	
+	public Boolean minus (Boolean a) {
+		return new Boolean(!a);
+	}
+	
+	
 	//pow functions which do not return errors
 	
-	public Float pow (Float a, Float b) {
+	public Float power (Float a, Float b) {
 		return new Float(Math.pow(a,b));
 	}
 	
-	public Float pow (Percentage a, Float b) {
+	public Float power (Percentage a, Float b) {
 		return new Float(Math.pow(a.percent/100f, b));
 	}
 	
-	public Float pow (Float a, Percentage b) {
+	public Float power (Float a, Percentage b) {
 		return new Float(Math.pow(a, b.percent/100f));
 	}
 	
-	public Float pow (Percentage a, Percentage b) {
+	public Float power (Percentage a, Percentage b) {
 		return new Float(Math.pow(a.percent/100f, b.percent/100f));
 	}
 	

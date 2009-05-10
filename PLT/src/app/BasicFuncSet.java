@@ -146,7 +146,18 @@ public class BasicFuncSet {
 		return new Float(0f);
 	}
 	
-	public Float pow (Object a, Object b) {
+	public Float minus (Object a) {
+		Exception e = new Exception();
+		try {
+			throw e;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+
+		return new Float(0f);
+	}
+	
+	public Float power (Object a, Object b) {
 		Exception e = new Exception();
 		try {
 			throw e;
