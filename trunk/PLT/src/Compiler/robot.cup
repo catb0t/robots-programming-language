@@ -333,8 +333,13 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                                      RESULT.javaCode.append("funcset.add(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else if(ao == "*") {
                                      RESULT.javaCode.append("funcset.times(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
+                                 } else if(ao == "/") {
+                                     RESULT.javaCode.append("funcset.divided(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");                                     
+                                 } else if(ao == "-") {
+                                     RESULT.javaCode.append("funcset.subtract(").append(ae1.javaCode).append(", ").append(ae2.javaCode).append(")");
                                  } else {
-                                     RESULT.javaCode.append(ae1.javaCode).append(ao).append(ae2.javaCode);
+                                     //RESULT.javaCode.append(ae1.javaCode).append(ao).append(ae2.javaCode);
+                                     parser.custom_error("Unsupported operator: " + ao);
                                  }
                               :}
                         |
@@ -385,11 +390,11 @@ arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao a
                               SELF                     {:   RESULT = new Expression("this"); :}
 ;
 
-arithmetic_operator     ::=   PLUS     {: RESULT = "+";   :}
-                        |     MINUS    {: RESULT = " - "; :}
-                        |     TIMES    {: RESULT = "*";   :}
-                        |     DIVIDE   {: RESULT = " / "; :}
-                        |     ROLLOVER {: RESULT = "%";   :}
+arithmetic_operator     ::=   PLUS     {: RESULT = "+"; :}
+                        |     MINUS    {: RESULT = "-"; :}
+                        |     TIMES    {: RESULT = "*"; :}
+                        |     DIVIDE   {: RESULT = "/"; :}
+                        |     ROLLOVER {: RESULT = "%"; :}
 ;
 
 boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
@@ -625,6 +630,10 @@ function_call           ::=   FUNCTION_NAME:fn arguments_act:args
                                  if(fn.compareToIgnoreCase("sin") == 0
                                     ||
                                     fn.compareToIgnoreCase("cos") == 0
+                                    ||
+                                    fn.compareToIgnoreCase("power") == 0
+                                    ||
+                                    fn.compareToIgnoreCase("sqrt") == 0
                                     ||
                                     fn.compareToIgnoreCase("tan") == 0) {
 
