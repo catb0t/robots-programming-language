@@ -576,41 +576,67 @@ public class Robot implements RobotInterface {
 	
 	public void shoot (Enemy en)
 	{
-		//decrease energy
-		energy = energy - 10;
-		//shoot
-		Vector3 las_loc = this.getLocation().getVector3();
-		shoot = true;
-		shootDirection = en.location.getVector3().add(las_loc.multiply(-1));
+		if (ammo <= 0)
+		{
+			say("I don't have ammunition");
+			return;
+		}
+		if (energy >9)
+		{
+			//decrease energy
+			energy = energy - 10;
+			//shoot
+			Vector3 las_loc = this.getLocation().getVector3();
+			shoot = true;
+			shootDirection = en.location.getVector3().add(las_loc.multiply(-1));
+		}
+		else
+		{
+			say("I am running out of energy");
+		}
 	}
 	
 	public void shoot (Location loc)
 	{
-		//decrease energy
-		energy = energy - 10;
-		//shoot
-		Vector3 las_loc = this.getLocation().getVector3();
-		shoot = true;
-		shootDirection = loc.getVector3().add(las_loc.multiply(-1));
-
+		if (ammo <= 0)
+		{
+			say("I don't have ammunition");
+			return;
+		}
+		if (energy >9)
+		{
+			//decrease energy
+			energy = energy - 10;
+			//shoot
+			Vector3 las_loc = this.getLocation().getVector3();
+			shoot = true;
+			shootDirection = loc.getVector3().add(las_loc.multiply(-1));
+		}
 	}
 	
 	public void ping ()
 	{
-		energy = energy - 5;
-		
-		//updateEnememies
-		enemy_list.clear();
-		for (Enemy e: Global.enemy_list)
+		if (energy > 4)
 		{
-			enemy_list.addLast(e.copy());
+			energy = energy - 5;
+
+			//updateEnememies
+			enemy_list.clear();
+			for (Enemy e: Global.enemy_list)
+			{
+				enemy_list.addLast(e.copy());
+			}
+
+			//update Ressources
+			resource_list.clear();
+			for (Resource r: Global.resource_list)
+			{
+				resource_list.addLast(r.copy());
+			}
 		}
-		
-		//update Ressources
-		resource_list.clear();
-		for (Resource r: Global.resource_list)
+		else
 		{
-			resource_list.addLast(r.copy());
+			say("I am running out of energy");
 		}
 	}
 	
@@ -1295,6 +1321,14 @@ public class Robot implements RobotInterface {
 	}
 	
 	public Location getLocation() {
+		return new Location(position.x, position.z);
+	}
+	
+	public Location getlocation() {
+		return new Location(position.x, position.z);
+	}
+	
+	public Location get_location() {
 		return new Location(position.x, position.z);
 	}
 	
