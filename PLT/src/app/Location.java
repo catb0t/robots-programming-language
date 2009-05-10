@@ -48,7 +48,8 @@ public class Location {
 	
 	public String toString()
 	{
-		String s = "x= "+x+", y= "+y;
+		//String s = "x= "+x+", y= "+y;
+		String s = "("+x+", "+y+")";
 		return s;
 	}
 	

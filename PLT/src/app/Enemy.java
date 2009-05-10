@@ -4,32 +4,32 @@ public class Enemy {
 
 	public String name;
 	public Location location;
-	public Float energy;
+	public Float health;
 	
 	public Enemy() {
 		name ="";
 		location = new Location();
-		energy = new Float(0f);
+		health = new Float(0f);
 	}
 	
-	public Enemy(String n, Location l, Float e) {
+	public Enemy(String n, Location l, Float h) {
 		name = n;
 		location = l;
-		energy = e;
+		health = h;
 	}
 	
 	public String toString()
 	{
-		String sol = "enemy "+name+" at ("+Float.toString(location.getX())+","+Float.toString(location.getY())+","+"), energy="+Float.toString(energy);
+		String sol = "enemy "+name+" @("+Float.toString(location.getX())+","+Float.toString(location.getY())+"), health="+Float.toString(health);
 		return sol;
 	}
 	
-	public float getEnergy() {
-		return energy;
+	public float getHealth() {
+		return health;
 	}
 	
 	public Enemy copy() {
-		return new Enemy(name, location.copy(), new Float(energy.floatValue()));
+		return new Enemy(name, location.copy(), new Float(health.floatValue()));
 	}
 	
 	
@@ -43,6 +43,6 @@ public class Enemy {
 
 		return (this.name.equals(equalTest.name)
 				&&(this.location.equals(equalTest.location))
-				&&(this.energy==equalTest.energy));
+				&&(this.health==equalTest.health));
 	}
 }
