@@ -97,17 +97,16 @@ non terminal Integer expr;
 non terminal String  statement, entry, variable_name, program, block;
 non terminal         optnl, assign_op;
 non terminal String  function, functions, variable_name_local;
-non terminal String  boolean_final, declaration, boolean_expression, boolean_component;
-non terminal String  any_expr;
+non terminal String  boolean_final, declaration;
 non terminal String  arithmetic_operator, constant_value;
-non terminal String  call, field_access, local_declaration;
+non terminal String  call, local_declaration;
 //non terminal String  field_name;
 non terminal String  conditional, else_statement;
 non terminal String  arguments, arguments_act, function_call;
 non terminal String  comparison_operator, index;
 non terminal String  assignment;
 non terminal String  loop;
-non terminal Expression arithmetic_expression;
+non terminal Expression arithmetic_expression, boolean_expression, field_access;
 non terminal String  out_text;
 non terminal String  sort_type, optional_sort_arg, sort_function;
 non terminal String  special_args;
@@ -170,24 +169,24 @@ declaration     ::= declaration:dcl optnl VARIABLE:v NEWLINE
                        }*/
                     :}
                  |
-                    declaration:dcl optnl VARIABLE:v assign_op any_expr:ex NEWLINE
+                    declaration:dcl optnl VARIABLE:v assign_op boolean_expression:ex NEWLINE
                     {:
                        parser.temp = parser.sm.declareIfNecessary(v);
-                       String t = parser.temp + v.name() + " = " + ex + ";\n";
+                       String t = parser.temp + v.name() + " = " + ex.javaCode.toString() + ";\n";
                        
                        if(parser.temp.compareTo("") != 0) {
                           RESULT = dcl + parser.sm.indent() + parser.temp + v.name() + ";\n";
-                          parser.globalAssignments += "\t\tthis." + v.name() + " = " + ex + ";\n";
+                          parser.globalAssignments += "\t\tthis." + v.name() + " = " + ex.javaCode.toString() + ";\n";
                        } else {
                           RESULT = dcl;
                           parser.globalAssignments += "\t\tthis." + t;
                        }
                     :}
                  |
-                    declaration:dcl optnl field_access:fa assign_op any_expr:ex NEWLINE
+                    declaration:dcl optnl field_access:fa assign_op boolean_expression:ex NEWLINE
                     {:
                        RESULT = dcl;
-                       parser.globalAssignments += fa + " = " + ex + ";\n";
+                       parser.globalAssignments += fa.javaCode.toString() + " = " + ex.javaCode.toString() + ";\n";
                     :}
                  |
                     /* empty */
@@ -199,22 +198,26 @@ declaration     ::= declaration:dcl optnl VARIABLE:v NEWLINE
 //TODO: What happens if base_value is not already declared?  Should we create a new instance?
 field_access    ::= VARIABLE:v OF arithmetic_expression:ae
                     {:
-                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + "." + v.name();
+                       RESULT = new Expression(ae.javaCode.toString() + "." + v.name());
+                       RESULT.declarations.append(ae.declarations);
                     :}
                 |   
                     function_call:fc OF arithmetic_expression:ae
                     {:
-                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + "." + fc;
+                       RESULT = new Expression(ae.javaCode.toString() + "." + fc);
+                       RESULT.declarations.append(ae.declarations);
                     :}
                 |
                     sort_function:sf OF arithmetic_expression:ae
                     {:
-                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + "." + sf;
+                       RESULT = new Expression(ae.javaCode.toString() + "." + sf);
+                       RESULT.declarations.append(ae.declarations);
                     :}
                 |   
                     index:idx OF arithmetic_expression:ae
                     {:
-                       RESULT = ae.declarations.toString() + ae.javaCode.toString() + ".get(" + idx + ")";
+                       RESULT = new Expression(ae.javaCode.toString() + ".get(" + idx + ")");
+                       RESULT.declarations.append(ae.declarations);
                     :}
                 /*|   
                     variable_name:vn
@@ -315,10 +318,6 @@ base_value      ::=   field_name:fn            {:   RESULT = fn;     :}
                       arithmetic_expression:ae {:   RESULT = ae;     :}
 ;
 */
-any_expr        ::=   boolean_expression:be    {:   RESULT = be; :}
-                /*|
-                      arithmetic_expression:ae {:   RESULT = ae; :}*/
-;
 
 arithmetic_expression   ::=   arithmetic_expression:ae1 arithmetic_operator:ao arithmetic_expression:ae2
                               {:
@@ -398,39 +397,62 @@ arithmetic_operator     ::=   PLUS     {: RESULT = "+"; :}
 ;
 
 boolean_expression      ::=   boolean_expression:be1 OR boolean_expression:be2
-                              {:   RESULT = be1 + " || " + be2; :}
+                              {:   
+                                 RESULT = new Expression(be1.javaCode.toString() + " || " + be2.javaCode.toString());
+                                 RESULT.declarations.append(be1.declarations);
+                                 RESULT.declarations.append(be2.declarations);
+                              :}
                         |     
                               boolean_expression:be1 AND boolean_expression:be2
-                              {:   RESULT = be1 + " && " + be2; :}
+                              {:   
+                                 RESULT = new Expression(be1.javaCode.toString() + " && " + be2.javaCode.toString());
+                                 RESULT.declarations.append(be1.declarations);
+                                 RESULT.declarations.append(be2.declarations);
+                              :}
                         |     
                               NOT boolean_expression:be
-                              {:   RESULT = "!" + be;           :}
+                              {:   
+                                 RESULT = new Expression("!" + be.javaCode.toString());
+                                 RESULT.declarations.append(be.declarations);
+                              :}
                         |     
                               LPAREN boolean_expression:be RPAREN
-                              {:   RESULT = "( " + be + " )";   :}
+                              {:   
+                                 RESULT = new Expression("(" + be.javaCode.toString() + ")");
+                                 RESULT.declarations.append(be.declarations);
+                              :}
                         |     
                               boolean_final:bf
-                              {:   RESULT = bf;                 :}
+                              {:   RESULT = new Expression(bf);  :}
                         |
-                              boolean_component:bec
-                              {:  RESULT = bec;  :}
+                              arithmetic_expression:ae
+                              {:  RESULT = new Expression(ae);  :}
                         |
-                              boolean_component:bec1 IS_EQUAL_TO
-                              boolean_component:bec2
-                              {:  RESULT = bec1 + ".equals(" + bec2 + ")";  :}
+                              boolean_expression:be1 IS_EQUAL_TO
+                              boolean_expression:be2
+                              {:   
+                                 RESULT = new Expression(be1.javaCode.toString() + ".equals(" + be2.javaCode.toString() + ")");
+                                 RESULT.declarations.append(be1.declarations);
+                                 RESULT.declarations.append(be2.declarations);
+                              :}
                         |
-                              boolean_component:bec1 IS_DIFFERENT_FROM
-                              boolean_component:bec2
-                              {:  RESULT = "!" + bec1 + ".equals(" + bec2 + ")";  :}
+                              boolean_expression:be1 IS_DIFFERENT_FROM
+                              boolean_expression:be2
+                              {:   
+                                 RESULT = new Expression("!" + be1.javaCode.toString() + ".equals(" + be2.javaCode.toString() + ")");
+                                 RESULT.declarations.append(be1.declarations);
+                                 RESULT.declarations.append(be2.declarations);
+                              :}
                         |
-                              boolean_component:bec1 comparison_operator:co
-                              boolean_component:bec2
-                              {:  RESULT = bec1 + co + bec2;  :}
+                              boolean_expression:be1 comparison_operator:co
+                              boolean_expression:be2
+                              {:   
+                                 RESULT = new Expression(be1.javaCode.toString() + co + be2.javaCode.toString());
+                                 RESULT.declarations.append(be1.declarations);
+                                 RESULT.declarations.append(be2.declarations);
+                              :}
 ;
 
-boolean_component       ::=   arithmetic_expression:ae {: RESULT = ae.javaCode.toString(); :}
-;
-                      
 comparison_operator     ::=   IS_LOWER_THAN
                               {: RESULT = "<="; :}
                         |     
@@ -497,22 +519,23 @@ block                   ::=   statement:s {: RESULT = parser.sm.indent() + s + "
 ;
 
 
-assignment              ::=   /*variable_name_local:vnl*/ VARIABLE:v assign_op any_expr:ex NEWLINE
+assignment              ::=   /*variable_name_local:vnl*/ VARIABLE:v assign_op boolean_expression:ex NEWLINE
                               {:
                                  //RESULT = vnl + " = " + ex;
                                  RESULT = parser.sm.declareIfNecessary(v) + v.name();
-                              	 RESULT += " = " + ex;
+                              	 RESULT += " = " + ex.javaCode.toString();
                               :}
                         |
-                              field_access:fa assign_op any_expr:ex NEWLINE
+                              field_access:fa assign_op boolean_expression:ex NEWLINE
                               {: 
-                                 RESULT = fa + " = " + ex;
+                                 RESULT = fa.declarations.toString() + ex.declarations.toString();
+                                 RESULT += fa.javaCode.toString() + " = " + ex.javaCode.toString();
                               :}
 ;
 
 conditional             ::=   IF boolean_expression:be THEN 
                               {:
-                                 RESULT = "\n" + parser.sm.indent() + "if (" + be + ") {\n";
+                                 RESULT = "\n" + parser.sm.indent() + "if (" + be.javaCode.toString() + ") {\n";
                                  parser.sm.increaseLevel();
                               :} NEWLINE
                               optnl
@@ -604,7 +627,7 @@ loop                    ::=   REPEAT WITH EACH VARIABLE:item IN VARIABLE:list
                          |
                               WHILE boolean_expression:be NEWLINE
                               {:
-                                 RESULT = "\n" + parser.sm.indent() + "while(" + be + ") {\n\n";
+                                 RESULT = "\n" + parser.sm.indent() + "while(" + be.javaCode.toString() + ") {\n\n";
                                  parser.sm.increaseLevel();
                               :}
                               optnl
@@ -648,9 +671,9 @@ arguments_act           ::=   special_args:sargs arguments_act:args
                                  RESULT = sargs + ", " + args;
                               :}
                         |
-                              any_expr:arg arguments_act:args
+                              boolean_expression:arg arguments_act:args
                               {:
-                                 RESULT = arg + ", " + args;
+                                 RESULT = arg.javaCode.toString() + ", " + args;
                               :}
                         |
                               /* empty */
@@ -760,9 +783,9 @@ out_text                ::=   VERBATIM_OUT_TXT:txt out_text:ot
                               SAY_EXPR_STA boolean_expression:be SAY_EXPR_END out_text:ot
                               {:
                                  if(ot.compareTo("") != 0) {
-                                 	RESULT = be + " + " + ot;
+                                 	RESULT = be.javaCode.toString() + " + " + ot;
                                  } else {
-                                    RESULT = be;
+                                    RESULT = be.javaCode.toString();
                                  }
                               :}
                         |
