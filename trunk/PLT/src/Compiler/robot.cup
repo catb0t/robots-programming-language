@@ -186,8 +186,29 @@ declaration     ::= declaration:dcl optnl VARIABLE:v NEWLINE
                  |
                     declaration:dcl optnl field_access:fa assign_op boolean_expression:ex NEWLINE
                     {:
-                       RESULT = dcl;
-                       parser.globalAssignments += fa.javaCode.toString() + " = " + ex.javaCode.toString() + ";\n";
+                       //System.out.println("DEBUG:"+fa.declarations.toString());
+                       String [] temp = fa.declarations.toString().split("\\n");
+                       String declarations = new String();
+                       String initializations = new String();
+                       //System.out.println("DEBUG:"+temp.length);
+                       for (int i = 0 ; i < temp.length ; i++) {
+                          //System.out.println("DEBUG:temp["+ i +"].length()="+temp[i].length());
+                          if (temp[i].length() <= 1) continue;
+                          //System.out.println("DEBUG: temp[" + i + "]=" + temp[i].toString());
+                          int firstSpaceIndex = temp[i].indexOf(" ");
+                          int secondSpaceIndex = temp[i].indexOf(" ",firstSpaceIndex + 1);
+                          //System.out.println("DEBUG:firstSpaceIndex=" + firstSpaceIndex + " secondSpaceIndex=" + secondSpaceIndex);
+                          if (firstSpaceIndex < 0 || secondSpaceIndex < 0) continue; 
+                          declarations += "\t\t" + declarations + temp[i].substring(0,secondSpaceIndex) + ";\n";
+                          initializations += "\t\t" + initializations + temp[i].substring(firstSpaceIndex + 1) + "\n";
+                       }
+                       
+                       System.out.println("DEBUG: declarations="+declarations);
+                       System.out.println("DEBUG: initializations="+initializations);
+
+                       RESULT = dcl + declarations;
+                       parser.globalAssignments += initializations;
+                       parser.globalAssignments += "\t\tthis." + fa.javaCode.toString() + " = " + ex.javaCode.toString() + ";\n";
                     :}
                  |
                     /* empty */
