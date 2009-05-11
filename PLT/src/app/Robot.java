@@ -1335,14 +1335,14 @@ public class Robot implements RobotInterface {
 		}
 	}
 	
-	public Percentage get_random_num ()
+	public Percentage gen_random_num ()
 	{
 		return new Percentage((float) Math.random()*100);
 	}
 	
-	public boolean flip_coin (double s)
+	public boolean flip_coin (Float s)
 	{
-		return (Math.random()>s);
+		return ((float) Math.random()>s);
 	}
 	
 	/*
