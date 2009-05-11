@@ -635,7 +635,7 @@ public class Robot implements RobotInterface {
 	{
 		if (energy > 4)
 		{
-			energy = energy - 5;
+			//energy = energy - 5;
 
 			//updateEnememies
 			enemy_list.clear();
