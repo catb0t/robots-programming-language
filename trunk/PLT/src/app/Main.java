@@ -192,7 +192,7 @@ public class Main extends JFrame implements ActionListener, TextListener, KeyLis
                                     if (i == -1) i = editArea.getText().length();
                                  }
                                  if (i == editArea.getCaretPosition()) i++;
-                                 System.out.println(i + " " + editArea.getCaretPosition()); 
+                                 //System.out.println(i + " " + editArea.getCaretPosition()); 
                              } else {
                                  i = editArea.getCaretPosition()+1;
                              }
