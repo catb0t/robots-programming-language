@@ -381,12 +381,13 @@ public class AppTests {
 		expectedResult.add(e3);
 		expectedResult.add(e5);
 		expectedResult.add(e1);
-		result=robot.sort_incr(list,"energy");
+		result=robot.sort_incr(list,"health");
 		//System.out.println(list.size());
 		for(int i=0;i<list.size();i++){
-			//System.out.println(result.get(i).location.toString());
-			//System.out.println(expectedResult.get(i).location.toString());
-			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+			//System.out.println(result.get(i).health.toString());
+			//System.out.println(expectedResult.get(i).health.toString());
+			//assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+			assertEquals("Result",result.get(i).health, expectedResult.get(i).health);
 		}
 		
 		//test sort_decr by energy
@@ -397,12 +398,13 @@ public class AppTests {
 		expectedResult.add(e4);
 		expectedResult.add(e2);
 		
-		result=robot.sort_decr(list,"energy");
+		result=robot.sort_decr(list,"health");
 		//System.out.println(list.size());
 		for(int i=0;i<list.size();i++){
 			//System.out.println(result.get(i).location.toString());
 			//System.out.println(expectedResult.get(i).location.toString());
-			assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+			//assertTrue(result.get(i).location.equals(expectedResult.get(i).location));
+			assertEquals("Result",result.get(i).health, expectedResult.get(i).health);
 		}
 	}
 	
