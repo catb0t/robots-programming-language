@@ -15,23 +15,22 @@ public class RobotCompiled extends Robot {
 		shoot(closest_enemy);
 		ping();
 		Location my_loc = this.getLocation();
-		Location enemy_loc = Enemy enemy = new Enemy();
-		enemy.location;
+		Location enemy_loc = enemy.location;
 		Float distance = distance(enemy_loc, my_loc);
 		RobotList<Enemy> enemies = get_enemies();
 		RobotList<Resource> resources = get_resources();
 		Float height = get_environment_height(enemy_loc);
-		RobotList<Enemy> furthest_enemies = sort(enemy_info);
-		RobotList<Resource> most_valuable_resources = sort(resource_info>ammo_stash);
-		modify_list(cliff_locations, add(loc_of_cliff));
+		RobotList<Enemy> furthest_enemies = sort_incr(enemy, "health");
+		RobotList<Resource> most_valuable_resources = sort_decr(resources, "ammostash");
+		modify_list(cliff_locations, "add", loc_of_cliff);
 		Percentage randomNumber = gen_random_num();
 		Boolean should_attack = flipCoin(this.health);
 		Float testnum = new Float(100f);
-		Float result = sqrt(testnum);
-		result = power(testnum, new Float(2f));
-		result = sin(new Float(45f));
-		result = cos(new Float(120f));
-		result = tan(new Float(125f));
+		Float result = funcset.sqrt(testnum);
+		result = funcset.power(testnum, new Float(2f));
+		result = funcset.sin(new Float(45f));
+		result = funcset.cos(new Float(120f));
+		result = funcset.tan(new Float(125f));
 		result = funcset.rollover(testnum, new Float(10f));
 
 	}

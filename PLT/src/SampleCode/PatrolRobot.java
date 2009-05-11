@@ -3,7 +3,7 @@ import java.util.*;
 
 public class RobotCompiled extends Robot {
 
-Float count = new Float(0f);
+	Float count;
 
 	public void think() {
 
@@ -27,5 +27,10 @@ Float count = new Float(0f);
 
 	}
 
+
+
+	public RobotCompiled() {
+		this.count = new Float(0f);
+	}
 
 }

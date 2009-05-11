@@ -3,9 +3,9 @@ import java.util.*;
 
 public class RobotCompiled extends Robot {
 
-Float wholecount = new Float(0f);
-Percentage Maximum_energy_level = new Float(100f);
-Boolean isEnemy = false;
+	Float wholecount;
+	Percentage Maximum_energy_level;
+	Boolean isEnemy;
 
 	public void think() {
 
@@ -25,6 +25,8 @@ Boolean isEnemy = false;
 		targetLocation.get(2f).y = new Float(10f);
 		targetLocation.get(3f).x = my_loc.x;
 		targetLocation.get(3f).y = new Float(10f);
+		targetLocation.get(4f).x = my_loc.x;
+		targetLocation.get(4f).y = new Float(10f);
 		Float Number = new Float(10f);
 		Float closest_distance = Float.MAX_VALUE;
 		Float farest_distance = Float.MIN_VALUE;
@@ -32,5 +34,12 @@ Boolean isEnemy = false;
 
 	}
 
+
+
+	public RobotCompiled() {
+		this.wholecount = new Float(0f);
+		this.Maximum_energy_level = new Float(100f);
+		this.isEnemy = false;
+	}
 
 }

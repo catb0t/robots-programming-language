@@ -29,8 +29,8 @@ think
      height#=get_environment_height enemy_loc@
      
      //5.9 Sort
-     furthest_enemies!... = sort enemy_info!...
-     most_valuable_resources$... = sort resource_info$... > ammo_stash#  
+     furthest_enemies!... = sort enemy!... < health#
+     most_valuable_resources$... = sort resources$... > ammostash#  
           
      //5.10 modify_list
      modify_list cliff_locations@ add loc_of_cliff@
