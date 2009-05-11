@@ -9,9 +9,9 @@ public class RobotCompiled extends Robot {
 		Float a = new Float(100f);
 		Float b = new Float(50f);
 		Float c = funcset.add(a, b);
-		Float d = a - b;
+		Float d = funcset.subtract(a, b);
 		Float e = funcset.times(a, b);
-		Float f = a / b;
+		Float f = funcset.divided(a, b);
 		Percentage health_boost = new Float(70f);
 		Percentage health = new Float(40f);
 		health = funcset.add(health, health_boost);

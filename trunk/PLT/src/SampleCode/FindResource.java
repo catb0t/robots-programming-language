@@ -10,8 +10,7 @@ public class RobotCompiled extends Robot {
 		ping();
 		RobotList<Resource> resources = get_resources();
 		closest_resource = find_closest_resource(resources);
-		move_to(Resource closest_resources = new Resource();
-		closest_resources.location, new Percentage(30));
+		move_to(closest_resources.location, new Percentage(30));
 
 	}
 
