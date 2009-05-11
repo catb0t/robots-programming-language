@@ -601,7 +601,7 @@ public class Robot implements RobotInterface {
 		if (energy >9)
 		{
 			//decrease energy
-			energy = energy - 10;
+			energy = energy - 3;
 			//shoot
 			Vector3 las_loc = this.getLocation().getVector3();
 			shoot = true;
@@ -623,7 +623,7 @@ public class Robot implements RobotInterface {
 		if (energy >9)
 		{
 			//decrease energy
-			energy = energy - 10;
+			energy = energy - 3;
 			//shoot
 			Vector3 las_loc = this.getLocation().getVector3();
 			shoot = true;
