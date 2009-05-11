@@ -1342,7 +1342,7 @@ public class Robot implements RobotInterface {
 	
 	public boolean flip_coin (Float s)
 	{
-		return ((float) Math.random()>s);
+		return ((float) Math.random()<s);
 	}
 	
 	/*
